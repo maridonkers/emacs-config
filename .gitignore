@@ -16,4 +16,5 @@ backups
 /projectile-bookmarks.eld
 /recentf
 /smex-items
-eshell/
+/eshell
+/projectile.cache
