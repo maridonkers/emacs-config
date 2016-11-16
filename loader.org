@@ -937,7 +937,7 @@ With negative N, comment out original line and use the absolute value."
   (global-set-key (kbd "C-_") 'undo-tree-undo)
   (global-set-key (kbd "C-/") 'undo-tree-undo)
   (global-set-key (kbd "M-_") 'undo-tree-redo)
-  (global-set-key (kbd "C-S-?") 'undo-tree-redo)
+  (global-set-key (kbd "C-?") 'undo-tree-redo)
 
   ;; Undo tree visualize
   (global-set-key (kbd "C-x u") 'undo-tree-visualize)
