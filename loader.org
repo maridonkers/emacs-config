@@ -1,0 +1,486 @@
+#+TITLE: Emacs configuration using org-mode
+#+STARTUP: indent 
+#+OPTIONS: H:5 num:nil tags:nil toc:nil timestamps:t
+#+LAYOUT: post
+#+DESCRIPTION: Loading emacs configuration using org-babel
+#+TAGS: emacs
+#+CATEGORIES: editing
+
+* Introduction
+
+GNU Emacs org-mode configuration file. Based on Arjen Wiersma's
+[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]].
+
+You can find the latest version of this configuration at
+[[https://github.com/maridonkers/emacs-config]].
+
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Mari Donkers")
+  (setq user-mail-address "contact@maridonkers.info")
+#+END_SRC
+
+* A secure Emacs environment
+
+Great article why [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Your editor is malware]]. The following basically sets up the configuration to adhere to the articles recommendations.
+
+#+BEGIN_SRC shell :exports none
+python -m pip install --user certifi
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  ;;  (if (fboundp 'gnutls-available-p)
+  ;;      (fmakunbound 'gnutls-available-p))
+
+  (require 'cl)
+  (setq tls-checktrust t)
+
+  (setq python (or (executable-find "py.exe")
+                   (executable-find "python")
+                   ))
+
+  (let ((trustfile
+         (replace-regexp-in-string
+          "\\\\" "/"
+          (replace-regexp-in-string
+           "\n" ""
+           (shell-command-to-string (concat python " -m certifi"))))))
+    (setq tls-program
+          (list
+           (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                   (if (eq window-system 'w32) ".exe" "") trustfile)))
+    (setq gnutls-verify-error t)
+    (setq gnutls-trustfiles (list trustfile)))
+
+  ;; Test the settings by using the following code snippet:
+  ;;  (let ((bad-hosts
+  ;;         (loop for bad
+  ;;               in `("https://wrong.host.badssl.com/"
+  ;;                    "https://self-signed.badssl.com/")
+  ;;               if (condition-case e
+  ;;                      (url-retrieve
+  ;;                       bad (lambda (retrieved) t))
+  ;;                    (error nil))
+  ;;               collect bad)))
+  ;;    (if bad-hosts
+  ;;        (error (format "tls misconfigured; retrieved %s ok" bad-hosts))
+  ;;      (url-retrieve "https://badssl.com"
+  ;;                    (lambda (retrieved) t))))
+#+END_SRC
+
+* Installing use-package
+** Setup
+
+GNU Emacs has a lot of packages that make things very easy for the
+user. The package management infrastructure makes it a breeze to
+install new packages and keep up-to-date with their development.
+
+There are several package archives available for GNU Emacs:
+
+- GNU
+- Marmalade
+- Melpa
+
+Each archive will write its files in a seperate archive directory.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+#+END_SRC
+
+Because the default setting for package-archives is to use the HTTP access to the GNU archive, I set the variable to `nil` before adding the HTTPS variants.
+
+#+name: credmp-package-infrastructure
+#+begin_src emacs-lisp
+
+  (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+  (defvar melpa '("melpa" . "https://melpa.org/packages/"))
+  (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
+  ;; Add marmalade to package repos
+  (setq package-archives nil)
+  (add-to-list 'package-archives melpa-stable t)
+  (add-to-list 'package-archives melpa t)
+  (add-to-list 'package-archives gnu t)
+#+end_src
+
+Initialize the archive and refresh the contents in case there is no cached archive.
+
+#+BEGIN_SRC emacs-lisp
+  (package-initialize)
+
+  (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
+               (file-exists-p (concat init-dir "elpa/archives/melpa"))
+               (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
+    (package-refresh-contents))
+#+END_SRC
+
+At each load the package list will be evaluated and any missing
+packages will be installed. The packages-install function deals with
+this check and takes care of any loading of the packages.
+
+#+name: credmp-package-installer
+#+begin_src emacs-lisp
+  (defun packages-install (&rest packages)
+    (message "running packages-install")
+    (mapc (lambda (package)
+            (let ((name (car package))
+                  (repo (cdr package)))
+              (when (not (package-installed-p name))
+                (let ((package-archives (list repo)))
+                  (package-initialize)
+                  (package-install name)))))
+          packages)
+    (package-initialize)
+    (delete-other-windows))
+#+end_src
+
+** The package
+
+#+name: credmp-package-installer
+#+begin_src emacs-lisp
+  ;; Install extensions if they're missing
+  (defun init--install-packages ()
+    (message "Lets install some packages")
+    (packages-install
+     ;; Since use-package this is the only entry here
+     ;; ALWAYS try to use use-package!
+     (cons 'use-package melpa)
+     ))
+
+  (condition-case nil
+      (init--install-packages)
+    (error
+     (package-refresh-contents)
+     (init--install-packages)))
+#+end_src
+
+* Moving around
+
+Be sure to just ask for y/n instead of yes/no.
+
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+Bookmarks are very useful for quickly jumping around files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package bm
+    :ensure t
+    :bind (("C-c =" . bm-toggle)
+           ("C-c [" . bm-previous)
+           ("C-c ]" . bm-next)))
+#+END_SRC
+* Discover-ability
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :config
+    (which-key-mode))
+#+END_SRC
+
+* Environment
+
+** GUI
+
+- Turn off mouse interface early in startup to avoid momentary display.
+
+#+name: credmp-gui
+#+begin_src emacs-lisp
+  (menu-bar-mode 1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+- change command to meta, and ignore option to use weird Norwegian
+keyboard
+
+#+name: credmp-keys
+#+begin_src emacs-lisp
+  (setq mac-option-modifier 'none)
+  (setq mac-command-modifier 'meta)
+  (setq ns-function-modifier 'hyper)
+#+end_src
+
+- Move to trash when deleting stuff and write backup files to own directory
+
+#+name: credmp-trash
+#+begin_src emacs-lisp
+  ;; Backup settings
+  (defvar --backup-directory (concat init-dir "backups"))
+
+  (if (not (file-exists-p --backup-directory))
+      (make-directory --backup-directory t))
+
+  (setq backup-directory-alist `(("." . ,--backup-directory)))
+  (setq make-backup-files t               ; backup of a file the first time it is saved.
+        backup-by-copying t               ; don't clobber symlinks
+        version-control t                 ; version numbers for backup files
+        delete-old-versions t             ; delete excess backup files silently
+        delete-by-moving-to-trash t
+        kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+        kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+        auto-save-default t               ; auto-save every buffer that visits a file
+        auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+        auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+        )
+    (setq delete-by-moving-to-trash t
+          trash-directory "~/.Trash/emacs")
+
+    (setq backup-directory-alist `(("." . ,(expand-file-name
+                                            (concat init-dir "backups")))))
+#+end_src
+
+
+
+* Look and feel
+
+#+BEGIN_SRC emacs-lisp
+  (use-package cyberpunk-theme
+    :ensure t
+    :config
+    (load-theme 'cyberpunk t))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+   (eval-after-load "org-indent" '(diminish 'org-indent-mode))
+#+END_SRC
+
+** Markdown support
+
+Markdown is a great way to write documentation, not as good as org-mode of course, but generally accepted as a standard.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t)
+#+END_SRC
+
+** HTMLize buffers
+
+When exporting documents to HTML documents, such as code fragments, we need to htmlize.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+
+** Exports
+
+
+* Programming
+
+** General programming
+
+As I write a lot of Lisp like code, either in GNU Emacs or in Clojure
+I like to have my environment setup for these languages. This is
+greatly supported by Paredit. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][Dan Midwood]] has a great guide to using
+paredit.
+
+The structured editing of paredit is usefull in a LOT of languages, as
+long as there are parenthesis, brackets or quotes.
+
+*** Utilities
+
+String manipulation routines for emacs lisp
+
+#+BEGIN_SRC emacs-lisp
+  (use-package s
+    :ensure t)
+#+END_SRC
+
+Hydras are the most awesome thing in the world. Check out [[https://github.com/abo-abo/hydra][the project page]] for some great examples.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hydra
+    :ensure t)
+#+END_SRC
+
+*** Code Folding
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hideshow
+    :ensure t
+    :bind (("C->" . my-toggle-hideshow-all)
+           ("C-<" . hs-hide-level)
+           ("C-;" . hs-toggle-hiding))
+    :config
+    ;; Hide the comments too when you do a 'hs-hide-all'
+    (setq hs-hide-comments nil)
+    ;; Set whether isearch opens folded comments, code, or both
+    ;; where x is code, comments, t (both), or nil (neither)
+    (setq hs-isearch-open 'x)
+    ;; Add more here
+
+
+    (setq hs-set-up-overlay
+          (defun my-display-code-line-counts (ov)
+            (when (eq 'code (overlay-get ov 'hs))
+              (overlay-put ov 'display
+                           (propertize
+                            (format " ... <%d>"
+                                    (count-lines (overlay-start ov)
+                                                 (overlay-end ov)))
+                            'face 'font-lock-type-face)))))
+
+    (defvar my-hs-hide nil "Current state of hideshow for toggling all.")
+         ;;;###autoload
+    (defun my-toggle-hideshow-all () "Toggle hideshow all."
+           (interactive)
+           (setq my-hs-hide (not my-hs-hide))
+           (if my-hs-hide
+               (hs-hide-all)
+             (hs-show-all)))
+
+    (add-hook 'prog-mode-hook (lambda ()
+                                (hs-minor-mode 1)
+                                ))
+    (add-hook 'clojure-mode-hook (lambda ()
+                                (hs-minor-mode 1)
+                                ))
+    )
+#+END_SRC
+
+*** Look and feel
+
+
+*** LISP Editing
+
+#+name: credmp-lisp-editing
+#+BEGIN_SRC emacs-lisp
+  (use-package paredit
+    :ensure t
+    :diminish paredit-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+    )
+
+  ;; Ensure paredit is used EVERYWHERE!
+  (use-package paredit-everywhere
+    :ensure t
+    :diminish paredit-everywhere-mode
+    :config
+    (add-hook 'prog-mode-hook #'paredit-everywhere-mode))
+
+  (use-package highlight-parentheses
+    :ensure t
+    :diminish highlight-parentheses-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook
+              (lambda()
+                (highlight-parentheses-mode)
+                )))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :config
+    (add-hook 'lisp-mode-hook
+              (lambda()
+                (rainbow-delimiters-mode)
+                )))
+
+  (global-highlight-parentheses-mode)
+#+END_SRC
+
+*** Snippets
+
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :diminish yas
+    :config
+    (yas/global-mode 1)
+    (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
+
+  (use-package clojure-snippets
+    :ensure t)
+#+END_SRC
+
+*** Auto completion
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :bind (("C-c /". company-complete))
+    :config
+    (global-company-mode)
+    )
+
+;;  (use-package company-flx
+;;    :ensure t
+;;    :config
+;;    (with-eval-after-load 'company
+;;      (company-flx-mode +1)))
+#+END_SRC
+
+*** Version Control
+Magit is the only thing you need when it comes to Version Control (Git)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind (("C-c m" . magit-status)))
+#+END_SRC
+
+Display the buffer state in the fringe.
+
+*** REST support
+
+#+BEGIN_SRC emacs-lisp
+  (use-package restclient
+    :ensure t)
+#+END_SRC
+
+
+** Clojure
+
+The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
+supporting modules.
+
+*** CIDER
+
+#+name: credmp-clojure
+#+BEGIN_SRC emacs-lisp
+  (use-package cider
+    :ensure t
+    :pin melpa-stable
+
+    :config
+    (add-hook 'cider-repl-mode-hook #'company-mode)
+    (add-hook 'cider-mode-hook #'company-mode)
+    (add-hook 'cider-mode-hook #'eldoc-mode)
+    ;; (add-hook 'cider-mode-hook #'cider-hydra-mode)
+    (add-hook 'clojure-mode-hook #'paredit-mode)
+    (setq cider-repl-use-pretty-printing t)
+    (setq cider-repl-display-help-banner nil)
+    (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+
+    :bind (("M-r" . cider-namespace-refresh)
+           ("C-c r" . cider-repl-reset)
+           ("C-c ." . cider-reset-test-run-tests))
+    )
+
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (add-hook 'clojure-mode-hook (lambda ()
+                                   (clj-refactor-mode 1)
+                                   ;; insert keybinding setup here
+                                   ))
+    (cljr-add-keybindings-with-prefix "C-c C-m")
+    (setq cljr-warn-on-evaql nil)
+    :bind ("C-c '" . hydra-cljr-help-menu/body)
+  )
+#+END_SRC
+
+*** Cider hydras
+
+#+BEGIN_SRC emacs-lisp
+(use-package cider-hydra
+    :ensure t)
+#+END_SRC
+

@@ -1,0 +1,13 @@
+*~
+loader.el
+*.elc
+elpa
+auto-save-list/*
+ac-comphist.dat
+.mc-lists.el
+nrepl-history
+cider-history
+bookmarks
+request
+backups
+\#*\#
