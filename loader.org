@@ -989,6 +989,23 @@ With negative N, comment out original line and use the absolute value."
 (global-set-key (kbd "C-<") 'scroll-up-line)
 (global-set-key (kbd "C->") 'scroll-down-line)
 #+END_SRC
+** Backup
+#+BEGIN_SRC emacs-lisp
+; Backup and auto-save.
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+
+(setq backup-directory-alist
+          `((".*" . ,temporary-file-directory)))
+    (setq auto-save-file-name-transforms
+          `((".*" ,temporary-file-directory t)))
+#+END_SRC
 * Recent
 ** Files
 #+BEGIN_SRC emacs-lisp
