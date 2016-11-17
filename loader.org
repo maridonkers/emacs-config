@@ -620,6 +620,7 @@ supporting modules.
 
   (use-package clj-refactor
     :ensure t
+    :pin melpa-stable
     :config
     (add-hook 'clojure-mode-hook (lambda ()
                                    (clj-refactor-mode 1)
