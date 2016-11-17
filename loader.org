@@ -147,11 +147,6 @@ this check and takes care of any loading of the packages.
      (package-refresh-contents)
      (init--install-packages)))
 #+END_SRC
-* Debugging/Tracing
-#+BEGIN_SRC emacs-lisp
-(setq edebug-trace t)
-(setq stack-trace-on-error '(buffer-read-only))
-#+END_SRC
 * GUI
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
