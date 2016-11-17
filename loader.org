@@ -36,8 +36,7 @@ python -m pip install --user certifi
   (setq tls-checktrust t)
 
   (setq python (or (executable-find "py.exe")
-                   (executable-find "python")
-                   ))
+                   (executable-find "python")))
 
   (let ((trustfile
          (replace-regexp-in-string
@@ -138,8 +137,7 @@ this check and takes care of any loading of the packages.
     (packages-install
      ;; Since use-package this is the only entry here
      ;; ALWAYS try to use use-package!
-     (cons 'use-package melpa)
-     ))
+     (cons 'use-package melpa)))
 
   (condition-case nil
       (init--install-packages)
@@ -309,19 +307,13 @@ Be sure to just ask for y/n instead of yes/no.
 ;; Smex brings the power of ido mode to your M-x mini-buffer, another way to supercharge your emacs navigation
 ;; From https://github.com/nonsequitur/smex
 (use-package smex
-    :ensure t)
+    :ensure t
+    :bind (("M-x" . smex)
+           ("M-S-X" . smex-major-mode-commands)
+           ("C-c C-c M-x" . execute-extended-command)
+           ("C-x C-b" . ibuffer)))
 
 (smex-initialize)
-
-;; Smex (M-x completion)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-;; Use I-Buffer
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Allow wildcards in file-open (in ido-file-open press C-F for Emacs file-open)
 (setq find-file-wildcards t)
@@ -497,17 +489,15 @@ String manipulation routines for emacs lisp
 ;;      (company-flx-mode +1)))
 #+END_SRC
 
-*** Origami folding
+*** Code folding
 #+BEGIN_SRC emacs-lisp
-;; Origami folding.
 (use-package origami
     :ensure t
-    :config (global-origami-mode))
-
-(global-set-key (kbd "C-S-O r") 'origami-reset)
-(global-set-key (kbd "<C-return>") 'origami-open-node-recursively)
-(global-set-key (kbd "<C-S-return>") 'origami-close-node-recursively)
-(global-set-key (kbd "<C-M-return>") 'origami-toggle-all-nodes)
+    :config (global-origami-mode)
+    :bind (("C-c |" . origami-reset)
+           ("C-c {" . origami-open-node-recursively)
+           ("C-c }" . origami-close-node-recursively)
+           ("C-c \"" . origami-toggle-all-nodes)))
 #+END_SRC
 *** Version Control
 Magit is the only thing you need when it comes to Version Control (Git)
@@ -540,7 +530,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (setq imenu-auto-rescan 1)
 
 ;; Incremental imenu.
-(global-set-key (kbd "C-S-L") 'imenu)
+(global-set-key (kbd "C-S-l") 'imenu)
 #+END_SRC
 *** Symbols
 **** Highlight symbol
@@ -594,7 +584,7 @@ supporting modules.
             (cljr-add-keybindings-with-prefix "C-c C-m")
             (setq cljr-warn-on-evaql nil)
     :bind (("C-<return>" . complete-symbol)
-           ("C-S-G" . cljr-find-usages)))
+           ("C-S-g" . cljr-find-usages)))
 #+END_SRC
 *** Cider hydras
 #+BEGIN_SRC emacs-lisp
@@ -640,8 +630,8 @@ Version 2015-02-07
   (end-of-line)
   (set-mark (line-beginning-position)))
 
-;; Join line.
-(global-set-key (kbd "C-S-L") 'join-next-line)
+;; Select current line.
+(global-set-key (kbd "C-|") 'select-current-line)
 #+END_SRC
 *** Joining
 #+BEGIN_SRC emacs-lisp
@@ -792,11 +782,8 @@ With negative N, comment out original line and use the absolute value."
 
 *** Various
 #+BEGIN_SRC emacs-lisp
-;; Select current line.
-(global-set-key (kbd "C-|") 'select-current-line)
-
 ;; Quick switch linum-mode.
-(global-set-key (kbd "C-S-N") 'linum-mode)
+(global-set-key (kbd "C-S-n") 'linum-mode)
 
 ;; Expand and replace region.
 (global-set-key (kbd "C-$") 'expand-delete-line)
