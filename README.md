@@ -1,5 +1,5 @@
 # emacs-config
-Emacs configuration using org-mode.
+Emacs configuration using org-mode based on Arjen Wiersma's emacs-config.
 
 Beware: still debugging.
 
