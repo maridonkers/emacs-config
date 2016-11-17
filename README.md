@@ -2,7 +2,7 @@
 Emacs configuration using org-mode based on Arjen
 Wiersma's <https://gitlab.com/buildfunthings/emacs-config>.
 
-Beware: still debugging.
+Beware: still debugging (my version, not his).
 
 TODO:
   * ~~paredit not default in Clojure buffers~~;
