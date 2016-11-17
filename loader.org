@@ -453,6 +453,12 @@ String manipulation routines for emacs lisp
       :config
       (add-hook 'lisp-mode-hook
                 (lambda()
+                  (rainbow-delimiters-mode)))
+      (add-hook 'clojure-mode-hook
+                (lambda()
+                  (rainbow-delimiters-mode)))
+      (add-hook 'clojurescript-mode-hook
+                (lambda()
                   (rainbow-delimiters-mode))))
 
     (global-highlight-parentheses-mode)
@@ -1064,7 +1070,7 @@ With negative N, comment out original line and use the absolute value."
   (blink-cursor-mode 0)
 
   ;; Font and size.
-  (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 130)
+  (set-face-attribute 'default nil :font "Monospace" :height 135)
 
   ;; Selection color.
   ;;(set-face-background 'hl-line "#3e4446")
