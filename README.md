@@ -4,6 +4,5 @@ Wiersma's <https://gitlab.com/buildfunthings/emacs-config>.
 
 Beware: still debugging (my version, not his).
 
-TODO:
-  * ~~paredit not default in Clojure buffers~~;
-  * ~~two CIDER menu's after cider-connect~~; [removed Hydra's head].
+Copy to an empty ~/.emacs.d subdirectory and start emacs.
+(Backup your existing ~/.emacs.d first).
