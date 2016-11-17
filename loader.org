@@ -8,7 +8,7 @@
 
 * Introduction
 GNU Emacs org-mode configuration file. Based on Arjen Wiersma's
-[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]].
+[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]] and Sacha Chua's [[http://pages.sachachua.com/.emacs.d/Sacha.html][Emacs configuration]].
 
 You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
@@ -974,6 +974,18 @@ With negative N, comment out original line and use the absolute value."
           `((".*" . ,temporary-file-directory)))
     (setq auto-save-file-name-transforms
           `((".*" ,temporary-file-directory t)))
+#+END_SRC
+** History
+#+BEGIN_SRC emacs-lisp
+(setq savehist-file "~/.emacs.d/savehist")
+(savehist-mode 1)
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+      '(kill-ring
+        search-ring
+        regexp-search-ring))
 #+END_SRC
 * Recent
 ** Files
