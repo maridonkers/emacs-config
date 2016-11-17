@@ -5,5 +5,5 @@ Wiersma's <https://gitlab.com/buildfunthings/emacs-config>.
 Beware: still debugging.
 
 TODO:
-  * paredit not default in Clojure buffers;
+  * ~~paredit not default in Clojure buffers~~;
   * ~~two CIDER menu's after cider-connect~~; [removed Hydra's head].
