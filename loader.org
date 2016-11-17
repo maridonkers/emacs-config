@@ -372,7 +372,7 @@ Be sure to just ask for y/n instead of yes/no.
 ;;(define-key global-map "\C-ca" 'org-agenda)
 ;;(setq org-log-done t)
 #+END_SRC
-** Identation
+** Indentation
 #+BEGIN_SRC emacs-lisp
   (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 #+END_SRC
@@ -545,22 +545,30 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (global-set-key (kbd "C-S-l") 'imenu)
 #+END_SRC
 *** Symbols
+**** Highlight s-exp
+#+BEGIN_SRC emacs-lisp
+(use-package hl-sexp
+    :ensure t
+    :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
+            (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode)
+            (add-hook 'clojure-mode-hook #'hl-sexp-mode)
+            (add-hook 'clojurescript-mode-hook #'hl-sexp-mode)
+    :bind (("C-M-'" . hl-sexp-mode)))
+#+END_SRC
 **** Highlight symbol
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-symbol
     :ensure t
-    :config
-    (add-hook 'c-mode-hook #'highlight-symbol-mode)
-    (add-hook 'css-mode-hook #'highlight-symbol-mode)
-    (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-    (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
+    :config (add-hook 'c-mode-hook #'highlight-symbol-mode)
+            (add-hook 'css-mode-hook #'highlight-symbol-mode)
+            (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
+            (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
     :bind (("C-*" . highlight-symbol)
            ("<f5>" . highlight-symbol-next)
            ("S-<f5>" . highlight-symbol-prev)
-           ("M-<f5>" . highlight-symbol-query-replace)
-           ("C-M-'" . hl-sexp-mode)))
+           ("M-<f5>" . highlight-symbol-query-replace)))
        
-;;(highlight-symbol-mode 1)
+(highlight-symbol-mode 1)
 (setq highlight-symbol-idle-delay 0.5)
 #+END_SRC
 ** Clojure
