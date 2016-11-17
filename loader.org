@@ -424,11 +424,6 @@ String manipulation routines for emacs lisp
   (use-package s
     :ensure t)
 #+END_SRC
-Hydras are the most awesome thing in the world. Check out [[https://github.com/abo-abo/hydra][the project page]] for some great examples.
-#+BEGIN_SRC emacs-lisp
-  (use-package hydra
-    :ensure t)
-#+END_SRC
 
 *** LISP Editing
 #+BEGIN_SRC emacs-lisp
@@ -441,7 +436,16 @@ Hydras are the most awesome thing in the world. Check out [[https://github.com/a
       (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
       (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
       (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-      (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+      (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+      :bind (("<f7>" . paredit-mode)
+             ("M-<left>" . paredit-forward-barf-sexp)
+             ("M-<right>" . paredit-forward-slurp-sexp)
+             ("C-<left>" . nil)
+             ("C-<right>" . nil)
+             ("M-S-<up>" . paredit-splice-sexp-killing-backward)
+             ("M-S-<down>" . paredit-splice-sexp-killing-forward)
+             ("M-<up>" . nil)
+             ("M-<down>" . nil)))
 
     ;; Ensure paredit is used EVERYWHERE!
     (use-package paredit-everywhere
@@ -466,35 +470,6 @@ Hydras are the most awesome thing in the world. Check out [[https://github.com/a
                   (rainbow-delimiters-mode))))
 
     (global-highlight-parentheses-mode)
-
-    ;; Replace paredit bindings and unassign. paredit-splice-sexp-killing-backward, paredit-splice-sexp-killing-forward
-    (eval-after-load "paredit"
-      '(progn (define-key paredit-mode-map (kbd "<M-left>") 'paredit-forward-barf-sexp)
-              (define-key paredit-mode-map (kbd "<M-right>") 'paredit-forward-slurp-sexp)
-              (define-key paredit-mode-map (kbd "<C-left>") nil)
-              (define-key paredit-mode-map (kbd "<C-right>") nil)
-
-              (define-key paredit-mode-map (kbd "<M-S-up>") 'paredit-splice-sexp-killing-backward)
-              (define-key paredit-mode-map (kbd "<M-S-down>") 'paredit-splice-sexp-killing-forward)
-              (define-key paredit-mode-map (kbd "<M-up>") nil)
-              (define-key paredit-mode-map (kbd "<M-down>") nil)))
-
-  (global-set-key [f7] 'paredit-mode)
-
-  ;; Delete sexp.
-  (global-set-key (kbd "<C-S-delete>") 'kill-sexp)
-
-  ;; Navigate to previous- or next sexp.
-  (global-set-key (kbd "<M-S-left>") 'backward-sexp)
-  (global-set-key (kbd "<M-S-right>") 'forward-sexp)
-
-  ;; Goto previous top level paren-block.
-  (global-set-key (kbd "M-p") 'outline-previous-visible-heading)
-  (global-set-key (kbd "M-n") 'outline-next-visible-heading)
-
-  ;; C-arrow for word navigation; M-arrow for (reassigned) paredit C-arrow bindings.
-  (global-set-key (kbd "<C-left>") 'left-word)
-  (global-set-key (kbd "<C-right>") 'right-word)
 #+END_SRC
 
 *** Snippets
@@ -571,28 +546,26 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (setq imenu-auto-rescan 1)
 
 ;; Incremental imenu.
-(global-set-key (kbd "C-S-l") 'imenu)
+(global-set-key (kbd "C-S-L") 'imenu)
 #+END_SRC
 *** Symbols
 **** Highlight symbol
 #+BEGIN_SRC emacs-lisp
-  (use-package highlight-symbol
-    :ensure t)
-
-  (add-hook 'c-mode-hook #'highlight-symbol-mode)
-  (add-hook 'css-mode-hook #'highlight-symbol-mode)
-  (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-  (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
-  
-  ;;(highlight-symbol-mode 1)
-  (setq highlight-symbol-idle-delay 0.5)
-  (global-set-key (kbd "C-*") 'highlight-symbol)
-  (global-set-key [f5] 'highlight-symbol-next)
-  (global-set-key [(shift f5)] 'highlight-symbol-prev)
-  (global-set-key [(meta f5)] 'highlight-symbol-query-replace)
-
-;; Switch hl-sexp mode (s-expression highlighting).
-(global-set-key (kbd "C-M-'") 'hl-sexp-mode)
+(use-package highlight-symbol
+    :ensure t
+    :config
+    (add-hook 'c-mode-hook #'highlight-symbol-mode)
+    (add-hook 'css-mode-hook #'highlight-symbol-mode)
+    (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
+    (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
+    :bind (("C-*" . highlight-symbol)
+           ("<f5>" . highlight-symbol-next)
+           ("S-<f5>" . highlight-symbol-prev)
+           ("M-<f5>" . highlight-symbol-query-replace)
+           ("C-M-'" . hl-sexp-mode)))
+       
+;;(highlight-symbol-mode 1)
+(setq highlight-symbol-idle-delay 0.5)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -602,65 +575,65 @@ supporting modules.
   (use-package cider
     :ensure t
     :pin melpa-stable
-
-    :config
-    (add-hook 'cider-repl-mode-hook #'company-mode)
-    (add-hook 'cider-mode-hook #'company-mode)
-    (add-hook 'cider-mode-hook #'eldoc-mode)
-    (add-hook 'cider-mode-hook #'cider-hydra-mode)
-    (add-hook 'cider-repl-mode-hook #'paredit-mode)
-    (add-hook 'clojure-mode-hook #'paredit-mode)
-    (setq cider-repl-use-pretty-printing t)
-    (setq cider-repl-display-help-banner nil)
-    (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
-
+    :config (add-hook 'cider-repl-mode-hook #'company-mode)
+            (add-hook 'cider-mode-hook #'company-mode)
+            (add-hook 'cider-mode-hook #'eldoc-mode)
+            (add-hook 'cider-repl-mode-hook #'paredit-mode)
+            (add-hook 'clojure-mode-hook #'paredit-mode)
+            (add-hook 'clojurescript-mode-hook #'paredit-mode)
+            (setq cider-repl-use-pretty-printing t)
+            ;;(setq cider-repl-display-help-banner nil)
+            (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
     :bind (("M-r" . cider-namespace-refresh)
            ("C-c r" . cider-repl-reset)
-           ("C-c ." . cider-reset-test-run-tests)))
+           ("C-c ." . cider-reset-test-run-tests)
+           ("M-<return>" . cider-doc)
+           ("<f8>" . cider-clear-compilation-highlights)))
 
   (use-package clj-refactor
     :ensure t
     :pin melpa-stable
-    :config
-    (add-hook 'clojure-mode-hook (lambda ()
+    :config (add-hook 'clojure-mode-hook (lambda ()
                                    (clj-refactor-mode 1)
                                    ;; insert keybinding setup here
                                    ))
-    (cljr-add-keybindings-with-prefix "C-c C-m")
-    (setq cljr-warn-on-evaql nil)
-    :bind ("C-c '" . hydra-cljr-help-menu/body))
-
-  ;; Autocomplete symbol.
-  (global-set-key (kbd "<C-return>") 'complete-symbol)
+            (cljr-add-keybindings-with-prefix "C-c C-m")
+            (setq cljr-warn-on-evaql nil)
+    :bind (("C-<return>" . complete-symbol)
+           ("C-S-G" . cljr-find-usages)))
 #+END_SRC
 *** Cider hydras
 #+BEGIN_SRC emacs-lisp
-(use-package cider-hydra
-    :ensure t)
-#+END_SRC
-*** Compilation highlights
-#+BEGIN_SRC emacs-lisp
-(global-set-key [f8] 'cider-clear-compilation-highlights)
+;;TODO
+;;(use-package cider-hydra
+;;    :ensure t)
 #+END_SRC
 *** Expand region
 #+BEGIN_SRC emacs-lisp
 ;expand-region functionality is really great for lisp/clojure editing
 ;from https://github.com/magnars/expand-region.el
 (use-package expand-region
-    :ensure t)
-
-;;TODO
-;;(global-set-key (kbd "C-=") 'er/expand-region)
-#+END_SRC
-*** Various
-#+BEGIN_SRC emacs-lisp
-;; Clojure mode documentation for symbol under cursor.
-(global-set-key (kbd "M-RET") 'cider-doc)
-
-;; Clojure refactor: find references.
-(global-set-key (kbd "C-S-G") 'cljr-find-usages)
+    :ensure t
+    :bind ("C-=" . expand-region))
 #+END_SRC
 * Editing
+** Navigation and S-exp
+#+BEGIN_SRC emacs-lisp
+  ;; Delete sexp.
+  (global-set-key (kbd "<C-S-delete>") 'kill-sexp)
+
+  ;; Navigate to previous- or next sexp.
+  (global-set-key (kbd "<M-S-left>") 'backward-sexp)
+  (global-set-key (kbd "<M-S-right>") 'forward-sexp)
+
+  ;; Goto previous top level paren-block.
+  (global-set-key (kbd "M-p") 'outline-previous-visible-heading)
+  (global-set-key (kbd "M-n") 'outline-next-visible-heading)
+
+  ;; C-arrow for word navigation; M-arrow for (reassigned) paredit C-arrow bindings.
+  (global-set-key (kbd "<C-left>") 'left-word)
+  (global-set-key (kbd "<C-right>") 'right-word)
+#+END_SRC
 ** Lines
 *** Selecting
 #+BEGIN_SRC emacs-lisp
@@ -829,7 +802,7 @@ With negative N, comment out original line and use the absolute value."
 (global-set-key (kbd "C-|") 'select-current-line)
 
 ;; Quick switch linum-mode.
-(global-set-key (kbd "C-S-n") 'linum-mode)
+(global-set-key (kbd "C-S-N") 'linum-mode)
 
 ;; Expand and replace region.
 (global-set-key (kbd "C-$") 'expand-delete-line)
@@ -1141,8 +1114,5 @@ With negative N, comment out original line and use the absolute value."
   ;; No boxes around mode line (cyberpunk theme creates these).
   ;;(set-face-attribute `mode-line nil :box nil)
   ;;(set-face-attribute `mode-line-inactive nil :box nil)
-  
-  ;; Enable menu bar.
-  (menu-bar-mode 1)
-  (tool-bar-mode -1))
+)
 #+END_SRC
