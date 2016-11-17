@@ -413,55 +413,61 @@ String manipulation routines for emacs lisp
 
 *** LISP Editing
 #+BEGIN_SRC emacs-lisp
-    (use-package paredit
-      :ensure t
-      :diminish paredit-mode
-      :config
-      (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-      (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-      (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-      (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-      (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-      (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-      :bind (("<f7>" . paredit-mode)
-             ("M-<left>" . paredit-forward-barf-sexp)
-             ("M-<right>" . paredit-forward-slurp-sexp)
-             ("C-<left>" . nil)
-             ("C-<right>" . nil)
-             ("M-S-<up>" . paredit-splice-sexp-killing-backward)
-             ("M-S-<down>" . paredit-splice-sexp-killing-forward)
-             ("M-<up>" . nil)
-             ("M-<down>" . nil)))
+  (use-package paredit
+    :ensure t
+    :diminish paredit-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+    :bind (("<f7>" . paredit-mode)
+           ("M-<left>" . paredit-forward-barf-sexp)
+           ("M-<right>" . paredit-forward-slurp-sexp)
+           ("M-S-<up>" . paredit-splice-sexp-killing-backward)
+           ("M-S-<down>" . paredit-splice-sexp-killing-forward)))
 
-    ;; Ensure paredit is used EVERYWHERE!
-    (use-package paredit-everywhere
-      :ensure t
-      :diminish paredit-everywhere-mode
-      :config
-      (add-hook 'prog-mode-hook #'paredit-everywhere-mode))
+  ;; Reset paredit key bindings for Control-Left, Control-Right (because
+  ;; of years of muscle memory for word navigation using these key
+  ;; combinations). Also reset Meta-up and Meta-down because of move
+  ;; line(s) bindings.
+  (eval-after-load "paredit"
+    '(progn (define-key paredit-mode-map (kbd "<C-left>") nil)
+            (define-key paredit-mode-map (kbd "<C-right>") nil)
+            (define-key paredit-mode-map (kbd "<M-up>") nil)
+            (define-key paredit-mode-map (kbd "<M-down>") nil)))
 
-    (use-package highlight-parentheses
-      :ensure t
-      :diminish highlight-parentheses-mode
-      :config
-      (add-hook 'emacs-lisp-mode-hook
-                (lambda()
-                  (highlight-parentheses-mode))))
+  ;; Ensure paredit is used EVERYWHERE!
+  (use-package paredit-everywhere
+    :ensure t
+    :diminish paredit-everywhere-mode
+    :config
+    (add-hook 'prog-mode-hook #'paredit-everywhere-mode))
 
-    (use-package rainbow-delimiters
-      :ensure t
-      :config
-      (add-hook 'lisp-mode-hook
-                (lambda()
-                  (rainbow-delimiters-mode)))
-      (add-hook 'clojure-mode-hook
-                (lambda()
-                  (rainbow-delimiters-mode)))
-      (add-hook 'clojurescript-mode-hook
-                (lambda()
-                  (rainbow-delimiters-mode))))
+  (use-package highlight-parentheses
+    :ensure t
+    :diminish highlight-parentheses-mode
+    :config
+    (add-hook 'emacs-lisp-mode-hook
+              (lambda()
+                (highlight-parentheses-mode))))
 
-    (global-highlight-parentheses-mode)
+  (use-package rainbow-delimiters
+    :ensure t
+    :config
+    (add-hook 'lisp-mode-hook
+              (lambda()
+                (rainbow-delimiters-mode)))
+    (add-hook 'clojure-mode-hook
+              (lambda()
+                (rainbow-delimiters-mode)))
+    (add-hook 'clojurescript-mode-hook
+              (lambda()
+                (rainbow-delimiters-mode))))
+
+  (global-highlight-parentheses-mode)
 #+END_SRC
 
 *** Snippets
@@ -571,6 +577,11 @@ supporting modules.
             (add-hook 'cider-repl-mode-hook #'paredit-mode)
             (add-hook 'clojure-mode-hook #'paredit-mode)
             (add-hook 'clojurescript-mode-hook #'paredit-mode)
+            (setq cider-repl-history-file "~/.emacs.d/cider-history")
+            (setq cider-repl-use-clojure-font-lock t)
+            (setq cider-repl-result-prefix ";; => ")
+            (setq cider-repl-wrap-history t)
+            (setq cider-repl-history-size 9999)
             (setq cider-repl-use-pretty-printing t)
             ;;(setq cider-repl-display-help-banner nil)
             (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
@@ -1070,7 +1081,8 @@ With negative N, comment out original line and use the absolute value."
   (blink-cursor-mode 0)
 
   ;; Font and size.
-  (set-face-attribute 'default nil :font "Monospace" :height 135)
+  (toggle-use-system-font)
+  (set-face-attribute 'default nil :height 135)
 
   ;; Selection color.
   ;;(set-face-background 'hl-line "#3e4446")
