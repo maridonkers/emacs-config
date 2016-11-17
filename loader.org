@@ -15,7 +15,6 @@ You can find the latest version of this configuration at
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Mari Donkers")
-  (setq user-mail-address "contact@maridonkers.info")
 #+END_SRC
 * A secure Emacs environment
 Great article why [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Your editor is malware]]. The following basically sets
