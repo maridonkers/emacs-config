@@ -550,9 +550,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (use-package hl-sexp
     :ensure t
     :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
-            (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode)
-            (add-hook 'clojure-mode-hook #'hl-sexp-mode)
-            (add-hook 'clojurescript-mode-hook #'hl-sexp-mode)
+            (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
     :bind (("C-M-'" . hl-sexp-mode)))
 #+END_SRC
 **** Highlight symbol
