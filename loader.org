@@ -411,63 +411,40 @@ String manipulation routines for emacs lisp
 
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
-(defmacro def-pairs (pairs)
-  `(progn
-     ,@(loop for (key . val) in pairs
-          collect
-            `(defun ,(read (concat
-                            "wrap-with-"
-                            (prin1-to-string key)
-                            "s"))
-                 (&optional arg)
-               (interactive "p")
-               (sp-wrap-with-pair ,val)))))
+    (use-package smartparens
+        :ensure t
+        :config 
 
-(def-pairs ((paren        . "(")
-            (bracket      . "[")
-            (brace        . "{")
-            (single-quote . "'")
-            (double-quote . "\"")
-            (back-quote   . "`")))
-
-(use-package smartparens
-    :ensure t
-    :config (progn (show-smartparens-global-mode t))
-            (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
-            (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
-            (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
-            (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-            (add-hook 'lisp-interaction-mode-hook #'smartparens-strict-mode)
-            (add-hook 'scheme-mode-hook #'smartparens-strict-mode)
-    :bind (("<f7>" . smartparens-strict-mode)
-            ("C-S-s a" . sp-beginning-of-sexp)
-            ("C-S-s e" . sp-end-of-sexp)
-            ("C-S-s d" . sp-down-sexp)
-            ("C-S-s u" . sp-up-sexp)
-            ("C-S-s D" . sp-backward-down-sexp)
-            ("C-S-s U" . sp-up-down-sexp)
-            ("C-S-s f" . sp-forward-sexp)
-            ("C-S-s b" . sp-backward-sexp)
-            ("C-S-s n" . sp-next-sexp)
-            ("C-S-s p" . sp-previous-sexp)
-            ("C-S-s S" . sp-backward-symbol)
-            ("C-S-s s" . sp-forward-symbol)
-            ("C-S-s (" . paren)
-            ("C-S-s [" . bracket)
-            ("C-S-s {" . brace)
-            ("C-S-s '" . single-quote)
-            ("C-S-s \"" . double-quote)
-            ("C-S-s `" . back-quote)
-            ("C-S-s U" . sp-backward-unwrap-sexp)
-            ("C-S-s u" . sp-unwrap-sexp)
-            ("M-<right>" . sp-forward-slurp-sexp)
-            ("M-S-<right>" . sp-forward-barf-sexp)
-            ("M-<left>" . sp-backward-slurp-sexp)
-            ("M-S-<left>" . sp-backward-barf-sexp)
-            ("C-S-s t" . sp-transpose-sexp)
-            ("C-S-s k" . sp-kill-sexp)
-            ("C-S-s h" . sp-kill-hybrid-sexp)
-            ("C-S-s K" . sp-backward-kill-sexp)))
+    (progn (show-smartparens-global-mode t))
+                (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+                (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
+                (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+                (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+                (add-hook 'lisp-interaction-mode-hook #'smartparens-strict-mode)
+                (add-hook 'scheme-mode-hook #'smartparens-strict-mode)
+        :bind (("<f7>" . smartparens-strict-mode)
+                ("C-S-s a" . sp-beginning-of-sexp)
+                ("C-S-s e" . sp-end-of-sexp)
+                ("C-S-s d" . sp-down-sexp)
+                ("C-S-s u" . sp-up-sexp)
+                ("C-S-s D" . sp-backward-down-sexp)
+                ("C-S-s U" . sp-up-down-sexp)
+                ("C-S-s f" . sp-forward-sexp)
+                ("C-S-s b" . sp-backward-sexp)
+                ("C-S-s n" . sp-next-sexp)
+                ("C-S-s p" . sp-previous-sexp)
+                ("C-S-s S" . sp-backward-symbol)
+                ("C-S-s s" . sp-forward-symbol)
+                ("C-S-s U" . sp-backward-unwrap-sexp)
+                ("C-S-s u" . sp-unwrap-sexp)
+                ("M-<right>" . sp-forward-slurp-sexp)
+                ("M-S-<right>" . sp-forward-barf-sexp)
+                ("M-<left>" . sp-backward-slurp-sexp)
+                ("M-S-<left>" . sp-backward-barf-sexp)
+                ("C-S-s t" . sp-transpose-sexp)
+                ("C-S-s k" . sp-kill-sexp)
+                ("C-S-s h" . sp-kill-hybrid-sexp)
+                ("C-S-s K" . sp-backward-kill-sexp)))
 #+END_SRC
 *** Highlight parentheses
 #+BEGIN_SRC emacs-lisp
