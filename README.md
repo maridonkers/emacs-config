@@ -7,7 +7,8 @@ Beware: still debugging (my version, not theirs).
 Usage
 -----
 
-  * first backup your existing ~/.emacs.d;
+  * first backup your existing ~/.emacs.d
+  * rename your existing ~/.emacs.d
   * do a git clone as follows:
   
   git clone https://github.com/maridonkers/emacs-config.git ~/.emacs.d
