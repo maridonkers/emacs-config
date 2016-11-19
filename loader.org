@@ -158,8 +158,7 @@ this check and takes care of any loading of the packages.
 #+BEGIN_SRC emacs-lisp
   (use-package cyberpunk-theme
     :ensure t
-    :config
-    (load-theme 'cyberpunk t))
+    :config (load-theme 'cyberpunk t))
 #+END_SRC
 *** Title
 #+BEGIN_SRC emacs-lisp
@@ -399,10 +398,9 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 #+END_SRC
 * Programming
 ** General
-Setup for GNU Emacs, Clojure and ClojureScript. Plus Paredit. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][Dan
-Midwood]] has a great guide to using paredit.
+Setup for GNU Emacs, Clojure and ClojureScript. Plus [[https://github.com/Fuco1/smartparens][Smartparens]].
 
-The structured editing of paredit is useful in a LOT of languages, as
+The structured editing of smartparens is useful in a LOT of languages, as
 long as there are parenthesis, brackets or quotes.
 *** Utilities
 String manipulation routines for emacs lisp
@@ -411,59 +409,91 @@ String manipulation routines for emacs lisp
     :ensure t)
 #+END_SRC
 
-*** LISP Editing
+*** Smartparens
 #+BEGIN_SRC emacs-lisp
-  (use-package paredit
+(defmacro def-pairs (pairs)
+  `(progn
+     ,@(loop for (key . val) in pairs
+          collect
+            `(defun ,(read (concat
+                            "wrap-with-"
+                            (prin1-to-string key)
+                            "s"))
+                 (&optional arg)
+               (interactive "p")
+               (sp-wrap-with-pair ,val)))))
+
+(def-pairs ((paren        . "(")
+            (bracket      . "[")
+            (brace        . "{")
+            (single-quote . "'")
+            (double-quote . "\"")
+            (back-quote   . "`")))
+
+(use-package smartparens
     :ensure t
-    :diminish paredit-mode
-    :config
-    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-    :bind (("<f7>" . paredit-mode)
-           ("M-<left>" . paredit-forward-barf-sexp)
-           ("M-<right>" . paredit-forward-slurp-sexp)
-           ("M-S-<up>" . paredit-splice-sexp-killing-backward)
-           ("M-S-<down>" . paredit-splice-sexp-killing-forward)))
-
-  ;; Reset paredit key bindings for Control-Left, Control-Right (because
-  ;; of years of muscle memory for word navigation using these key
-  ;; combinations). Also reset Meta-up and Meta-down because of move
-  ;; line(s) bindings.
-  (eval-after-load "paredit"
-    '(progn (define-key paredit-mode-map (kbd "<C-left>") nil)
-            (define-key paredit-mode-map (kbd "<C-right>") nil)
-            (define-key paredit-mode-map (kbd "<M-up>") nil)
-            (define-key paredit-mode-map (kbd "<M-down>") nil)))
-
-  ;; Ensure paredit is used EVERYWHERE!
-  (use-package paredit-everywhere
-    :ensure t
-    :diminish paredit-everywhere-mode
-    :config
-    (add-hook 'prog-mode-hook #'paredit-everywhere-mode))
-
+    :config (progn (show-smartparens-global-mode t))
+            (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+            (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
+            (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+            (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+            (add-hook 'lisp-interaction-mode-hook #'smartparens-strict-mode)
+            (add-hook 'scheme-mode-hook #'smartparens-strict-mode)
+    :bind (("<f7>" . smartparens-strict-mode)
+            ("C-S-s a" . sp-beginning-of-sexp)
+            ("C-S-s e" . sp-end-of-sexp)
+            ("C-S-s d" . sp-down-sexp)
+            ("C-S-s u" . sp-up-sexp)
+            ("C-S-s D" . sp-backward-down-sexp)
+            ("C-S-s U" . sp-up-down-sexp)
+            ("C-S-s f" . sp-forward-sexp)
+            ("C-S-s b" . sp-backward-sexp)
+            ("C-S-s n" . sp-next-sexp)
+            ("C-S-s p" . sp-previous-sexp)
+            ("C-S-s S" . sp-backward-symbol)
+            ("C-S-s s" . sp-forward-symbol)
+            ("C-S-s (" . paren)
+            ("C-S-s [" . bracket)
+            ("C-S-s {" . brace)
+            ("C-S-s '" . single-quote)
+            ("C-S-s \"" . double-quote)
+            ("C-S-s `" . back-quote)
+            ("C-S-s U" . sp-backward-unwrap-sexp)
+            ("C-S-s u" . sp-unwrap-sexp)
+            ("M-<right>" . sp-forward-slurp-sexp)
+            ("M-S-<right>" . sp-forward-barf-sexp)
+            ("M-<left>" . sp-backward-slurp-sexp)
+            ("M-S-<left>" . sp-backward-barf-sexp)
+            ("C-S-s t" . sp-transpose-sexp)
+            ("C-S-s k" . sp-kill-sexp)
+            ("C-S-s h" . sp-kill-hybrid-sexp)
+            ("C-S-s K" . sp-backward-kill-sexp)))
+#+END_SRC
+*** Highlight parentheses
+#+BEGIN_SRC emacs-lisp
   (use-package highlight-parentheses
     :ensure t
     :diminish highlight-parentheses-mode
-    :config
-    (add-hook 'emacs-lisp-mode-hook
+    :config (add-hook 'emacs-lisp-mode-hook
               (lambda()
                 (highlight-parentheses-mode))))
 
+  (global-highlight-parentheses-mode)
+#+END_SRC
+*** Rainbow delimiters
+#+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
-    :config
-    (add-hook 'lisp-mode-hook
+    :config (add-hook 'lisp-mode-hook
               (lambda()
                 (rainbow-delimiters-mode)))
-    (add-hook 'clojure-mode-hook
+            (add-hook 'clojure-mode-hook
               (lambda()
                 (rainbow-delimiters-mode)))
-    (add-hook 'clojurescript-mode-hook
+            (add-hook 'clojurec-mode-hook
+              (lambda()
+                (rainbow-delimiters-mode)))
+            (add-hook 'clojurescript-mode-hook
               (lambda()
                 (rainbow-delimiters-mode))))
 
@@ -475,9 +505,8 @@ String manipulation routines for emacs lisp
   (use-package yasnippet
     :ensure t
     :diminish yas
-    :config
-    (yas/global-mode 1)
-    (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
+    :config (yas/global-mode 1)
+            (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
 
   (use-package clojure-snippets
     :ensure t)
@@ -488,17 +517,14 @@ String manipulation routines for emacs lisp
   (use-package company
     :ensure t
     :bind (("C-c /". company-complete))
-    :config
-    (global-company-mode)
-    )
+    :config (global-company-mode))
 
 (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
 ;;  (use-package company-flx
 ;;    :ensure t
-;;    :config
-;;    (with-eval-after-load 'company
-;;      (company-flx-mode +1)))
+;;    :config (with-eval-after-load 'company
+;;            (company-flx-mode +1)))
 #+END_SRC
 
 *** Code folding
@@ -539,6 +565,8 @@ Magit is the only thing you need when it comes to Version Control (Git)
 #+BEGIN_SRC emacs-lisp
 ;; Add imenu to menu bar and make it automatically rescan.
 (add-hook 'clojure-mode-hook #'imenu-add-menubar-index)
+(add-hook 'clojurec-mode-hook #'imenu-add-menubar-index)
+(add-hook 'clojurescript-mode-hook #'imenu-add-menubar-index)
 (setq imenu-auto-rescan 1)
 
 ;; Incremental imenu.
@@ -560,6 +588,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
     :config (add-hook 'c-mode-hook #'highlight-symbol-mode)
             (add-hook 'css-mode-hook #'highlight-symbol-mode)
             (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
+            (add-hook 'clojurec-mode-hook #'highlight-symbol-mode)
             (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
     :bind (("C-*" . highlight-symbol)
            ("<f5>" . highlight-symbol-next)
@@ -577,19 +606,17 @@ supporting modules.
   (use-package cider
     :ensure t
     :pin melpa-stable
-    :config (add-hook 'cider-repl-mode-hook #'company-mode)
+    :config (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+            (add-hook 'cider-repl-mode-hook #'company-mode)
             (add-hook 'cider-mode-hook #'company-mode)
-            (add-hook 'cider-mode-hook #'eldoc-mode)
-            (add-hook 'cider-repl-mode-hook #'paredit-mode)
-            (add-hook 'clojure-mode-hook #'paredit-mode)
-            (add-hook 'clojurescript-mode-hook #'paredit-mode)
+            (add-hook 'cider-mode-hook #'eldoc-mode)            
             (setq cider-repl-history-file "~/.emacs.d/cider-history")
             (setq cider-repl-use-clojure-font-lock t)
             (setq cider-repl-result-prefix ";; => ")
             (setq cider-repl-wrap-history t)
             (setq cider-repl-history-size 9999)
             (setq cider-repl-use-pretty-printing t)
-            ;;(setq cider-repl-display-help-banner nil)
+            (setq cider-repl-display-help-banner nil)
             (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
     :bind (("M-r" . cider-namespace-refresh)
            ("C-c r" . cider-repl-reset)
@@ -597,17 +624,9 @@ supporting modules.
            ("M-<return>" . cider-doc)
            ("<f8>" . cider-clear-compilation-highlights)))
 
-  (use-package clj-refactor
-    :ensure t
-    :pin melpa-stable
-    :config (add-hook 'clojure-mode-hook (lambda ()
-                                   (clj-refactor-mode 1)
-                                   ;; insert keybinding setup here
-                                   ))
-            (cljr-add-keybindings-with-prefix "C-c C-m")
-            (setq cljr-warn-on-evaql nil)
-    :bind (("C-<return>" . complete-symbol)
-           ("C-S-g" . cljr-find-usages)))
+  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
+  (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
 #+END_SRC
 *** Cider hydras
 #+BEGIN_SRC emacs-lisp
@@ -637,7 +656,7 @@ supporting modules.
   (global-set-key (kbd "M-p") 'outline-previous-visible-heading)
   (global-set-key (kbd "M-n") 'outline-next-visible-heading)
 
-  ;; C-arrow for word navigation; M-arrow for (reassigned) paredit C-arrow bindings.
+  ;; C-arrow for word navigation.
   (global-set-key (kbd "<C-left>") 'left-word)
   (global-set-key (kbd "<C-right>") 'right-word)
 #+END_SRC
@@ -782,25 +801,11 @@ With negative N, comment out original line and use the absolute value."
 (set-default 'global-linum-mode 0)
 
 ;; Line numbers for various source file types.
-(defun my-html-mode-hook () 
-  (linum-mode 1)) 
-(add-hook 'html-mode-hook 'my-html-mode-hook)
-
-(defun my-c-mode-hook () 
-  (linum-mode 1)) 
-(add-hook 'c-mode-hook 'my-c-mode-hook)
-
-(defun my-clojure-mode-hook () 
-  (linum-mode 1)) 
-(add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
-
-(defun my-clojurec-mode-hook () 
-  (linum-mode 1)) 
-(add-hook 'clojurec-mode-hook 'my-clojurec-mode-hook)
-
-(defun my-clojurescript-mode-hook () 
-  (linum-mode 1)) 
-(add-hook 'clojurescript-mode-hook 'my-clojurescript-mode-hook)
+(add-hook 'html-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'c-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'clojure-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'clojurec-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'clojurescript-mode-hook (lambda () (linum-mode 1)))
 #+END_SRC
 
 *** Various
