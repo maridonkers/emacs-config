@@ -435,6 +435,7 @@ String manipulation routines for emacs lisp
                 ("C-S-s p" . sp-previous-sexp)
                 ("C-S-s S" . sp-backward-symbol)
                 ("C-S-s s" . sp-forward-symbol)
+                ("C-S-s |" . sp-split-sexp)
                 ("C-S-s U" . sp-backward-unwrap-sexp)
                 ("C-S-s u" . sp-unwrap-sexp)
                 ("M-<right>" . sp-forward-slurp-sexp)
