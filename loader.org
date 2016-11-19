@@ -430,8 +430,8 @@ String manipulation routines for emacs lisp
                 ("C-S-s D" . sp-backward-down-sexp)
                 ("C-S-s U" . sp-up-down-sexp)
                 ("C-S-s f" . sp-forward-sexp)
-                ("C-S-s b" . sp-backward-sexp)
-                ("C-S-s n" . sp-next-sexp)
+                ("C-M-<left>" . sp-backward-sexp)
+                ("C-M-<right>" . sp-next-sexp)
                 ("C-S-s p" . sp-previous-sexp)
                 ("C-S-s S" . sp-backward-symbol)
                 ("C-S-s s" . sp-forward-symbol)
@@ -625,10 +625,6 @@ supporting modules.
 #+BEGIN_SRC emacs-lisp
   ;; Delete sexp.
   (global-set-key (kbd "<C-S-delete>") 'kill-sexp)
-
-  ;; Navigate to previous- or next sexp.
-  (global-set-key (kbd "<M-S-left>") 'backward-sexp)
-  (global-set-key (kbd "<M-S-right>") 'forward-sexp)
 
   ;; Goto previous top level paren-block.
   (global-set-key (kbd "M-p") 'outline-previous-visible-heading)
