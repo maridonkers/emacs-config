@@ -4,5 +4,13 @@ Wiersma's <https://gitlab.com/buildfunthings/emacs-config> and Sacha Chua's <htt
 
 Beware: still debugging (my version, not theirs).
 
-Copy to an empty ~/.emacs.d subdirectory and start emacs.
-(Backup your existing ~/.emacs.d first).
+Usage
+-----
+
+  * first backup your existing ~/.emacs.d;
+  * do a git clone as follows:
+  
+  git clone https://github.com/maridonkers/emacs-config.git ~/.emacs.d
+  
+  * start emacs and wait until packages are all retrieved and
+    installed.
