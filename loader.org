@@ -293,7 +293,7 @@ Be sure to just ask for y/n instead of yes/no.
     (error "Minibuffer is not active")))
 
 ;; Switch to minibuffer.
-(global-set-key "\C-cm" 'switch-to-minibuffer)
+(global-set-key (kbd "C-x M") 'switch-to-minibuffer)
 #+END_SRC
 *** Ido mode
 #+BEGIN_SRC emacs-lisp
@@ -332,7 +332,7 @@ Be sure to just ask for y/n instead of yes/no.
   (interactive)
   (set-mark-command 1))
 
- ;; Mark without select visible.
+  ;; Mark without select visible.
   (global-set-key (kbd "C-`") 'push-mark-no-activate)
   (global-set-key (kbd "C-~") 'jump-to-mark)
 #+END_SRC
