@@ -625,7 +625,7 @@ supporting modules.
 ;from https://github.com/magnars/expand-region.el
 (use-package expand-region
     :ensure t
-    :bind ("C-=" . expand-region))
+    :bind ("C-=" . er/expand-region))
 #+END_SRC
 * Editing
 ** Navigation and S-exp
