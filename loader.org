@@ -198,8 +198,8 @@ Bookmarks are very useful for quickly jumping around files.
 #+END_SRC
 *** Winner mode
 #+BEGIN_SRC emacs-lisp
-;winner mode
-;from: http://www.emacswiki.org/emacs/WinnerMode
+;; Winner mode
+;; From: http://www.emacswiki.org/emacs/WinnerMode
 (when (fboundp 'winner-mode)
   (winner-mode 1))
 #+END_SRC
@@ -612,12 +612,6 @@ supporting modules.
   (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
   (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
   (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
-#+END_SRC
-*** Cider hydras
-#+BEGIN_SRC emacs-lisp
-;;TODO
-;;(use-package cider-hydra
-;;    :ensure t)
 #+END_SRC
 *** Expand region
 #+BEGIN_SRC emacs-lisp
