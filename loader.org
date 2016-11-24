@@ -183,12 +183,19 @@ this check and takes care of any loading of the packages.
         (funcall fn)))))
 #+END_SRC
 *** Moving around
-Be sure to just ask for y/n instead of yes/no.
-
+**** Be sure to just ask for y/n instead of yes/no.
 #+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
-
+**** Bookmarks
+Bookmarks are very useful for quickly jumping around files.
+#+BEGIN_SRC emacs-lisp
+(use-package bm
+  :ensure t
+  :bind (("C-c =" . bm-toggle)
+         ("C-c [" . bm-previous)
+         ("C-c ]" . bm-next)))
+#+END_SRC
 *** Winner mode
 #+BEGIN_SRC emacs-lisp
 ;winner mode
