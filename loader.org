@@ -16,56 +16,6 @@ You can find the latest version of this configuration at
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Mari Donkers")
 #+END_SRC
-* A secure Emacs environment
-Great article why [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Your editor is malware]]. The following basically sets
-up the configuration to adhere to the articles recommendations.
-
-#+BEGIN_SRC shell :exports none
-python -m pip install --user certifi
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  ;;  (if (fboundp 'gnutls-available-p)
-  ;;      (fmakunbound 'gnutls-available-p))
-
-;;TODO
-;;  (or (fboundp 'last)                     ; Emacs 20
-;;      (require 'cl))                      ; Emacs 19
-  (require 'cl)
-
-  (setq tls-checktrust t)
-
-  (setq python (or (executable-find "py.exe")
-                   (executable-find "python")))
-
-  (let ((trustfile
-         (replace-regexp-in-string
-          "\\\\" "/"
-          (replace-regexp-in-string
-           "\n" ""
-           (shell-command-to-string (concat python " -m certifi"))))))
-    (setq tls-program
-          (list
-           (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-                   (if (eq window-system 'w32) ".exe" "") trustfile)))
-    (setq gnutls-verify-error t)
-    (setq gnutls-trustfiles (list trustfile)))
-
-  ;; Test the settings by using the following code snippet:
-  ;;  (let ((bad-hosts
-  ;;         (loop for bad
-  ;;               in `("https://wrong.host.badssl.com/"
-  ;;                    "https://self-signed.badssl.com/")
-  ;;               if (condition-case e
-  ;;                      (url-retrieve
-  ;;                       bad (lambda (retrieved) t))
-  ;;                    (error nil))
-  ;;               collect bad)))
-  ;;    (if bad-hosts
-  ;;        (error (format "tls misconfigured; retrieved %s ok" bad-hosts))
-  ;;      (url-retrieve "https://badssl.com"
-  ;;                    (lambda (retrieved) t))))
-#+END_SRC
 * Installing use-package
 ** Setup
 GNU Emacs has a lot of packages that make things very easy for the
@@ -84,14 +34,12 @@ Each archive will write its files in a seperate archive directory.
   (require 'package)
 #+END_SRC
 
-Because the default setting for package-archives is to use the HTTP access to the GNU archive, I set the variable to `nil` before adding the HTTPS variants.
-
 #+BEGIN_SRC emacs-lisp
-  (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
-  (defvar melpa '("melpa" . "https://melpa.org/packages/"))
-  (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
+  (defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
+  (defvar melpa '("melpa" . "http://melpa.org/packages/"))
+  (defvar melpa-stable '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
-  ;; Add marmalade to package repos
+  ;; Add repositories (resetting defaults first).
   (setq package-archives nil)
   (add-to-list 'package-archives melpa-stable t)
   (add-to-list 'package-archives melpa t)
@@ -152,6 +100,10 @@ this check and takes care of any loading of the packages.
   (menu-bar-mode 1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+#+END_SRC
+** Prerequisite packages
+#+BEGIN_SRC emacs-lisp
+(require 'cl)
 #+END_SRC
 ** Look and feel
 *** Theme
@@ -504,8 +456,6 @@ String manipulation routines for emacs lisp
     :bind (("C-c /". company-complete))
     :config (global-company-mode))
 
-(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
-
 ;;  (use-package company-flx
 ;;    :ensure t
 ;;    :config (with-eval-after-load 'company
@@ -542,7 +492,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
 #+END_SRC
 *** REST (client) support
 #+BEGIN_SRC emacs-lisp
-  (use-package restclient
+(use-package restclient
     :ensure t)
 #+END_SRC
 
