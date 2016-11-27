@@ -355,6 +355,16 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
   (use-package markdown-mode
     :ensure t)
 #+END_SRC
+* LaTex
+#+BEGIN_SRC emacs-lisp
+(use-package tex
+    :ensure auctex
+    :config (setq TeX-auto-save t)
+            (setq TeX-parse-self t)
+            (setq TeX-save-query nil))
+;;(setq TeX-PDF-mode t)
+(require 'tex)
+#+END_SRC
 * Programming
 ** General
 Setup for GNU Emacs, Clojure and ClojureScript. Plus [[https://github.com/Fuco1/smartparens][Smartparens]].
@@ -367,7 +377,6 @@ String manipulation routines for emacs lisp
   (use-package s
     :ensure t)
 #+END_SRC
-
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
     (use-package smartparens
