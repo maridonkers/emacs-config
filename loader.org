@@ -309,6 +309,13 @@ Bookmarks are very useful for quickly jumping around files.
 ;turn off emacs alarms (those annoying beeps)
 (setq ring-bell-function 'ignore)
 #+END_SRC
+** Which key
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+#+END_SRC
 ** Large files
 #+BEGIN_SRC emacs-lisp
 ;; Large files slow emacs down to a grind. Main offender is fundamental mode.
