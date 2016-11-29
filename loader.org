@@ -101,6 +101,18 @@ this check and takes care of any loading of the packages.
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 #+END_SRC
+** Cursor
+Set cursor color explicitly (?) TODO: investigate why this is required
+(the cursor doesn't have the correct color otherwise, for
+emacsclient).
+#+BEGIN_SRC emacs-lisp
+  (require 'frame)
+  (defun set-cursor-hook (frame)
+    (modify-frame-parameters frame
+                             (list (cons 'cursor-color "#ffff00"))))
+
+  (add-hook 'after-make-frame-functions 'set-cursor-hook)
+#+END_SRC
 ** Prerequisite packages
 #+BEGIN_SRC emacs-lisp
 (require 'cl)
@@ -1038,12 +1050,6 @@ With negative N, comment out original line and use the absolute value."
   (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
   (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-  ;; Set cursor color, shape and no blinking.
-  (setq-default cursor-color "#ffff00")
-  (set-cursor-color "#ffff00")
-  (setq-default cursor-type 'hollow)
-  (blink-cursor-mode 0)
-
   ;; Font and size.
   (toggle-use-system-font)
   (set-face-attribute 'default nil :height 135)
@@ -1077,5 +1083,10 @@ With negative N, comment out original line and use the absolute value."
   ;; No boxes around mode line (cyberpunk theme creates these).
   ;;(set-face-attribute `mode-line nil :box nil)
   ;;(set-face-attribute `mode-line-inactive nil :box nil)
-)
+
+  ;; Set cursor color, shape and no blinking.
+  (setq-default cursor-color "#ffff00")
+  (set-cursor-color "#ffff00")
+  (setq-default cursor-type 'hollow)
+  (blink-cursor-mode 0))
 #+END_SRC
