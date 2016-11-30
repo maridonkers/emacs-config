@@ -290,6 +290,7 @@ Bookmarks are very useful for quickly jumping around files.
     (global-set-key (kbd "<f6>") 'ivy-resume)
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "C-x C-S-r") 'counsel-recentf)
     (global-set-key (kbd "<f1> f") 'counsel-describe-function)
     (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
     (global-set-key (kbd "<f1> l") 'counsel-load-library)
@@ -375,12 +376,13 @@ When exporting documents to HTML documents, such as code fragments, we need to h
 #+END_SRC
 ** Reveal.js
 #+BEGIN_SRC emacs-lisp
-;;TODO
+;;TODO doesn't appear to work (breaks org-mode export of title sections).
 ;;(use-package ox-reveal
-;;    :ensure t)
+;;    :ensure ox-reveal)
 
 ;; Reveal.js location and ox-reveal.
 ;;(setq org-reveal-root "file:///home/mdo/lib/reveal.js")
+;;(setq org-reveal-mathjax t)
 #+END_SRC 
 * Markdown
 Markdown is a great way to write documentation, not as good as org-mode of course, but generally accepted as a standard.
