@@ -266,51 +266,41 @@ Bookmarks are very useful for quickly jumping around files.
 ;; Switch to minibuffer.
 (global-set-key (kbd "C-x M") 'switch-to-minibuffer)
 #+END_SRC
-*** Ido mode
+*** Swiper
 #+BEGIN_SRC emacs-lisp
-;; Use ido-mode, a must-have for quick emacs navigation.
-;; From http://emacswiki.org/emacs/InteractivelyDoThings
-;l More about it: http://www.masteringemacs.org/article/introduction-to-ido-mode
-(require 'ido)
-(ido-mode t)
+(use-package ivy
+  :ensure t)
 
-;; Smex brings the power of ido mode to your M-x mini-buffer, another way to supercharge your emacs navigation
-;; From https://github.com/nonsequitur/smex
-(use-package smex
-    :ensure t
-    :bind (("M-x" . smex)
-           ("M-S-X" . smex-major-mode-commands)
-           ("C-c C-c M-x" . execute-extended-command)
-           ("C-x C-b" . ibuffer)))
+(use-package counsel
+  :ensure t)
 
-(smex-initialize)
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-on))
 
-;; Allow wildcards in file-open (in ido-file-open press C-F for Emacs file-open)
-(setq find-file-wildcards t)
-#+END_SRC
-*** Recent Files
-#+BEGIN_SRC emacs-lisp
-  ;; ==========================================================================
-  ;; http://www.masteringemacs.org/article/find-files-faster-recent-files-package
-
-  (require 'recentf)
-
-  ;; get rid of `find-file-read-only' and replace it with something
-  ;; more useful.
-  (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
-
-  ;; enable recent files mode.
-  (recentf-mode t)
-
-  ; 999 files ought to be enough.
-  (setq recentf-max-saved-items 999)
-
-  (defun ido-recentf-open ()
-    "Use `ido-completing-read' to \\[find-file] a recent file"
-    (interactive)
-    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-        (message "Opening file...")
-      (message "Aborting")))
+(use-package swiper
+  :ensure try
+  :config
+  (progn
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-c C-r") 'ivy-resume)
+    (global-set-key (kbd "<f6>") 'ivy-resume)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    (global-set-key (kbd "<f1> l") 'counsel-load-library)
+    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    (global-set-key (kbd "C-c g") 'counsel-git)
+    (global-set-key (kbd "C-c j") 'counsel-git-grep)
+    (global-set-key (kbd "C-c k") 'counsel-ag)
+    (global-set-key (kbd "C-x l") 'counsel-locate)
+    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+    (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 #+END_SRC
 *** Mark
 #+BEGIN_SRC emacs-lisp
