@@ -288,6 +288,30 @@ Bookmarks are very useful for quickly jumping around files.
 ;; Allow wildcards in file-open (in ido-file-open press C-F for Emacs file-open)
 (setq find-file-wildcards t)
 #+END_SRC
+*** Recent Files
+#+BEGIN_SRC emacs-lisp
+  ;; ==========================================================================
+  ;; http://www.masteringemacs.org/article/find-files-faster-recent-files-package
+
+  (require 'recentf)
+
+  ;; get rid of `find-file-read-only' and replace it with something
+  ;; more useful.
+  (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+
+  ;; enable recent files mode.
+  (recentf-mode t)
+
+  ; 999 files ought to be enough.
+  (setq recentf-max-saved-items 999)
+
+  (defun ido-recentf-open ()
+    "Use `ido-completing-read' to \\[find-file] a recent file"
+    (interactive)
+    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+        (message "Opening file...")
+      (message "Aborting")))
+#+END_SRC
 *** Mark
 #+BEGIN_SRC emacs-lisp
 (defun push-mark-no-activate ()
@@ -950,31 +974,6 @@ With negative N, comment out original line and use the absolute value."
       '(kill-ring
         search-ring
         regexp-search-ring))
-#+END_SRC
-* Recent
-** Files
-#+BEGIN_SRC emacs-lisp
-  ;; ==========================================================================
-  ;; http://www.masteringemacs.org/article/find-files-faster-recent-files-package
-
-  (require 'recentf)
-
-  ;; get rid of `find-file-read-only' and replace it with something
-  ;; more useful.
-  (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
-
-  ;; enable recent files mode.
-  (recentf-mode t)
-
-  ; 999 files ought to be enough.
-  (setq recentf-max-saved-items 999)
-
-  (defun ido-recentf-open ()
-    "Use `ido-completing-read' to \\[find-file] a recent file"
-    (interactive)
-    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-        (message "Opening file...")
-      (message "Aborting")))
 #+END_SRC
 * Shell
 ** Launch
