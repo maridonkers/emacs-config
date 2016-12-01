@@ -14,7 +14,7 @@ You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
 
 #+BEGIN_SRC emacs-lisp
-  (setq user-full-name "Mari Donkers")
+(setq user-full-name "Mari Donkers")
 #+END_SRC
 * Installing use-package
 ** Setup
@@ -31,30 +31,30 @@ There are several package archives available for GNU Emacs:
 Each archive will write its files in a seperate archive directory.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
+(require 'package)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
-  (defvar melpa '("melpa" . "http://melpa.org/packages/"))
-  (defvar melpa-stable '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
+(defvar melpa '("melpa" . "http://melpa.org/packages/"))
+(defvar melpa-stable '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
-  ;; Add repositories (resetting defaults first).
-  (setq package-archives nil)
-  (add-to-list 'package-archives melpa-stable t)
-  (add-to-list 'package-archives melpa t)
-  (add-to-list 'package-archives gnu t)
+;; Add repositories (resetting defaults first).
+(setq package-archives nil)
+(add-to-list 'package-archives melpa-stable t)
+(add-to-list 'package-archives melpa t)
+(add-to-list 'package-archives gnu t)
 #+END_SRC
 
 Initialize the archive and refresh the contents in case there is no cached archive.
 
 #+BEGIN_SRC emacs-lisp
-  (package-initialize)
+(package-initialize)
 
-  (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
-               (file-exists-p (concat init-dir "elpa/archives/melpa"))
-               (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
-    (package-refresh-contents))
+(unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
+             (file-exists-p (concat init-dir "elpa/archives/melpa"))
+             (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
+        (package-refresh-contents))
 #+END_SRC
 
 At each load the package list will be evaluated and any missing
@@ -62,8 +62,8 @@ packages will be installed. The packages-install function deals with
 this check and takes care of any loading of the packages.
 
 #+BEGIN_SRC emacs-lisp
-  (defun packages-install (&rest packages)
-    (message "running packages-install")
+(defun packages-install (&rest packages)
+  (message "running packages-install")
     (mapc (lambda (package)
             (let ((name (car package))
                   (repo (cdr package)))
@@ -79,39 +79,38 @@ this check and takes care of any loading of the packages.
 ** The package
 
 #+BEGIN_SRC emacs-lisp
-  ;; Install extensions if they're missing
-  (defun init--install-packages ()
-    (message "Lets install some packages")
-    (packages-install
-     ;; Since use-package this is the only entry here
-     ;; ALWAYS try to use use-package!
-     (cons 'use-package melpa)))
+;; Install extensions if they're missing
+(defun init--install-packages ()
+  (message "Lets install some packages")
+  (packages-install
+   ;; Since use-package this is the only entry here
+   ;; ALWAYS try to use use-package!
+   (cons 'use-package melpa)))
 
-  (condition-case nil
-      (init--install-packages)
-    (error
-     (package-refresh-contents)
-     (init--install-packages)))
+(condition-case nil
+  (init--install-packages)
+  (error (package-refresh-contents)
+         (init--install-packages)))
 #+END_SRC
 * GUI
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
 #+BEGIN_SRC emacs-lisp
-  (menu-bar-mode 1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+(menu-bar-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 #+END_SRC
 ** Cursor
 Set cursor color explicitly (?) TODO: investigate why this is required
 (the cursor doesn't have the correct color otherwise, for
 emacsclient).
 #+BEGIN_SRC emacs-lisp
-  (require 'frame)
-  (defun set-cursor-hook (frame)
-    (modify-frame-parameters frame
-                             (list (cons 'cursor-color "#ffff00"))))
+(require 'frame)
+(defun set-cursor-hook (frame)
+  (modify-frame-parameters frame
+                           (list (cons 'cursor-color "#ffff00"))))
 
-  (add-hook 'after-make-frame-functions 'set-cursor-hook)
+(add-hook 'after-make-frame-functions 'set-cursor-hook)
 #+END_SRC
 ** Prerequisite packages
 #+BEGIN_SRC emacs-lisp
@@ -120,9 +119,9 @@ emacsclient).
 ** Look and feel
 *** Theme
 #+BEGIN_SRC emacs-lisp
-  (use-package cyberpunk-theme
-    :ensure t
-    :config (load-theme 'cyberpunk t))
+(use-package cyberpunk-theme
+  :ensure t
+  :config (load-theme 'cyberpunk t))
 #+END_SRC
 *** Title
 #+BEGIN_SRC emacs-lisp
@@ -168,6 +167,7 @@ Bookmarks are very useful for quickly jumping around files.
   (winner-mode 1))
 #+END_SRC
 *** Window swapping
+From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 ;; Initialization of these variables is required.
 (setq swapping-buffer nil)
@@ -356,6 +356,7 @@ Bookmarks are very useful for quickly jumping around files.
 (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
 #+END_SRC
 * Org-mode
+Org-mode is an Emacs built-in.
 ** Shortcuts
 #+BEGIN_SRC emacs-lisp
 ;;TODO
@@ -366,15 +367,17 @@ Bookmarks are very useful for quickly jumping around files.
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
-  (eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
 #+END_SRC
 ** HTMLize buffers
 When exporting documents to HTML documents, such as code fragments, we need to htmlize.
 #+BEGIN_SRC emacs-lisp
-  (use-package htmlize
-    :ensure t)
+(use-package htmlize
+  :ensure t)
 #+END_SRC
 ** Reveal.js
+Tool to create presentations via an emacs org file export. See
+[[http://matt.hackinghistory.ca/2015/07/11/creating-and-publishing-presentations-with-org-reveal/][Creating and Publishing Presentations with org-reveal]].
 #+BEGIN_SRC emacs-lisp
 ;;TODO doesn't appear to work (breaks org-mode export of title sections).
 ;;(use-package ox-reveal
@@ -385,10 +388,11 @@ When exporting documents to HTML documents, such as code fragments, we need to h
 ;;(setq org-reveal-mathjax t)
 #+END_SRC 
 * Markdown
-Markdown is a great way to write documentation, not as good as org-mode of course, but generally accepted as a standard.
+Markdown is a great way to write documentation, not as good as
+org-mode of course, but generally accepted as a standard.
 #+BEGIN_SRC emacs-lisp
-  (use-package markdown-mode
-    :ensure t)
+(use-package markdown-mode
+  :ensure t)
 #+END_SRC
 * LaTex
 #+BEGIN_SRC emacs-lisp
@@ -409,96 +413,89 @@ long as there are parenthesis, brackets or quotes.
 *** Utilities
 String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
-  (use-package s
-    :ensure t)
+(use-package s
+  :ensure t)
 #+END_SRC
 *** Smartparens
 #+BEGIN_SRC emacs-lisp
-    (use-package smartparens
-        :ensure t
-        :config 
-
-    (progn (show-smartparens-global-mode t))
-                (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
-                (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
-                (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
-                (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-                (add-hook 'lisp-interaction-mode-hook #'smartparens-strict-mode)
-                (add-hook 'scheme-mode-hook #'smartparens-strict-mode)
-        :bind (("<f7>" . smartparens-strict-mode)
-                ("C-S-s a" . sp-beginning-of-sexp)
-                ("C-S-s e" . sp-end-of-sexp)
-                ("C-S-s d" . sp-down-sexp)
-                ("C-S-s u" . sp-up-sexp)
-                ("C-S-s D" . sp-backward-down-sexp)
-                ("C-S-s U" . sp-up-down-sexp)
-                ("C-S-s f" . sp-forward-sexp)
-                ("C-S-s b" . sp-backward-sexp)
-                ("C-M-<right>" . sp-next-sexp)
-                ("C-M-<left>" . sp-previous-sexp)
-                ("C-S-s S" . sp-backward-symbol)
-                ("C-S-s s" . sp-forward-symbol)
-                ("C-S-s |" . sp-split-sexp)
-                ("C-S-s U" . sp-backward-unwrap-sexp)
-                ("C-S-s u" . sp-unwrap-sexp)
-                ("M-<right>" . sp-forward-slurp-sexp)
-                ("M-S-<right>" . sp-forward-barf-sexp)
-                ("M-<left>" . sp-backward-slurp-sexp)
-                ("M-S-<left>" . sp-backward-barf-sexp)
-                ("C-S-s t" . sp-transpose-sexp)
-                ("C-S-s k" . sp-kill-sexp)
-                ("C-S-s h" . sp-kill-hybrid-sexp)
-                ("C-S-s K" . sp-backward-kill-sexp)))
+(use-package smartparens
+  :ensure t
+  :config (progn (show-smartparens-global-mode t))
+                 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+                 (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
+                 (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+                 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+                 (add-hook 'lisp-interaction-mode-hook #'smartparens-strict-mode)
+                 (add-hook 'scheme-mode-hook #'smartparens-strict-mode)
+  :bind (("<f7>" . smartparens-strict-mode)
+         ("C-S-s a" . sp-beginning-of-sexp)
+         ("C-S-s e" . sp-end-of-sexp)
+         ("C-S-s d" . sp-down-sexp)
+         ("C-S-s u" . sp-up-sexp)
+         ("C-S-s D" . sp-backward-down-sexp)
+         ("C-S-s U" . sp-up-down-sexp)
+         ("C-S-s f" . sp-forward-sexp)
+         ("C-S-s b" . sp-backward-sexp)
+         ("C-M-<right>" . sp-next-sexp)
+         ("C-M-<left>" . sp-previous-sexp)
+         ("C-S-s S" . sp-backward-symbol)
+         ("C-S-s s" . sp-forward-symbol)
+         ("C-S-s |" . sp-split-sexp)
+         ("C-S-s U" . sp-backward-unwrap-sexp)
+         ("C-S-s u" . sp-unwrap-sexp)
+         ("M-<right>" . sp-forward-slurp-sexp)
+         ("M-S-<right>" . sp-forward-barf-sexp)
+         ("M-<left>" . sp-backward-slurp-sexp)
+         ("M-S-<left>" . sp-backward-barf-sexp)
+         ("C-S-s t" . sp-transpose-sexp)
+         ("C-S-s k" . sp-kill-sexp)
+         ("C-S-s h" . sp-kill-hybrid-sexp)
+         ("C-S-s K" . sp-backward-kill-sexp)))
 #+END_SRC
 *** Highlight parentheses
 #+BEGIN_SRC emacs-lisp
-  (use-package highlight-parentheses
-    :ensure t
-    :diminish highlight-parentheses-mode
-    :config (add-hook 'emacs-lisp-mode-hook
-              (lambda()
-                (highlight-parentheses-mode))))
+(use-package highlight-parentheses
+  :ensure t
+  :diminish highlight-parentheses-mode
+  :config (add-hook 'emacs-lisp-mode-hook
+            (lambda() (highlight-parentheses-mode))))
 
-  (global-highlight-parentheses-mode)
+(global-highlight-parentheses-mode)
 #+END_SRC
 *** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t
-    :config (add-hook 'lisp-mode-hook
-              (lambda()
-                (rainbow-delimiters-mode)))
-            (add-hook 'clojure-mode-hook
-              (lambda()
-                (rainbow-delimiters-mode)))
-            (add-hook 'clojurec-mode-hook
-              (lambda()
-                (rainbow-delimiters-mode)))
-            (add-hook 'clojurescript-mode-hook
-              (lambda()
-                (rainbow-delimiters-mode))))
+(use-package rainbow-delimiters
+  :ensure t
+  :config (add-hook 'lisp-mode-hook
+              (lambda() (rainbow-delimiters-mode)))
+          (add-hook 'clojure-mode-hook
+              (lambda() (rainbow-delimiters-mode)))
+          (add-hook 'clojurec-mode-hook
+              (lambda() (rainbow-delimiters-mode)))
+          (add-hook 'clojurescript-mode-hook
+              (lambda() (rainbow-delimiters-mode))))
 
-  (global-highlight-parentheses-mode)
+(global-highlight-parentheses-mode)
 #+END_SRC
 
 *** Snippets
 #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :diminish yas
-    :config (yas/global-mode 1)
-            (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
+(use-package yasnippet
+  :ensure t
+  :diminish yas
+  :config (yas/global-mode 1)
+          (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
 
-  (use-package clojure-snippets
-    :ensure t)
+(use-package clojure-snippets
+  :ensure t)
 #+END_SRC
 
 *** Auto completion
 #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :bind (("C-c /". company-complete))
-    :config (global-company-mode))
+(use-package company
+  :ensure t
+  :bind (("C-c /". company-complete))
+  :config (global-company-mode))
 
 ;;  (use-package company-flx
 ;;    :ensure t
@@ -509,20 +506,20 @@ String manipulation routines for emacs lisp
 *** Code folding
 #+BEGIN_SRC emacs-lisp
 (use-package origami
-    :ensure t
-    :config (global-origami-mode)
-    :bind (("C-c |" . origami-reset)
-           ("C-c {" . origami-open-node-recursively)
-           ("C-c }" . origami-close-node-recursively)
-           ("C-c \"" . origami-toggle-all-nodes)))
+  :ensure t
+  :config (global-origami-mode)
+  :bind (("C-c |" . origami-reset)
+         ("C-c {" . origami-open-node-recursively)
+         ("C-c }" . origami-close-node-recursively)
+         ("C-c \"" . origami-toggle-all-nodes)))
 #+END_SRC
 *** Version Control
 Magit is the only thing you need when it comes to Version Control (Git)
 
 #+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t
-    :bind (("C-x g" . magit-status)))
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 #+END_SRC
 
 *** Projectile
@@ -531,13 +528,14 @@ Magit is the only thing you need when it comes to Version Control (Git)
 ;; can be placed in the root of a project. It can be used to exclude (or include)
 ;; directories (see: https://github.com/bbatsov/projectile).
 (use-package projectile
-    :ensure t)
+  :ensure t)
+
 (projectile-global-mode)
 #+END_SRC
 *** REST (client) support
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
-    :ensure t)
+  :ensure t)
 #+END_SRC
 
 *** Imenu
@@ -555,24 +553,24 @@ Magit is the only thing you need when it comes to Version Control (Git)
 **** Highlight s-exp
 #+BEGIN_SRC emacs-lisp
 (use-package hl-sexp
-    :ensure t
-    :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
-            (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
-    :bind (("C-M-'" . hl-sexp-mode)))
+  :ensure t
+  :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
+          (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
+  :bind (("C-M-'" . hl-sexp-mode)))
 #+END_SRC
 **** Highlight symbol
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-symbol
-    :ensure t
-    :config (add-hook 'c-mode-hook #'highlight-symbol-mode)
-            (add-hook 'css-mode-hook #'highlight-symbol-mode)
-            (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-            (add-hook 'clojurec-mode-hook #'highlight-symbol-mode)
-            (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
-    :bind (("C-*" . highlight-symbol)
-           ("<f5>" . highlight-symbol-next)
-           ("S-<f5>" . highlight-symbol-prev)
-           ("M-<f5>" . highlight-symbol-query-replace)))
+  :ensure t
+  :config (add-hook 'c-mode-hook #'highlight-symbol-mode)
+          (add-hook 'css-mode-hook #'highlight-symbol-mode)
+          (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
+          (add-hook 'clojurec-mode-hook #'highlight-symbol-mode)
+          (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
+  :bind (("C-*" . highlight-symbol)
+         ("<f5>" . highlight-symbol-next)
+         ("S-<f5>" . highlight-symbol-prev)
+         ("M-<f5>" . highlight-symbol-query-replace)))
        
 (highlight-symbol-mode 1)
 (setq highlight-symbol-idle-delay 0.5)
@@ -582,52 +580,52 @@ The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
 supporting modules.
 *** Cider
 #+BEGIN_SRC emacs-lisp
-  (use-package cider
-    :ensure t
-    :pin melpa-stable
-    :config (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-            (add-hook 'cider-repl-mode-hook #'company-mode)
-            (add-hook 'cider-mode-hook #'company-mode)
-            (add-hook 'cider-mode-hook #'eldoc-mode)            
-            (setq cider-repl-history-file "~/.emacs.d/cider-history")
-            (setq cider-repl-use-clojure-font-lock t)
-            (setq cider-repl-result-prefix ";; => ")
-            (setq cider-repl-wrap-history t)
-            (setq cider-repl-history-size 9999)
-            (setq cider-repl-use-pretty-printing t)
-            (setq cider-repl-display-help-banner nil)
-            (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
-    :bind (("M-r" . cider-namespace-refresh)
-           ("C-c r" . cider-repl-reset)
-           ("C-c ." . cider-reset-test-run-tests)
-           ("M-<return>" . cider-doc)
-           ("<f8>" . cider-clear-compilation-highlights)))
+(use-package cider
+  :ensure t
+  :pin melpa-stable
+  :config (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+          (add-hook 'cider-repl-mode-hook #'company-mode)
+          (add-hook 'cider-mode-hook #'company-mode)
+          (add-hook 'cider-mode-hook #'eldoc-mode)            
+          (setq cider-repl-history-file "~/.emacs.d/cider-history")
+          (setq cider-repl-use-clojure-font-lock t)
+          (setq cider-repl-result-prefix ";; => ")
+          (setq cider-repl-wrap-history t)
+          (setq cider-repl-history-size 9999)
+          (setq cider-repl-use-pretty-printing t)
+          (setq cider-repl-display-help-banner nil)
+          (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+  :bind (("M-r" . cider-namespace-refresh)
+         ("C-c r" . cider-repl-reset)
+         ("C-c ." . cider-reset-test-run-tests)
+         ("M-<return>" . cider-doc)
+         ("<f8>" . cider-clear-compilation-highlights)))
 
-  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-  (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
-  (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
 #+END_SRC
 *** Expand region
 #+BEGIN_SRC emacs-lisp
 ;expand-region functionality is really great for lisp/clojure editing
 ;from https://github.com/magnars/expand-region.el
 (use-package expand-region
-    :ensure t
-    :bind ("C-=" . er/expand-region))
+  :ensure t
+  :bind ("C-=" . er/expand-region))
 #+END_SRC
 * Editing
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
-  ;; Delete sexp.
-  (global-set-key (kbd "<C-S-delete>") 'kill-sexp)
+;; Delete sexp.
+(global-set-key (kbd "<C-S-delete>") 'kill-sexp)
 
-  ;; Goto previous top level paren-block.
-  (global-set-key (kbd "M-p") 'outline-previous-visible-heading)
-  (global-set-key (kbd "M-n") 'outline-next-visible-heading)
+;; Goto previous top level paren-block.
+(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'outline-next-visible-heading)
 
-  ;; C-arrow for word navigation.
-  (global-set-key (kbd "<C-left>") 'left-word)
-  (global-set-key (kbd "<C-right>") 'right-word)
+;; C-arrow for word navigation.
+(global-set-key (kbd "<C-left>") 'left-word)
+(global-set-key (kbd "<C-right>") 'right-word)
 #+END_SRC
 ** Lines
 *** Selecting
@@ -671,7 +669,8 @@ Version 2015-02-07
 (global-set-key (kbd "C-S-D") 'delete-line-or-region)
 (global-set-key (kbd "<M-delete>") 'delete-line-or-region)
 #+END_SRC
-*** Commenting
+*** TODO Commenting
+Check out commeter package.
 #+BEGIN_SRC emacs-lisp
 (defun comment-line-or-region (&optional n)
   "Comment current line, or region if active."
@@ -685,78 +684,12 @@ Version 2015-02-07
 ;; Comment current line or region.
 (global-set-key (kbd "C-;") 'comment-line-or-region)
 #+END_SRC
-*** Duplicating
+*** Move-dup
 #+BEGIN_SRC emacs-lisp
-(defun duplicate-line-or-region (&optional n)
-  "Duplicate current line, or region if active.
-With argument N, make N copies.
-With negative N, comment out original line and use the absolute value."
-  (interactive "*p")
-  (let ((use-region (use-region-p)))
-    (save-excursion
-      (let ((text (if use-region        ;Get region if active, otherwise line
-		      (buffer-substring (region-beginning) (region-end))
-		    (prog1 (thing-at-point 'line)
-		      (end-of-line)
-		      (if (< 0 (forward-line 1)) ;Go to beginning of next line, or make a new one
-			  (newline))))))
-	(dotimes (i (abs (or n 1)))     ;Insert N times, or once if not specified
-	  (insert text))))
-    (if use-region nil                  ;Only if we're working with a line (not a region)
-      (let ((pos (- (point) (line-beginning-position)))) ;Save column
-	(if (> 0 n)                             ;Comment out original with negative arg
-	    (comment-region (line-beginning-position) (line-end-position)))
-	(forward-line 1)
-	(forward-char pos)))))
+(use-package move-dup
+  :ensure t)
 
-;; Duplicate line or region above or below.
-(global-set-key (kbd "<C-M-up>") 'duplicate-line-or-region)
-(global-set-key (kbd "<C-M-down>") 'duplicate-line-or-region)
-#+END_SRC
-*** Moving
-#+BEGIN_SRC emacs-lisp
-;; move the line(s) spanned by the active region up/down (line transposing)
-;; {{{
-(defun move-lines (n)
-  (let ((beg) (end) (keep))
-    (if mark-active
-	(save-excursion
-	  (setq keep t)
-	  (setq beg (region-beginning)
-		end (region-end))
-	  (goto-char beg)
-	  (setq beg (line-beginning-position))
-	  (goto-char end)
-	  (setq end (line-beginning-position 2)))
-      (setq beg (line-beginning-position)
-	    end (line-beginning-position 2)))
-    (let ((offset (if (and (mark t)
-			   (and (>= (mark t) beg)
-				(< (mark t) end)))
-		      (- (point) (mark t))))
-	  (rewind (- end (point))))
-      (goto-char (if (< n 0) beg end))
-      (forward-line n)
-      (insert (delete-and-extract-region beg end))
-      (backward-char rewind)
-      (if offset (set-mark (- (point) offset))))
-    (if keep
-	(setq mark-active t
-	      deactivate-mark nil))))
-
-(defun move-lines-up (n)
-  "move the line(s) spanned by the active region up by N lines."
-  (interactive "*p")
-  (move-lines (- (or n 1))))
-
-(defun move-lines-down (n)
-  "move the line(s) spanned by the active region down by N lines."
-  (interactive "*p")
-  (move-lines (or n 1)))
-
-;; Move line or region up or down.
-(global-set-key (kbd "<M-up>") 'move-lines-up)
-(global-set-key (kbd "<M-down>") 'move-lines-down)
+(global-move-dup-mode)
 #+END_SRC
 *** Truncating
 #+BEGIN_SRC emacs-lisp
@@ -789,110 +722,41 @@ With negative N, comment out original line and use the absolute value."
 (global-visual-line-mode 1)
 #+END_SRC
 ** Change
-*** Last
+*** Goto last change
 #+BEGIN_SRC emacs-lisp
-  (provide 'goto-last-change)
+(use-package goto-last-change
+  :ensure t)
 
-  (defvar goto-last-change-undo nil
-    "The `buffer-undo-list' entry of the previous \\[goto-last-change] command.")
-  (make-variable-buffer-local 'goto-last-change-undo)
-
-  ;;;###autoload
-  (defun goto-last-change (&optional mark-point minimal-line-distance)
-    "Set point to the position of the last change.
-  Consecutive calls set point to the position of the previous change.
-  With a prefix arg (optional arg MARK-POINT non-nil), set mark so \
-  \\[exchange-point-and-mark]
-  will return point to the current position."
-    (interactive "P")
-    ;; (unless (buffer-modified-p)
-    ;;   (error "Buffer not modified"))
-    (when (eq buffer-undo-list t)
-      (error "No undo information in this buffer"))
-    (when mark-point
-      (push-mark))
-    (unless minimal-line-distance
-      (setq minimal-line-distance 10))
-    (let ((position nil)
-          (undo-list (if (and (eq this-command last-command)
-                              goto-last-change-undo)
-                         (cdr (memq goto-last-change-undo buffer-undo-list))
-                       buffer-undo-list))
-          undo)
-      (while (and undo-list
-                  (or (not position)
-                      (eql position (point))
-                      (and minimal-line-distance
-                           ;; The first invocation always goes to the last change, subsequent ones skip
-                           ;; changes closer to (point) then minimal-line-distance.
-                           (memq last-command '(goto-last-change
-                                                goto-last-change-with-auto-marks))
-                           (< (count-lines (min position (point-max)) (point))
-                              minimal-line-distance))))
-        (setq undo (car undo-list))
-        (cond ((and (consp undo) (integerp (car undo)) (integerp (cdr undo)))
-               ;; (BEG . END)
-               (setq position (cdr undo)))
-              ((and (consp undo) (stringp (car undo))) ; (TEXT . POSITION)
-               (setq position (abs (cdr undo))))
-              ((and (consp undo) (eq (car undo) t))) ; (t HIGH . LOW)
-              ((and (consp undo) (null (car undo)))
-               ;; (nil PROPERTY VALUE BEG . END)
-               (setq position (cdr (last undo))))
-              ((and (consp undo) (markerp (car undo)))) ; (MARKER . DISTANCE)
-              ((integerp undo))           ; POSITION
-              ((null undo))               ; nil
-              (t (error "Invalid undo entry: %s" undo)))
-        (setq undo-list (cdr undo-list)))
-      (cond (position
-             (setq goto-last-change-undo undo)
-             (goto-char (min position (point-max))))
-            ((and (eq this-command last-command)
-                  goto-last-change-undo)
-             (setq goto-last-change-undo nil)
-             (error "No further undo information"))
-            (t
-             (setq goto-last-change-undo nil)
-             (error "Buffer not modified")))))
-
-  (defun goto-last-change-with-auto-marks (&optional minimal-line-distance)
-    "Calls goto-last-change and sets the mark at only the first
-  invocations in a sequence of invocations."
-    (interactive "P")
-    (goto-last-change (not (or (eq last-command 'goto-last-change-with-auto-marks)
-                               (eq last-command t)))
-                      minimal-line-distance))
-
-;; Goto last change.
 (global-set-key (kbd "C-S-Q") 'goto-last-change)
 #+END_SRC
 *** Undo tree
 #+BEGIN_SRC emacs-lisp
-  ;; Adds a custom directory where some .el scripts are placed used in
-  ;; this config file. Note that if you have .el scripts that exist on
-  ;; Melpa, you don't need this directory. But I have an undo-tree
-  ;; script (configured below) not on Melpa, so this is how you do it:
-  (add-to-list 'load-path (concat user-emacs-directory "macros-config"))
+;; Adds a custom directory where some .el scripts are placed used in
+;; this config file. Note that if you have .el scripts that exist on
+;; Melpa, you don't need this directory. But I have an undo-tree
+;; script (configured below) not on Melpa, so this is how you do it:
+(add-to-list 'load-path (concat user-emacs-directory "macros-config"))
 
-  ;; From http://www.emacswiki.org/emacs/UndoTree Script must exist in
-  ;; the macros-config directory before proceeding (see above paragraph)
-  (use-package undo-tree
-    :ensure t)
+;; From http://www.emacswiki.org/emacs/UndoTree Script must exist in
+;; the macros-config directory before proceeding (see above paragraph)
+(use-package undo-tree
+  :ensure t)
 
-  ;;TODO
-  ;;(global-undo-tree-mode)
+;;TODO
+;;(global-undo-tree-mode)
 
-  ;; Replace regular undo and redo with respectively tree-undo and tree-redo.
-  (global-set-key (kbd "C-_") 'undo-tree-undo)
-  (global-set-key (kbd "C-/") 'undo-tree-undo)
-  (global-set-key (kbd "M-_") 'undo-tree-redo)
-  (global-set-key (kbd "C-?") 'undo-tree-redo)
+;; Replace regular undo and redo with respectively tree-undo and tree-redo.
+(global-set-key (kbd "C-_") 'undo-tree-undo)
+(global-set-key (kbd "C-/") 'undo-tree-undo)
+(global-set-key (kbd "M-_") 'undo-tree-redo)
+(global-set-key (kbd "C-?") 'undo-tree-redo)
 
-  ;; Undo tree visualize
-  (global-set-key (kbd "C-x u") 'undo-tree-visualize)
+;; Undo tree visualize
+(global-set-key (kbd "C-x u") 'undo-tree-visualize)
 #+END_SRC
 ** Parenthesis
 *** Matching
+Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][Navigating Parentheses]].
 #+BEGIN_SRC emacs-lisp
 (defun goto-match-paren (arg)
   "Go to the matching parenthesis if on parenthesis. Else go to the
@@ -923,14 +787,13 @@ With negative N, comment out original line and use the absolute value."
 ** Search
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-S-F") 'find-dired)
-
 (global-set-key (kbd "C-%") 'replace-string)
 
 ;; Recursive grep to e.g. find all references of an entered string
 (global-set-key (kbd "C-,") 'rgrep)
 
 (use-package ag
-    :ensure t)
+  :ensure t)
 #+END_SRC
 ** Scroll
 #+BEGIN_SRC emacs-lisp
@@ -942,17 +805,17 @@ With negative N, comment out original line and use the absolute value."
 #+BEGIN_SRC emacs-lisp
 ; Backup and auto-save.
 (setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
+  backup-by-copying t      ; don't clobber symlinks
+  backup-directory-alist
+   '(("." . "~/.saves"))    ; don't litter my fs tree
+  delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)       ; use versioned backups
 
 (setq backup-directory-alist
           `((".*" . ,temporary-file-directory)))
-    (setq auto-save-file-name-transforms
+(setq auto-save-file-name-transforms
           `((".*" ,temporary-file-directory t)))
 #+END_SRC
 ** History

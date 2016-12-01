@@ -5,7 +5,7 @@ Wiersma's <https://gitlab.com/buildfunthings/emacs-config> and Sacha Chua's <htt
 Beware:
 
   * still debugging (my version, not theirs);
-  * tested only with emacs 25.1.
+  * tested only with emacs 25.1 under Linux.
 
 Usage
 -----
