@@ -562,17 +562,12 @@ Magit is the only thing you need when it comes to Version Control (Git)
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-symbol
   :ensure t
-  :config (add-hook 'c-mode-hook #'highlight-symbol-mode)
-          (add-hook 'css-mode-hook #'highlight-symbol-mode)
-          (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-          (add-hook 'clojurec-mode-hook #'highlight-symbol-mode)
-          (add-hook 'clojurescript-mode-hook #'highlight-symbol-mode)
+  :config (highlight-symbol-mode 1)
+          (setq highlight-symbol-idle-delay  0.5)
   :bind (("C-*" . highlight-symbol)
          ("<f5>" . highlight-symbol-next)
          ("S-<f5>" . highlight-symbol-prev)
          ("M-<f5>" . highlight-symbol-query-replace)))
-       
-(setq highlight-symbol-idle-delay 0.5)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
