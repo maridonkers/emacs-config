@@ -572,7 +572,6 @@ Magit is the only thing you need when it comes to Version Control (Git)
          ("S-<f5>" . highlight-symbol-prev)
          ("M-<f5>" . highlight-symbol-query-replace)))
        
-(highlight-symbol-mode 1)
 (setq highlight-symbol-idle-delay 0.5)
 #+END_SRC
 ** Clojure
@@ -670,7 +669,7 @@ Version 2015-02-07
 (global-set-key (kbd "<M-delete>") 'delete-line-or-region)
 #+END_SRC
 *** TODO Commenting
-Check out commeter package.
+Check out commenter package.
 #+BEGIN_SRC emacs-lisp
 (defun comment-line-or-region (&optional n)
   "Comment current line, or region if active."
