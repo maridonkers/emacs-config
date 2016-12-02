@@ -13,6 +13,8 @@ GNU Emacs org-mode configuration file. Based on Arjen Wiersma's
 You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
 
+Disclaimer: tested only on Linux, with emacs 25.1.
+
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Mari Donkers")
 #+END_SRC
