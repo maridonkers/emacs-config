@@ -314,6 +314,8 @@ With swiper, the following [[https://www.emacswiki.org/emacs/SearchAtPoint][key 
 (define-key swiper-map (kbd "M-.")
   (lambda () (interactive) (insert (format "\\<%s\\>" (with-ivy-window (thing-at-point 'word))))))
 #+END_SRC
+
+Usage: navigate point to relevant location and start search (C-S, C-R). Then use the key mappings defined above to respectively search for symbol or word at point.
 *** Mark
 #+BEGIN_SRC emacs-lisp
 (defun push-mark-no-activate ()
