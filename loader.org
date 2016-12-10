@@ -8,7 +8,8 @@
 
 * Introduction
 GNU Emacs org-mode configuration file. Based on Arjen Wiersma's
-[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]] and Sacha Chua's [[http://pages.sachachua.com/.emacs.d/Sacha.html][Emacs configuration]].
+[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]], Sacha Chua's [[http://pages.sachachua.com/.emacs.d/Sacha.html][Emacs configuration]] and Daniel Mai's [[https://github.com/danielmai/.emacs.d][Mai
+Emacs Configuration]].
 
 You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
@@ -125,6 +126,52 @@ emacsclient).
   :ensure t
   :config (load-theme 'cyberpunk t))
 #+END_SRC
+*** Sane defaults
+[[https://github.com/danielmai/.emacs.d/blob/master/config.org]].
+#+BEGIN_SRC emacs-lisp
+;; These functions are useful. Activate them.
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; Answering just 'y' or 'n' will do
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; UTF-8 please
+(setq locale-coding-system 'utf-8) ; pretty
+(set-terminal-coding-system 'utf-8) ; pretty
+(set-keyboard-coding-system 'utf-8) ; pretty
+(set-selection-coding-system 'utf-8) ; please
+(prefer-coding-system 'utf-8) ; with sugar on top
+(setq-default indent-tabs-mode nil)
+
+(setq-default indent-tabs-mode nil)
+(setq-default indicate-empty-lines t)
+
+;; Don't count two spaces after a period as the end of a sentence.
+;; Just one space is needed.
+(setq sentence-end-double-space nil)
+
+;; delete the region when typing, just like as we expect nowadays.
+(delete-selection-mode t)
+
+(show-paren-mode t)
+
+(column-number-mode t)
+
+(global-visual-line-mode)
+(diminish 'visual-line-mode)
+
+(setq uniquify-buffer-name-style 'forward)
+
+;; -i gets alias definitions from .bash_profile
+(setq shell-command-switch "-ic")
+
+;; Turn off emacs alarms (those annoying beeps)
+(setq ring-bell-function 'ignore)
+(setq visible-bell t)
+#+END_SRC
 *** Title
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format
@@ -148,10 +195,6 @@ emacsclient).
         (funcall fn)))))
 #+END_SRC
 *** Moving around
-**** Be sure to just ask for y/n instead of yes/no.
-#+BEGIN_SRC emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
 **** Bookmarks
 Bookmarks are very useful for quickly jumping around files.
 #+BEGIN_SRC emacs-lisp
@@ -343,11 +386,6 @@ Usage: navigate point to relevant location and start search (C-S, C-R). Then use
 *** Speedbar
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
-#+END_SRC
-*** Alarm
-#+BEGIN_SRC emacs-lisp
-;turn off emacs alarms (those annoying beeps)
-(setq ring-bell-function 'ignore)
 #+END_SRC
 ** Which key
 #+BEGIN_SRC emacs-lisp
