@@ -200,9 +200,9 @@ Bookmarks are very useful for quickly jumping around files.
 #+BEGIN_SRC emacs-lisp
 (use-package bm
   :ensure t
-  :bind (("C-c =" . bm-toggle)
-         ("C-c [" . bm-previous)
-         ("C-c ]" . bm-next)))
+  :bind (("C-S-c =" . bm-toggle)
+         ("C-S-c [" . bm-previous)
+         ("C-S-c ]" . bm-next)))
 #+END_SRC
 *** Winner mode
 #+BEGIN_SRC emacs-lisp
@@ -610,16 +610,23 @@ Magit is the only thing you need when it comes to Version Control (Git)
   :bind (("C-M-'" . hl-sexp-mode)))
 #+END_SRC
 **** Highlight symbol
+Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el/issues/11]].
 #+BEGIN_SRC emacs-lisp
+(defun highlight-symbol-mode-on () (highlight-symbol-mode 1))
+(define-globalized-minor-mode global-highlight-symbol-mode
+                              highlight-symbol-mode
+                              highlight-symbol-mode-on)
+
 (use-package highlight-symbol
   :ensure t
-  :config (highlight-symbol-mode 1)
-          (setq highlight-symbol-idle-delay  0.5)
+  :config (setq highlight-symbol-idle-delay  0.5)
   :bind (("C-*" . highlight-symbol)
          ("M-*" . highlight-symbol-remove-all)
          ("<f5>" . highlight-symbol-next)
          ("S-<f5>" . highlight-symbol-prev)
          ("M-<f5>" . highlight-symbol-query-replace)))
+
+(global-highlight-symbol-mode 1)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
