@@ -165,9 +165,6 @@ emacsclient).
 
 (setq uniquify-buffer-name-style 'forward)
 
-;; -i gets alias definitions from .bash_profile
-(setq shell-command-switch "-ic")
-
 ;; Turn off emacs alarms (those annoying beeps)
 (setq ring-bell-function 'ignore)
 (setq visible-bell t)
