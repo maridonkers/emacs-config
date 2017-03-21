@@ -193,6 +193,10 @@ emacsclient).
 #+END_SRC
 *** Moving around
 **** Bookmarks
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x r <return>") 'bookmark-save)
+#+END_SRC
+**** Bookmarks (bm)
 Bookmarks are very useful for quickly jumping around files.
 #+BEGIN_SRC emacs-lisp
 (use-package bm
@@ -676,6 +680,10 @@ supporting modules.
 ;; C-arrow for word navigation.
 (global-set-key (kbd "<C-left>") 'left-word)
 (global-set-key (kbd "<C-right>") 'right-word)
+
+;; Convenience shortcuts for buffer switching.
+(global-set-key (kbd "<s-left>") 'previous-buffer)
+(global-set-key (kbd "<s-right>") 'next-buffer)
 #+END_SRC
 ** Lines
 *** Selecting
