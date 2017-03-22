@@ -349,17 +349,6 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
     (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 #+END_SRC
-*** Swiper at point
-With swiper, the following [[https://www.emacswiki.org/emacs/SearchAtPoint][key bindings]] can be defined to insert the current symbol/word at point to the swiper minibuffer:
-
-#+BEGIN_SRC emacs-lisp
-(define-key swiper-map (kbd "C-.")
-  (lambda () (interactive) (insert (format "\\<%s\\>" (with-ivy-window (thing-at-point 'symbol))))))
-(define-key swiper-map (kbd "M-.")
-  (lambda () (interactive) (insert (format "\\<%s\\>" (with-ivy-window (thing-at-point 'word))))))
-#+END_SRC
-
-Usage: navigate point to relevant location and start search (C-S, C-R). Then use the key mappings defined above to respectively search for symbol or word at point.
 *** Mark
 #+BEGIN_SRC emacs-lisp
 (defun push-mark-no-activate ()
