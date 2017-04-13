@@ -1,6 +1,6 @@
 # emacs-config
 Emacs configuration using org-mode based on Arjen
-Wiersma's <https://gitlab.com/buildfunthings/emacs-config> and Sacha Chua's <http://pages.sachachua.com/.emacs.d/Sacha.html>.
+Wiersma's <https://gitlab.com/buildfunthings/emacs-config>, Sacha Chua's <http://pages.sachachua.com/.emacs.d/Sacha.html> and Daniel Mai’s <https://github.com/danielmai/.emacs.d>.
 
 Beware:
 
