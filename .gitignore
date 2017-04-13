@@ -1,6 +1,7 @@
 *~
 loader.el
 github
+snippets
 *.elc
 elpa
 auto-save-list/*
