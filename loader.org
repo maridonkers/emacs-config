@@ -257,10 +257,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 (global-set-key (kbd "<s-up>") (ignore-error-wrapper 'windmove-up))
 (global-set-key (kbd "<s-down>") (ignore-error-wrapper 'windmove-down))
 
-;;(global-set-key [(control C left)] (ignore-error-wrapper 'windmove-left))
-;;(global-set-key [(control C right)] (ignore-error-wrapper 'windmove-right))
-;;(global-set-key [(control C up)] (ignore-error-wrapper 'windmove-up))
-;;(global-set-key [(control C down)] (ignore-error-wrapper 'windmove-down))
+(global-set-key (kbd "C-c <C-left>") (ignore-error-wrapper 'windmove-left))
+(global-set-key (kbd "C-c <C-right>") (ignore-error-wrapper 'windmove-right))
+(global-set-key (kbd "C-c <C-up>") (ignore-error-wrapper 'windmove-up))
+(global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
 #+END_SRC
 *** Window minimize/maximize
 #+BEGIN_SRC emacs-lisp
