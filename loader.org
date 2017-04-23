@@ -405,6 +405,8 @@ Org-mode is an Emacs built-in.
 ;;(define-key global-map "\C-cl" 'org-store-link)
 ;;(define-key global-map "\C-ca" 'org-agenda)
 ;;(setq org-log-done t)
+
+(global-set-key (kbd "<C-M-tab>") 'pcomplete)
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
