@@ -673,8 +673,8 @@ supporting modules.
 (global-set-key (kbd "<C-right>") 'right-word)
 
 ;; Convenience shortcuts for buffer switching.
-(global-set-key (kbd "<S-s-left>") 'previous-buffer)
-(global-set-key (kbd "<S-s-right>") 'next-buffer)
+(global-set-key (kbd "<C-s-left>") 'previous-buffer)
+(global-set-key (kbd "<C-s-right>") 'next-buffer)
 #+END_SRC
 ** Lines
 *** Selecting
@@ -847,6 +847,8 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 ** Scroll
 #+BEGIN_SRC emacs-lisp
 ;; Scroll without changing point.
+(global-set-key (kbd "<S-s-left>") 'scroll-left)
+(global-set-key (kbd "<S-s-right>") 'scroll-right)
 (global-set-key (kbd "<S-s-up>") 'scroll-up-line)
 (global-set-key (kbd "<S-s-down>") 'scroll-down-line)
 #+END_SRC
