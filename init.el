@@ -23,7 +23,7 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (notmuch ag undo-tree expand-region cider highlight-symbol hl-sexp restclient projectile magit origami company clojure-snippets yasnippet rainbow-delimiters highlight-parentheses smartparens s markdown-mode htmlize smex bm cyberpunk-theme use-package))))
+    (point-undo notmuch ag undo-tree expand-region cider highlight-symbol hl-sexp restclient projectile magit origami company clojure-snippets yasnippet rainbow-delimiters highlight-parentheses smartparens s markdown-mode htmlize smex bm cyberpunk-theme use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -31,3 +31,4 @@
  ;; If there is more than one, they won't work right.
  )
 (put 'upcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)

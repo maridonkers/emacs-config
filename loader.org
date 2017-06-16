@@ -350,6 +350,7 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 #+END_SRC
 *** Mark
+**** Selection
 #+BEGIN_SRC emacs-lisp
 (defun push-mark-no-activate ()
   "Pushes `point' to `mark-ring' and does not activate the region
@@ -364,9 +365,26 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
   (interactive)
   (set-mark-command 1))
 
-  ;; Mark without select visible.
-  (global-set-key (kbd "C-`") 'push-mark-no-activate)
-  (global-set-key (kbd "C-~") 'jump-to-mark)
+;; Mark without select visible.
+(global-set-key (kbd "C-`") 'push-mark-no-activate)
+(global-set-key (kbd "C-~") 'jump-to-mark)
+#+END_SRC
+**** Convenience mapping for navigating back to your previous editing spots
+#+BEGIN_SRC emacs-lisp
+;; Does C-U C-SPC programatically.
+(defun set-mark-command-prefix-arg ()
+  (interactive)
+  (setq current-prefix-arg '(4)) ; C-u
+  (call-interactively 'set-mark-command))
+
+(global-set-key (kbd "<s-SPC>") 'set-mark-command-prefix-arg)
+#+END_SRC
+*** Point-Undo
+#+BEGIN_SRC emacs-lisp
+(use-package point-undo
+  :ensure t
+  :bind (("S-s-<left>" . point-undo)
+         ("S-s-<right>" . point-redo)))
 #+END_SRC
 *** Tabs
 #+BEGIN_SRC emacs-lisp
@@ -658,6 +676,18 @@ supporting modules.
   :ensure t
   :bind ("C-=" . er/expand-region))
 #+END_SRC
+*** Sayid
+[[http://bpiel.github.io/sayid/][Sayid]] (siy EED) is a tool for debugging and profiling clojure code.
+
+Sayid works by intercepting and recording the inputs and outputs of functions. It can even record function calls that occur inside of functions. The user can select which functions to trace. Functions can be selected individually or by namespace. The recorded data can be displayed, queried and profiled.
+#+BEGIN_SRC emacs-lisp
+;; http://bpiel.github.io/sayid/
+(use-package sayid
+  :ensure t)
+
+(eval-after-load 'clojure-mode
+   '(sayid-setup-package))
+#+END_SRC
 * Editing
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
@@ -847,8 +877,8 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 ** Scroll
 #+BEGIN_SRC emacs-lisp
 ;; Scroll without changing point.
-(global-set-key (kbd "<S-s-left>") 'scroll-left)
-(global-set-key (kbd "<S-s-right>") 'scroll-right)
+(global-set-key (kbd "s-<") 'scroll-right)
+(global-set-key (kbd "s->") 'scroll-left)
 (global-set-key (kbd "<S-s-up>") 'scroll-up-line)
 (global-set-key (kbd "<S-s-down>") 'scroll-down-line)
 #+END_SRC
