@@ -201,9 +201,9 @@ Bookmarks are very useful for quickly jumping around files.
 #+BEGIN_SRC emacs-lisp
 (use-package bm
   :ensure t
-  :bind (("C-S-b =" . bm-toggle)
-         ("C-S-b [" . bm-previous)
-         ("C-S-b ]" . bm-next)))
+  :bind (("M-+" . bm-toggle)
+         ("<M-S-up>" . bm-previous)
+         ("<M-S-down>" . bm-next)))
 #+END_SRC
 *** Winner mode
 #+BEGIN_SRC emacs-lisp
