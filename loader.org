@@ -201,7 +201,7 @@ Bookmarks are very useful for quickly jumping around files.
 #+BEGIN_SRC emacs-lisp
 (use-package bm
   :ensure t
-  :bind (("M-+" . bm-toggle)
+  :bind (("<M-S-return>" . bm-toggle)
          ("<M-S-up>" . bm-previous)
          ("<M-S-down>" . bm-next)))
 #+END_SRC
@@ -394,6 +394,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 *** Speedbar
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
+#+END_SRC
+** Break
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-M-g") 'top-level)
 #+END_SRC
 ** Which key
 #+BEGIN_SRC emacs-lisp
