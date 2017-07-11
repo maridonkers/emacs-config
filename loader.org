@@ -692,6 +692,13 @@ Sayid works by intercepting and recording the inputs and outputs of functions. I
 (eval-after-load 'clojure-mode
    '(sayid-setup-package))
 #+END_SRC
+** HTML
+*** [[https://github.com/smihica/emmet-mode][Emmet mode]].
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+:ensure t
+:config (add-hook 'clojure-mode-hook 'emmet-mode))
+#+END_SRC
 * Editing
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
