@@ -23,7 +23,12 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (point-undo notmuch ag undo-tree expand-region cider highlight-symbol hl-sexp restclient projectile magit origami company clojure-snippets yasnippet rainbow-delimiters highlight-parentheses smartparens s markdown-mode htmlize smex bm cyberpunk-theme use-package))))
+    (emmet-mode point-undo notmuch ag undo-tree expand-region cider highlight-symbol hl-sexp restclient projectile magit origami company clojure-snippets yasnippet rainbow-delimiters highlight-parentheses smartparens s markdown-mode htmlize smex bm cyberpunk-theme use-package)))
+ '(safe-local-variable-values
+   (quote
+    ((cider-cljs-lein-repl . "(do (dev) (go) (cljs-repl))")
+     (cider-refresh-after-fn . "reloaded.repl/resume")
+     (cider-refresh-before-fn . "reloaded.repl/suspend")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
