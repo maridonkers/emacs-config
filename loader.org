@@ -716,6 +716,9 @@ Sayid works by intercepting and recording the inputs and outputs of functions. I
 ;; Convenience shortcuts for buffer switching.
 (global-set-key (kbd "<C-s-left>") 'previous-buffer)
 (global-set-key (kbd "<C-s-right>") 'next-buffer)
+
+;; Bury buffer (moves to end of buffer list).
+(global-set-key (kbd "M-B") 'bury-buffer)
 #+END_SRC
 ** Lines
 *** Selecting
