@@ -713,16 +713,36 @@ Let's get some of that low hanging fruit...
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
 :pin melpa-stable
-:ensure t)
+:ensure t
+:init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql|html)'`"))
 #+END_SRC
 *** [[https://github.com/flycheck/flycheck/][flycheck]]
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
 :pin melpa-stable
-:ensure t)
+:ensure t
+:init (global-flycheck-mode))
 #+END_SRC
 ** HTML
-*** [[https://github.com/smihica/emmet-mode][Emmet mode]].
+*** [[http://web-mode.org/][Web mode]]
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+:pin melpa-stable
+  :ensure t
+  :mode (("\\.erb\\'" . web-mode)
+	 ("\\.mustache\\'" . web-mode)
+	 ("\\.html?\\'" . web-mode)
+	 ("\\.scss\\'" . web-mode)
+	 ("\\.css\\'" . web-mode)
+	 ("\\.js\\'" . web-mode)
+	 ("\\.vue\\'" . web-mode)
+   ("\\.blade.php\\'" . web-mode))
+  :config (progn
+            (setq web-mode-markup-indent-offset 2
+		  web-mode-css-indent-offset 2
+		  web-mode-code-indent-offset 2)))
+#+END_SRC
+*** [[https://github.com/smihica/emmet-mode][Emmet mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t
