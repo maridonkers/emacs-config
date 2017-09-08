@@ -18,6 +18,9 @@ Disclaimer: tested only on Linux, with emacs 25.1.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Mari Donkers")
+
+(defvar user-emacs-cache-directory
+  (concat (getenv "HOME") "/.cache/emacs"))
 #+END_SRC
 * Installing use-package
 ** Setup
@@ -554,12 +557,13 @@ String manipulation routines for emacs lisp
   :ensure t
   :diminish yas
   :config (yas/global-mode 1)
-          (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
+          (add-to-list 'yas-snippet-dirs (concat init-dir "snippets"))
+          (add-hook 'web-mode-hook #'(lambda () (yas-activate-extra-mode 'html-mode)))
+          (add-hook 'web-mode-hook #'(lambda () (yas-activate-extra-mode 'css-mode))))
 
 (use-package clojure-snippets
   :ensure t)
 #+END_SRC
-
 *** Auto completion
 #+BEGIN_SRC emacs-lisp
 (use-package company
@@ -572,7 +576,47 @@ String manipulation routines for emacs lisp
 ;;    :config (with-eval-after-load 'company
 ;;            (company-flx-mode +1)))
 #+END_SRC
+*** Auto completion for PHP
+Taken from [[https://home.elis.nu/emacs/]].
+#+BEGIN_SRC emacs-lisp
+(use-package company-php
+  :ensure t
+  :config
+  (progn
+    (setq-default ac-php-tags-path
+                  (concat user-emacs-cache-directory "/ac-php"))
 
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (unless (executable-find "ctags")
+                   (error "Program: ctags is missing"))
+
+                 ;; Add build company-backends with dabbrev and ac-php
+                 (set (make-local-variable 'company-backends)
+                      '((company-dabbrev-code
+                         company-gtags
+                         company-etags
+                         company-keywords
+                         company-ac-php-backend)))
+
+                 (company-mode t)))))
+
+;;(require 'php-mode)
+;;(define-key php-mode-map (kbd "C-]") 'ac-php-find-symbol-at-point)
+;;(define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
+
+(add-hook 'php-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   '((php-extras-company company-dabbrev) company-capf company-files))))
+#+END_SRC
+*** Auto completion for web
+Taken from: [[https://github.com/aiguofer/.emacs.d/blob/master/init.el]].
+#+BEGIN_SRC emacs
+(use-package company-web
+    :ensure t
+    :commands (company-web-html))
+#+END_SRC
 *** Code folding
 #+BEGIN_SRC emacs-lisp
 (use-package origami
@@ -670,9 +714,11 @@ supporting modules.
   :bind (("M-r" . cider-namespace-refresh)
          ("C-c r" . cider-repl-reset)
          ("C-c ." . cider-reset-test-run-tests)
-         ("M-<return>" . cider-doc)
+         ;("M-<return>" . cider-doc)
          ("<f8>" . cider-clear-compilation-highlights)))
 
+(require 'clojure-mode)
+(define-key clojure-mode-map (kbd "M-<return>") 'cider-doc)
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
@@ -712,16 +758,33 @@ Let's get some of that low hanging fruit...
 *** [[https://github.com/ejmr/php-mode][php-mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
-:pin melpa-stable
-:ensure t
-:init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql|html)'`"))
+  :pin melpa-stable
+  :ensure t
+  :config (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
+  :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql|html)'`"))
+#+END_SRC
+*** php-extras
+#+BEGIN_SRC php
+(use-package php-extras
+  :ensure t)
+#+END_SRC
+*** rainbow
+#+BEGIN_SRC php
+(use-package rainbow-mode
+  :ensure t)
 #+END_SRC
 *** [[https://github.com/flycheck/flycheck/][flycheck]]
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-:pin melpa-stable
-:ensure t
-:init (global-flycheck-mode))
+  :pin melpa-stable
+  :ensure t
+  :init (global-flycheck-mode))
+#+END_SRC
+** TypeScript
+#+BEGIN_SRC emacs
+(use-package typescript-mode
+  :ensure t
+  :mode "\\.ts\\'")
 #+END_SRC
 ** HTML
 *** [[http://web-mode.org/][Web mode]]
@@ -736,11 +799,20 @@ Let's get some of that low hanging fruit...
 	 ("\\.css\\'" . web-mode)
 	 ("\\.js\\'" . web-mode)
 	 ("\\.vue\\'" . web-mode)
-   ("\\.blade.php\\'" . web-mode))
+   ("\\.blade\\.php\\'" . web-mode))
   :config (progn
             (setq web-mode-markup-indent-offset 2
 		  web-mode-css-indent-offset 2
-		  web-mode-code-indent-offset 2)))
+		  web-mode-code-indent-offset 4))
+          (add-hook 'web-mode-hook
+            (lambda ()
+              (make-local-variable 'company-backends)
+              (add-to-list 'company-backends
+                           '(company-nxml company-web-html
+                                          company-yasnippet company-css))
+              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
+              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
+              )))
 #+END_SRC
 *** [[https://github.com/smihica/emmet-mode][Emmet mode]]
 #+BEGIN_SRC emacs-lisp
@@ -882,7 +954,8 @@ Check out commenter package.
 ;; From http://www.emacswiki.org/emacs/UndoTree Script must exist in
 ;; the macros-config directory before proceeding (see above paragraph)
 (use-package undo-tree
-  :ensure t)
+  :ensure t
+  :config (global-undo-tree-mode))
 
 ;;TODO
 ;;(global-undo-tree-mode)
