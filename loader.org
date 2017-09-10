@@ -761,7 +761,10 @@ Let's get some of that low hanging fruit...
   :pin melpa-stable
   :ensure t
   :config (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
-  :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql|html)'`"))
+  :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql)'`"))
+
+;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
+;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
 #+END_SRC
 *** php-extras
 #+BEGIN_SRC php
