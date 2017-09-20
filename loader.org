@@ -1023,10 +1023,10 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "s-<") 'scroll-right)
 (global-set-key (kbd "s->") 'scroll-left)
 
-(global-set-key (kbd "<S-s-up>") 'backward-paragraph)
-(global-set-key (kbd "<S-s-down>") 'forward-paragraph)
-(global-set-key (kbd "<C-up>") 'scroll-up-line)
-(global-set-key (kbd "<C-down>") 'scroll-down-line)
+(global-set-key (kbd "<C-up>") 'backward-paragraph)
+(global-set-key (kbd "<C-down>") 'forward-paragraph)
+(global-set-key (kbd "<S-s-up>") 'scroll-up-line)
+(global-set-key (kbd "<S-s-down>") 'scroll-down-line)
 #+END_SRC
 ** Backup
 #+BEGIN_SRC emacs-lisp
