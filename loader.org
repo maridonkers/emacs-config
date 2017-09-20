@@ -107,7 +107,8 @@ this check and takes care of any loading of the packages.
 (scroll-bar-mode -1)
 #+END_SRC
 ** Cursor
-Set cursor color explicitly (?) TODO: investigate why this is required
+*** Set cursor color explicitly
+(?) TODO: investigate why this is required
 (the cursor doesn't have the correct color otherwise, for
 emacsclient).
 #+BEGIN_SRC emacs-lisp
@@ -118,10 +119,17 @@ emacsclient).
 
 (add-hook 'after-make-frame-functions 'set-cursor-hook)
 #+END_SRC
-** Prerequisite packages
+*** Multiple cursors
+The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] appears to be installed by default in Emacs (25x).
 #+BEGIN_SRC emacs-lisp
-(require 'cl)
+;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+(global-unset-key (kbd "C-<down-mouse-1>"))
+(global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
 #+END_SRC
+** Prerequisite packages
+  #+BEGIN_SRC emacs-lisp
+  (require 'cl)
+  #+END_SRC
 ** Look and feel
 *** Theme
 #+BEGIN_SRC emacs-lisp
@@ -293,10 +301,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
   (enlarge-window 10))
 
 ;; Window resize bindings.
-(global-set-key (kbd "C-S-Z <C-S-left>") 'shrink-window-horizontally-stepped)
-(global-set-key (kbd "C-S-Z <C-S-right>") 'enlarge-window-horizontally-stepped)
-(global-set-key (kbd "C-S-Z <C-S-down>") 'shrink-window-stepped)
-(global-set-key (kbd "C-S-Z <C-S-up>") 'enlarge-window-stepped)
+(global-set-key (kbd "C-S-X <C-S-left>") 'shrink-window-horizontally-stepped)
+(global-set-key (kbd "C-S-X <C-S-right>") 'enlarge-window-horizontally-stepped)
+(global-set-key (kbd "C-S-X <C-S-down>") 'shrink-window-stepped)
+(global-set-key (kbd "C-S-X <C-S-up>") 'enlarge-window-stepped)
 
 (global-set-key (kbd "C-S-C <C-S-left>") 'shrink-window-horizontally)
 (global-set-key (kbd "C-S-C <C-S-right>") 'enlarge-window-horizontally)
@@ -723,16 +731,6 @@ supporting modules.
 (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
 #+END_SRC
-*** clj-refactor
-Refactors Clojure code.
-#+BEGIN_SRC emacs-lisp
-(use-package clj-refactor
-  :ensure t
-  :config (add-hook 'clojure-mode-hook (lambda ()
-                                          (clj-refactor-mode 1)))
-          (cljr-add-keybindings-with-prefix "C-C C-m")
-          (setq cljr-warn-on-eval nil))
-#+END_SRC
 *** Expand region
 #+BEGIN_SRC emacs-lisp
 ;expand-region functionality is really great for lisp/clojure editing
@@ -761,7 +759,8 @@ Let's get some of that low hanging fruit...
   :pin melpa-stable
   :ensure t
   :config (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
-  :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql)'`"))
+  ; :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql)'` `find vendor \\( -name '*.php' -o -name '*.sql' \\)`")
+)
 
 ;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
 ;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
@@ -821,7 +820,9 @@ Let's get some of that low hanging fruit...
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t
-:config (add-hook 'clojure-mode-hook 'emmet-mode))
+:config (add-hook 'clojure-mode-hook 'emmet-mode)
+        (add-hook 'web-mode-hook 'emmet-mode)
+        (add-hook 'php-mode-hook 'emmet-mode))
 #+END_SRC
 * Editing
 ** Navigation and S-exp
@@ -966,8 +967,11 @@ Check out commenter package.
 ;; Replace regular undo and redo with respectively tree-undo and tree-redo.
 (global-set-key (kbd "C-_") 'undo-tree-undo)
 (global-set-key (kbd "C-/") 'undo-tree-undo)
+(global-set-key (kbd "C-z") 'undo-tree-undo)
+
 (global-set-key (kbd "M-_") 'undo-tree-redo)
 (global-set-key (kbd "C-?") 'undo-tree-redo)
+(global-set-key (kbd "C-S-Z") 'undo-tree-redo)
 
 ;; Undo tree visualize
 (global-set-key (kbd "C-x u") 'undo-tree-visualize)
