@@ -120,11 +120,15 @@ emacsclient).
 (add-hook 'after-make-frame-functions 'set-cursor-hook)
 #+END_SRC
 *** Multiple cursors
-The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] appears to be installed by default in Emacs (25x).
+The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]].
 #+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :ensure t
+  :config (global-unset-key (kbd "C-<down-mouse-1>"))
+          (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))
+
 ;; (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-(global-unset-key (kbd "C-<down-mouse-1>"))
-(global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
+
 #+END_SRC
 ** Prerequisite packages
   #+BEGIN_SRC emacs-lisp
@@ -136,6 +140,44 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (use-package cyberpunk-theme
   :ensure t
   :config (load-theme 'cyberpunk t))
+
+;;(load-theme 'cyberpunk)
+
+(set-face-attribute 'default nil :height 135)
+
+;; Selection color.
+;;(set-face-background 'hl-line "#3e4446")
+;; (set-face-foreground 'highlight nil)
+
+;; Font size
+(define-key global-map (kbd "C-c C-=") 'text-scale-increase)
+(define-key global-map (kbd "C-c C--") 'text-scale-decrease)
+
+;; Clearer active window bar.
+(set-face-attribute  'mode-line-inactive
+                    nil 
+                    :foreground "white"
+                    :background "#232323"
+                    ;; :box '(:line-width 1 :style released-button)
+                    :box nil)
+
+(set-face-attribute  'mode-line
+                    nil 
+                    :foreground "black"
+                    :background "darkcyan"
+                    ;; :box '(:line-width 1 :style released-button)
+                    :box nil)
+
+
+;; No boxes around mode line (cyberpunk theme creates these).
+(set-face-attribute `mode-line nil :box nil)
+(set-face-attribute `mode-line-inactive nil :box nil)
+
+;; Set cursor color, shape and no blinking.
+(setq-default cursor-color "#ffff00")
+(set-cursor-color "#ffff00")
+;;(setq-default cursor-type 'hollow)
+(blink-cursor-mode 1)
 #+END_SRC
 *** Sane defaults
 [[https://github.com/danielmai/.emacs.d/blob/master/config.org]].
@@ -1132,31 +1174,31 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
   (setq scroll-step 1) ;; keyboard scroll one line at a time
 
   ;; Font and size.
-  (toggle-use-system-font)
-  (set-face-attribute 'default nil :height 135)
+  ;; (toggle-use-system-font)
+  ;; (set-face-attribute 'default nil :height 135)
 
   ;; Selection color.
   ;;(set-face-background 'hl-line "#3e4446")
   ;; (set-face-foreground 'highlight nil)
 
   ;; Font size
-  (define-key global-map (kbd "C-c C-=") 'text-scale-increase)
-  (define-key global-map (kbd "C-c C--") 'text-scale-decrease)
+  ;; (define-key global-map (kbd "C-c C-=") 'text-scale-increase)
+  ;; (define-key global-map (kbd "C-c C--") 'text-scale-decrease)
 
   ;; Clearer active window bar.
-  (set-face-attribute  'mode-line-inactive
-                        nil 
-                        :foreground "white"
-                        :background "#232323"
-                        ;; :box '(:line-width 1 :style released-button)
-                        :box nil)
+  ;; (set-face-attribute  'mode-line-inactive
+  ;;                       nil 
+  ;;                       :foreground "white"
+  ;;                       :background "#232323"
+  ;;                       ;; :box '(:line-width 1 :style released-button)
+  ;;                       :box nil)
 
-  (set-face-attribute  'mode-line
-                        nil 
-                        :foreground "black"
-                        :background "darkcyan"
-                        ;; :box '(:line-width 1 :style released-button)
-                        :box nil)
+  ;; (set-face-attribute  'mode-line
+  ;;                       nil 
+  ;;                       :foreground "black"
+  ;;                       :background "darkcyan"
+  ;;                       ;; :box '(:line-width 1 :style released-button)
+  ;;                       :box nil)
 
   ;; Via custom themes; see init.et...
   ;; (load-theme 'cyberpunk)
@@ -1166,8 +1208,9 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
   ;;(set-face-attribute `mode-line-inactive nil :box nil)
 
   ;; Set cursor color, shape and no blinking.
-  (setq-default cursor-color "#ffff00")
-  (set-cursor-color "#ffff00")
-  (setq-default cursor-type 'hollow)
-  (blink-cursor-mode 1))
+  ;; (setq-default cursor-color "#ffff00")
+  ;; (set-cursor-color "#ffff00")
+  ;;(setq-default cursor-type 'hollow)
+  ;; (blink-cursor-mode 1)
+)
 #+END_SRC
