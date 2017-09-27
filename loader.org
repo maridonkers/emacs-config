@@ -1106,7 +1106,7 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "C-x C-m") 'shell)
 
 ;; Open an eshell.
-(global-set-key (kbd "<f12>") 'eshell)
+(global-set-key (kbd "<M-f12>") 'eshell)
 #+END_SRC
 * Notmuch (emacs email client)
 #+BEGIN_SRC emacs-lisp
