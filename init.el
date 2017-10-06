@@ -38,5 +38,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(magit-diff-added ((t (:background "RoyalBlue4" :foreground "white"))))
- '(magit-diff-removed ((t (:background "DarkOrange4" :foreground "white")))))
+ '(magit-diff-added ((t (:background "PaleGreen4" :foreground "white smoke"))))
+ '(magit-diff-removed ((t (:background "DarkOrange4" :foreground "white smoke")))))
