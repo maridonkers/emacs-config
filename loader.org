@@ -125,10 +125,10 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (use-package multiple-cursors
   :ensure t
   :config (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-          (global-set-key (kbd "C-M-S-SPC") 'mc/edit-lines)
+          (global-set-key (kbd "C-S-SPC") 'mc/edit-lines)
           (global-set-key (kbd "C->") 'mc/mark-next-like-this)
           (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-          (global-set-key (kbd "C-S-SPC") 'mc/mark-all-like-this))
+          (global-set-key (kbd "C-M-S-SPC") 'mc/mark-all-like-this))
 #+END_SRC
 ** Prerequisite packages
   #+BEGIN_SRC emacs-lisp
