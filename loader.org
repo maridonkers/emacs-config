@@ -484,7 +484,7 @@ Org-mode is an Emacs built-in.
 ;;(define-key global-map "\C-ca" 'org-agenda)
 ;;(setq org-log-done t)
 
-(global-set-key (kbd "<C-M-tab>") 'pcomplete)
+(define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
@@ -950,7 +950,22 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 (use-package move-dup
   :ensure t)
 
-(global-move-dup-mode)
+;; Global mode or text-mode-hook interferes with e.g. org-mode M-down and M-up.
+;;(global-move-dup-mode)
+;;(add-hook 'text-mode-hook 'move-dup-mode)
+
+(add-hook 'clojure-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'clojurescript-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'lisp-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'sql-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'c-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'sh-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'python-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'perl-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'php-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'markdown-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'xml-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'html-mode-hook (lambda () (move-dup-mode)))
 #+END_SRC
 *** Truncating
 #+BEGIN_SRC emacs-lisp
