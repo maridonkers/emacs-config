@@ -14,7 +14,7 @@ Emacs Configuration]]. Plus various snippets from the internet.
 You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
 
-Disclaimer: tested only on Linux, with emacs 25.
+Disclaimer: tested only on Linux, with emacs 25.1.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Mari Donkers")
@@ -514,6 +514,17 @@ org-mode of course, but generally accepted as a standard.
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t)
+#+END_SRC
+* AsciiDoc
+[[http://www.methods.co.nz/asciidoc/][AsciiDoc]] is an alternative way to write documentation, not as good as
+org-mode of course, but supported by e.g. github. The [[https://github.com/sensorflo/adoc-mode/wiki][adoc-mode]] Emacs
+major mode supports the adoc format.
+#+BEGIN_SRC emacs-lisp
+(use-package adoc-mode
+  :ensure t)
+
+(add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+(add-hook 'adoc-mode-hook (lambda() (buffer-face-mode t)))
 #+END_SRC
 * LaTex
 #+BEGIN_SRC emacs-lisp
