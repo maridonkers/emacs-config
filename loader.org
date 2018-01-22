@@ -892,9 +892,9 @@ Let's get some of that low hanging fruit...
 (global-set-key (kbd "<C-left>") 'left-word)
 (global-set-key (kbd "<C-right>") 'right-word)
 
-;; Convenience shortcuts for buffer switching.
-(global-set-key (kbd "<C-s-left>") 'previous-buffer)
-(global-set-key (kbd "<C-s-right>") 'next-buffer)
+;; Convenience key mappings for sexp navigation.
+(global-set-key (kbd "C-x <left>") 'sp-backward-sexp)
+(global-set-key (kbd "C-x <right>") 'sp-forward-sexp)
 
 ;; Bury buffer (moves to end of buffer list).
 (global-set-key (kbd "M-B") 'bury-buffer)
