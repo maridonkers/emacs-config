@@ -446,6 +446,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
 #+END_SRC
+*** Default browser
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-chromium)
+#+END_SRC
 ** Break
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-M-g") 'top-level)
