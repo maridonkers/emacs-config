@@ -220,7 +220,8 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (column-number-mode t)
 
 (global-visual-line-mode)
-(diminish 'visual-line-mode)
+;TODO CHECK ERROR: symbol's function definition is void: diminish
+;(diminish 'visual-line-mode)
 
 (setq uniquify-buffer-name-style 'forward)
 
@@ -391,14 +392,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
           (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
           (global-set-key (kbd "C-c g") 'counsel-git)
           (global-set-key (kbd "C-c j") 'counsel-git-grep)
-          (global-set-key (kbd "C-c k") 'counsel-ag)
-          (global-set-key (kbd "C-x l") 'counsel-locate)
+          (global-set-key (kbd "C-c a") 'counsel-ag)
+          (global-set-key (kbd "C-c l") 'counsel-locate)
           (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
           (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
-
-(use-package counsel-projectile
-  :ensure t
-  :config (counsel-projectile-on))
 #+END_SRC
 *** Mark
 **** Selection
@@ -429,13 +426,6 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
   (call-interactively 'set-mark-command))
 
 (global-set-key (kbd "<s-SPC>") 'set-mark-command-prefix-arg)
-#+END_SRC
-*** Point-Undo
-#+BEGIN_SRC emacs-lisp
-(use-package point-undo
-  :ensure t
-  :bind (("S-s-<left>" . point-undo)
-         ("S-s-<right>" . point-redo)))
 #+END_SRC
 *** Tabs
 #+BEGIN_SRC emacs-lisp
@@ -492,7 +482,8 @@ Org-mode is an Emacs built-in.
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+;TODO CHECK ERROR: symbol's function definition is void: diminish
+;(eval-after-load "org-indent" '(diminish 'org-indent-mode))
 #+END_SRC
 ** HTMLize buffers
 When exporting documents to HTML documents, such as code fragments, we need to htmlize.
@@ -881,6 +872,17 @@ Let's get some of that low hanging fruit...
 :config (add-hook 'clojure-mode-hook 'emmet-mode)
         (add-hook 'web-mode-hook 'emmet-mode)
         (add-hook 'php-mode-hook 'emmet-mode))
+#+END_SRC
+* Docker
+Docker modes (file and compose).
+#+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode
+  :pin melpa-stable
+  :ensure t)
+
+(use-package docker-compose-mode
+  :pin melpa-stable
+  :ensure t)
 #+END_SRC
 * Editing
 ** Navigation and S-exp
