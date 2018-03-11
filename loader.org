@@ -396,6 +396,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
           (global-set-key (kbd "C-c l") 'counsel-locate)
           (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
           (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+
+(use-package counsel-projectile
+  :ensure t
+  :config (counsel-projectile-mode))
 #+END_SRC
 *** Mark
 **** Selection
