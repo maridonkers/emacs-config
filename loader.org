@@ -507,6 +507,12 @@ Tool to create presentations via an emacs org file export. See
 ;;(setq org-reveal-root "file:///home/mdo/lib/reveal.js")
 ;;(setq org-reveal-mathjax t)
 #+END_SRC 
+* Edit indirect
+The edit-indirect package is used by Markdown for editing code blocks.
+#+BEGIN_SRC emacs-lisp
+(use-package edit-indirect
+  :ensure t)
+#+END_SRC
 * Markdown
 Markdown is a great way to write documentation, not as good as
 org-mode of course, but generally accepted as a standard.
