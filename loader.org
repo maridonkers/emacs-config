@@ -841,6 +841,19 @@ Let's get some of that low hanging fruit...
 (use-package rainbow-mode
   :ensure t)
 #+END_SRC
+** Rust
+rust-mode
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode
+  :pin melpa-stable
+  :ensure t)
+#+END_SRC
+** Julia
+julia-mode
+#+BEGIN_SRC emacs-lisp
+(use-package julia-mode
+  :ensure t)
+#+END_SRC
 ** TypeScript
 #+BEGIN_SRC emacs
 (use-package typescript-mode
@@ -1109,6 +1122,8 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "<C-down>") 'forward-paragraph)
 (global-set-key (kbd "<C-S-up>") 'scroll-up-line)
 (global-set-key (kbd "<C-S-down>") 'scroll-down-line)
+(global-set-key (kbd "<s-S-up>") 'scroll-up-line)
+(global-set-key (kbd "<s-S-down>") 'scroll-down-line)
 #+END_SRC
 ** Backup
 #+BEGIN_SRC emacs-lisp

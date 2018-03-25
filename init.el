@@ -28,6 +28,7 @@
  '(package-selected-packages
    (quote
     (clj-refactor which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile company-php clojure-snippets bm auctex ag)))
+    (julia-mode rust-mode edit-indirect clj-refactor which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile company-php clojure-snippets bm auctex ag)))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (dev) (go) (cljs-repl))")
