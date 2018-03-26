@@ -1120,8 +1120,6 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 
 (global-set-key (kbd "<C-up>") 'backward-paragraph)
 (global-set-key (kbd "<C-down>") 'forward-paragraph)
-(global-set-key (kbd "<C-S-up>") 'scroll-up-line)
-(global-set-key (kbd "<C-S-down>") 'scroll-down-line)
 (global-set-key (kbd "<s-S-up>") 'scroll-up-line)
 (global-set-key (kbd "<s-S-down>") 'scroll-down-line)
 #+END_SRC
