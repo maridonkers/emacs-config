@@ -817,6 +817,13 @@ Sayid works by intercepting and recording the inputs and outputs of functions. I
 (eval-after-load 'clojure-mode
    '(sayid-setup-package))
 #+END_SRC
+** Geiser
+[[http://www.nongnu.org/geiser/][Geiser]] is a collection of Emacs major and minor modes that conspire with one or more Scheme interpreters to keep the Lisp Machine Spirit alive. It draws inspiration (and a bit more) from environments such as Common Lisp’s Slime, Factor’s FUEL, Squeak or Emacs itself, and does its best to make Scheme hacking inside Emacs (even more) fun.
+
+#+BEGIN_SRC emacs-lisp
+(use-package geiser
+  :ensure t)
+#+END_SRC
 ** PHP
 Let's get some of that low hanging fruit...
 *** [[https://github.com/ejmr/php-mode][php-mode]]
