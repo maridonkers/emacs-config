@@ -867,11 +867,17 @@ julia-mode
   :ensure t
   :mode "\\.ts\\'")
 #+END_SRC
+** SCSS
+scss mode
+#+BEGIN_SRC emacs-lisp
+(use-package scss-mode
+  :ensure t)
+#+END_SRC
 ** HTML
 *** [[http://web-mode.org/][Web mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-:pin melpa-stable
+  :pin melpa-stable
   :ensure t
   :mode (("\\.erb\\'" . web-mode)
 	 ("\\.mustache\\'" . web-mode)
