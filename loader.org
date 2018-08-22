@@ -708,7 +708,9 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (use-package projectile
   :ensure t)
 
-(projectile-global-mode)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 #+END_SRC
 *** REST (client) support
 #+BEGIN_SRC emacs-lisp
@@ -728,13 +730,13 @@ Magit is the only thing you need when it comes to Version Control (Git)
 (global-set-key (kbd "C-S-l") 'imenu)
 #+END_SRC
 *** Symbols
-**** Highlight s-exp
+**** TODO Highlight s-exp
 #+BEGIN_SRC emacs-lisp
-(use-package hl-sexp
-  :ensure t
-  :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
-          (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
-  :bind (("C-M-'" . hl-sexp-mode)))
+; (use-package hl-sexp
+;   :ensure t
+;   :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
+;           (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
+;   :bind (("C-M-'" . hl-sexp-mode)))
 #+END_SRC
 **** Highlight symbol
 Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el/issues/11]].
@@ -936,6 +938,7 @@ Docker modes (file and compose).
 
 ;; Convenience key mappings for sexp navigation.
 (global-set-key (kbd "C-x <left>") 'sp-backward-sexp)
+(global-set-key (kbd "C-S-x <left>") 'sp-backward-up-sexp)
 (global-set-key (kbd "C-x <right>") 'sp-forward-sexp)
 
 ;; Bury buffer (moves to end of buffer list).
