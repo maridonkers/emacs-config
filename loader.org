@@ -781,7 +781,7 @@ supporting modules.
   :bind (("M-r" . cider-namespace-refresh)
          ("C-c r" . cider-repl-reset)
          ("C-c ." . cider-reset-test-run-tests)
-         ("C-c C-h" . cider-eval-defun-at-point)
+         ("C-c C-v C-e" . cider-eval-defun-at-point)
          ;("M-<return>" . cider-doc)
          ("<f8>" . cider-clear-compilation-highlights)))
 
