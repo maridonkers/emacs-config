@@ -786,6 +786,7 @@ supporting modules.
 
 (require 'clojure-mode)
 (define-key clojure-mode-map (kbd "M-<return>") 'cider-doc)
+(define-key clojure-mode-map (kbd "C-c C-e") 'cider-eval-defun-at-point)
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
