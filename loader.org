@@ -674,13 +674,14 @@ Taken from [[https://home.elis.nu/emacs/]].
               (set (make-local-variable 'company-backends)
                    '((php-extras-company company-dabbrev) company-capf company-files))))
 #+END_SRC
-*** Auto completion for web
+*** TODO Auto completion for web
 Taken from: [[https://github.com/aiguofer/.emacs.d/blob/master/init.el]].
 #+BEGIN_SRC emacs
-(use-package company-web
-    :ensure t
-    :commands (company-web-html))
+; (use-package company-web
+;     :ensure t
+;     :commands (company-web-html))
 #+END_SRC
+Disabled because it no longer works. Error message as follows: =Company backend ’company-web-html’ could not be initialized: Symbol’s function definition is void: company-web-html=
 *** Code folding
 #+BEGIN_SRC emacs-lisp
 (use-package origami
@@ -924,6 +925,12 @@ Docker modes (file and compose).
   :ensure t)
 #+END_SRC
 * Editing
+** Navigation one hand shortcuts
+#+BEGIN_SRC emacs-lisp
+;; Delete sexp.
+(global-set-key (kbd "<C-s-left>") 'previous-buffer)
+(global-set-key (kbd "<C-s-right>") 'next-buffer)
+#+END_SRC
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
 ;; Delete sexp.
