@@ -304,8 +304,8 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
        (message "Buffer and window marked for swapping."))))
 
 ;; Switch windows.
-;;(global-set-key (kbd "C-c C-s") 'transpose-windows)
-(global-set-key (kbd "C-c C-s") 'swap-buffers-in-windows)
+;;(global-set-key (kbd "C-c C-w") 'transpose-windows)
+(global-set-key (kbd "C-c C-w") 'swap-buffers-in-windows)
 
 (global-set-key [f9] 'other-window)
 #+END_SRC
@@ -878,33 +878,34 @@ scss mode
   :ensure t)
 #+END_SRC
 ** HTML
-*** [[http://web-mode.org/][Web mode]]
+*** TODO [[http://web-mode.org/][Web mode]]
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  :pin melpa-stable
-  :ensure t
-  :mode (("\\.erb\\'" . web-mode)
-	 ("\\.mustache\\'" . web-mode)
-	 ("\\.html?\\'" . web-mode)
-	 ("\\.scss\\'" . web-mode)
-	 ("\\.css\\'" . web-mode)
-	 ("\\.js\\'" . web-mode)
-	 ("\\.vue\\'" . web-mode)
-   ("\\.blade\\.php\\'" . web-mode))
-  :config (progn
-            (setq web-mode-markup-indent-offset 2
-		  web-mode-css-indent-offset 2
-		  web-mode-code-indent-offset 4))
-          (add-hook 'web-mode-hook
-            (lambda ()
-              (make-local-variable 'company-backends)
-              (add-to-list 'company-backends
-                           '(company-nxml company-web-html
-                                          company-yasnippet company-css))
-              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
-              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
-              )))
+;(use-package web-mode
+;  :pin melpa-stable
+;  :ensure t
+;  :mode (("\\.erb\\'" . web-mode)
+;	 ("\\.mustache\\'" . web-mode)
+;	 ("\\.html?\\'" . web-mode)
+;	 ("\\.scss\\'" . web-mode)
+;	 ("\\.css\\'" . web-mode)
+;	 ("\\.js\\'" . web-mode)
+;	 ("\\.vue\\'" . web-mode)
+;   ("\\.blade\\.php\\'" . web-mode))
+;  :config (progn
+;            (setq web-mode-markup-indent-offset 2
+;		  web-mode-css-indent-offset 2
+;		  web-mode-code-indent-offset 4))
+;          (add-hook 'web-mode-hook
+;            (lambda ()
+;              (make-local-variable 'company-backends)
+;              (add-to-list 'company-backends
+;                           '(company-nxml company-web-html
+;                                          company-yasnippet company-css))
+;              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
+;              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
+;              )))
 #+END_SRC
+Disabled because it no longer works. Error message as follows: =Company backend ’company-web-html’ could not be initialized: Symbol’s function definition is void: company-web-html=
 *** [[https://github.com/smihica/emmet-mode][Emmet mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
