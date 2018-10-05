@@ -787,13 +787,13 @@ supporting modules.
 (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
 #+END_SRC
-*** TODO clj-refactor
+*** clj-refactor
 #+BEGIN_SRC emacs-lisp
-; (use-package clj-refactor
-;   :ensure t
-;   :config
-;   (cljr-add-keybindings-with-prefix "C-c C-/")
-;   (add-hook 'clojure-mode-hook 'clj-refactor-mode))
+(use-package clj-refactor
+  :ensure t
+  :config
+  (cljr-add-keybindings-with-prefix "C-c C-/")
+  (add-hook 'clojure-mode-hook 'clj-refactor-mode))
 #+END_SRC
 *** Expand region
 #+BEGIN_SRC emacs-lisp
@@ -803,17 +803,17 @@ supporting modules.
   :ensure t
   :bind ("M-S-SPC" . er/expand-region))
 #+END_SRC
-*** TODO Sayid
+*** Sayid
 [[http://bpiel.github.io/sayid/][Sayid]] (siy EED) is a tool for debugging and profiling clojure code.
 
 Sayid works by intercepting and recording the inputs and outputs of functions. It can even record function calls that occur inside of functions. The user can select which functions to trace. Functions can be selected individually or by namespace. The recorded data can be displayed, queried and profiled.
 #+BEGIN_SRC emacs-lisp
 ;; http://bpiel.github.io/sayid/
-; (use-package sayid
-;   :ensure t)
+(use-package sayid
+  :ensure t)
 
-; (eval-after-load 'clojure-mode
-;    '(sayid-setup-package))
+(eval-after-load 'clojure-mode
+   '(sayid-setup-package))
 #+END_SRC
 ** Geiser
 [[http://www.nongnu.org/geiser/][Geiser]] is a collection of Emacs major and minor modes that conspire with one or more Scheme interpreters to keep the Lisp Machine Spirit alive. It draws inspiration (and a bit more) from environments such as Common Lisp’s Slime, Factor’s FUEL, Squeak or Emacs itself, and does its best to make Scheme hacking inside Emacs (even more) fun.
