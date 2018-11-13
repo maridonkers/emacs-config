@@ -856,6 +856,9 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 #+BEGIN_SRC emacs-lisp
 (use-package phpstan
   :ensure t)
+(use-package flycheck-phpstan
+  :ensure t
+:config (add-hook 'php-mode-hook #'flycheck-mode))
 #+END_SRC
 *** TODO Auto completion for PHP
 Taken from [[https://home.elis.nu/emacs/]].
