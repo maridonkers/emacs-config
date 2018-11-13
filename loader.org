@@ -845,7 +845,7 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 *** Phpactor
 #+BEGIN_SRC emacs-lisp
 (use-package phpactor
-  :pin melpa-stable
+  ; :pin melpa-stable
   :ensure t)
 #+END_SRC
 *** Psysh
