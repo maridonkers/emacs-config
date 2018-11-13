@@ -593,6 +593,11 @@ String manipulation routines for emacs lisp
 
 (global-highlight-parentheses-mode)
 #+END_SRC
+*** Rainbow
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+  :ensure t)
+#+END_SRC
 *** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
@@ -633,40 +638,6 @@ String manipulation routines for emacs lisp
 ;;    :ensure t
 ;;    :config (with-eval-after-load 'company
 ;;            (company-flx-mode +1)))
-#+END_SRC
-*** Auto completion for PHP
-Taken from [[https://home.elis.nu/emacs/]].
-#+BEGIN_SRC emacs-lisp
-(use-package company-php
-  :ensure t
-  :config
-  (progn
-    (setq-default ac-php-tags-path
-                  (concat user-emacs-cache-directory "/ac-php"))
-
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (unless (executable-find "ctags")
-                   (error "Program: ctags is missing"))
-
-                 ;; Add build company-backends with dabbrev and ac-php
-                 (set (make-local-variable 'company-backends)
-                      '((company-dabbrev-code
-                         company-gtags
-                         company-etags
-                         company-keywords
-                         company-ac-php-backend)))
-
-                 (company-mode t)))))
-
-;;(require 'php-mode)
-;;(define-key php-mode-map (kbd "C-]") 'ac-php-find-symbol-at-point)
-;;(define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
-
-(add-hook 'php-mode-hook
-            (lambda ()
-              (set (make-local-variable 'company-backends)
-                   '((php-extras-company company-dabbrev) company-capf company-files))))
 #+END_SRC
 *** TODO Auto completion for web
 Taken from: [[https://github.com/aiguofer/.emacs.d/blob/master/init.el]].
@@ -822,9 +793,29 @@ Sayid works by intercepting and recording the inputs and outputs of functions. I
 (use-package geiser
   :ensure t)
 #+END_SRC
-** PHP
+** TODO PHP
 Let's get some of that low hanging fruit...
-*** [[https://github.com/ejmr/php-mode][php-mode]]
+
+Use the packages listed for [[https://github.com/emacs-php/php-suite][php-suite]].
+#+BEGIN_EXAMPLE
+PHP coding suite for GNU Emacs
+Emacs is a powerful IDE for PHP.
+
+This package integrates some packages for PHP coding.
+
+php-project (part of PHP Mode)
+php-runtime - Emacs runtime bridge to PHP
+php-mode - Major mode for PHP script
+web-mode - Major mode for HTML template
+composer.el - Interface to Composer (Dependency manager for PHP)
+phpunit.el - Interface to PHPUnit (xUnit testing framework)
+psysh.el - Interface to PsySH (REPL, interactive debugger)
+phpstan.el - Interface to PHPStan (PHP Static Analysis Tool)
+(phpactor.el) - Interface to Phpactor (Intelligent completion and refactoring tool)
+#+END_EXAMPLE
+
+Create a Docker container for PHP and the required tooling to prevent system pollution.
+*** TODO [[https://github.com/ejmr/php-mode][php-mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
   :pin melpa-stable
@@ -836,15 +827,64 @@ Let's get some of that low hanging fruit...
 ;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
 ;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
 #+END_SRC
-*** php-extras
-#+BEGIN_SRC php
-(use-package php-extras
+*** TODO php-extras
+#+BEGIN_SRC emacs-lisp
+;;(use-package php-extras
+;;  :ensure t)
+#+END_SRC
+*** Composer
+#+BEGIN_SRC emacs-lisp
+(use-package composer
   :ensure t)
 #+END_SRC
-*** rainbow
-#+BEGIN_SRC php
-(use-package rainbow-mode
+*** Phpunit
+#+BEGIN_SRC emacs-lisp
+(use-package phpunit
   :ensure t)
+#+END_SRC
+*** Psysh
+#+BEGIN_SRC emacs-lisp
+(use-package psysh
+  :ensure t)
+#+END_SRC
+*** Phpstan
+#+BEGIN_SRC emacs-lisp
+(use-package phpstan
+  :ensure t)
+#+END_SRC
+*** TODO Auto completion for PHP
+Taken from [[https://home.elis.nu/emacs/]].
+#+BEGIN_SRC emacs-lisp
+(use-package company-php
+  :ensure t
+  :config
+  (progn
+    (setq-default ac-php-tags-path
+                  (concat user-emacs-cache-directory "/ac-php"))
+
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (unless (executable-find "ctags")
+                   (error "Program: ctags is missing"))
+
+                 ;; Add build company-backends with dabbrev and ac-php
+                 (set (make-local-variable 'company-backends)
+                      '((company-dabbrev-code
+                         company-gtags
+                         company-etags
+                         company-keywords
+                         company-ac-php-backend)))
+
+                 (company-mode t)))))
+
+;;(require 'php-mode)
+;;(define-key php-mode-map (kbd "C-]") 'ac-php-find-symbol-at-point)
+;;(define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
+
+;;(add-hook 'php-mode-hook
+;;            (lambda ()
+;;              (set (make-local-variable 'company-backends)
+;;                   '((php-extras-company company-dabbrev) company-capf company-files))))
 #+END_SRC
 ** Rust
 rust-mode
