@@ -724,6 +724,11 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 ;;WARNING: interferes with Magit faces. (do not use global mode).
 ;;(global-highlight-symbol-mode 1)
 #+END_SRC
+*** Dumb-jump
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+  :ensure t)
+#+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
 supporting modules.
