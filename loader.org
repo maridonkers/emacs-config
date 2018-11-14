@@ -724,12 +724,17 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 ;;WARNING: interferes with Magit faces. (do not use global mode).
 ;;(global-highlight-symbol-mode 1)
 #+END_SRC
+*** Re-map xref keybindings
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-M-.") 'xref-find-definitions)
+(global-set-key (kbd "C-M-,") 'xref-pop-marker-stack)
+#+END_SRC
 *** Dumb-jump
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
   :ensure t
-  :bind (("C-M-." . dumb-jump-go)
-         ("C-M-," . dumb-jump-back)))
+  :bind (("M-." . dumb-jump-go)
+         ("M-," . dumb-jump-back)))
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
