@@ -833,11 +833,8 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 *** TODO [[https://github.com/ejmr/php-mode][php-mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
-  :pin melpa-stable
-  :ensure t
-  :config (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
-  ; :init (setq projectile-tags-command "etags TAGS `git ls-files | egrep '*.(php|sql)'` `find vendor \\( -name '*.php' -o -name '*.sql' \\)`")
-)
+;  :pin melpa-stable
+  :ensure t)
 
 ;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
 ;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
@@ -857,11 +854,11 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 (use-package phpunit
   :ensure t)
 #+END_SRC
-*** Phpactor
+*** TODO Phpactor
 #+BEGIN_SRC emacs-lisp
-(use-package phpactor
-  ; :pin melpa-stable
-  :ensure t)
+;(use-package phpactor
+;  ; :pin melpa-stable
+;  :ensure t)
 #+END_SRC
 *** Psysh
 #+BEGIN_SRC emacs-lisp
@@ -877,38 +874,9 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 :config (add-hook 'php-mode-hook #'flycheck-mode))
 #+END_SRC
 *** TODO Auto completion for PHP
-Taken from [[https://home.elis.nu/emacs/]].
 #+BEGIN_SRC emacs-lisp
-(use-package company-php
-  :ensure t
-  :config
-  (progn
-    (setq-default ac-php-tags-path
-                  (concat user-emacs-cache-directory "/ac-php"))
-
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (unless (executable-find "ctags")
-                   (error "Program: ctags is missing"))
-
-                 ;; Add build company-backends with dabbrev and ac-php
-                 (set (make-local-variable 'company-backends)
-                      '((company-dabbrev-code
-                         company-gtags
-                         company-etags
-                         company-keywords
-                         company-ac-php-backend)))
-
-                 (company-mode t)))))
-
-;;(require 'php-mode)
-;;(define-key php-mode-map (kbd "C-]") 'ac-php-find-symbol-at-point)
-;;(define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
-
-;;(add-hook 'php-mode-hook
-;;            (lambda ()
-;;              (set (make-local-variable 'company-backends)
-;;                   '((php-extras-company company-dabbrev) company-capf company-files))))
+(use-package ac-php
+  :ensure t)
 #+END_SRC
 ** Rust
 rust-mode
