@@ -815,6 +815,11 @@ phpstan.el - Interface to PHPStan (PHP Static Analysis Tool)
 #+END_EXAMPLE
 
 Create a Docker container for PHP and the required tooling to prevent system pollution.
+*** Web-mode
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :ensure t)
+#+END_SRC
 *** TODO [[https://github.com/ejmr/php-mode][php-mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
