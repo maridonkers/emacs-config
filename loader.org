@@ -850,7 +850,7 @@ composer.el - Interface to Composer (Dependency manager for PHP)
 phpunit.el - Interface to PHPUnit (xUnit testing framework)
 psysh.el - Interface to PsySH (REPL, interactive debugger)
 phpstan.el - Interface to PHPStan (PHP Static Analysis Tool)
-(phpactor.el) - Interface to Phpactor (Intelligent completion and refactoring tool)
+phpactor.el - Interface to Phpactor (Intelligent completion and refactoring tool)
 #+END_EXAMPLE
 
 Create a Docker container for PHP and the required tooling to prevent system pollution.
@@ -906,9 +906,9 @@ Create a Docker container for PHP and the required tooling to prevent system pol
   :ensure t
 :config (add-hook 'php-mode-hook #'flycheck-mode))
 #+END_SRC
-*** Auto completion for PHP
+*** Auto completion for phpactor
 #+BEGIN_SRC emacs-lisp
-(use-package ac-php
+(use-package company-phpactor
   :ensure t)
 #+END_SRC
 ** Rust
