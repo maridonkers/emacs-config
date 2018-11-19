@@ -749,8 +749,10 @@ supporting modules.
               ;;cider-repl-pop-to-buffer-on-connect nil
               cider-repl-use-clojure-font-lock t
               cider-repl-wrap-history t
-              cider-repl-history-size 1000
-               nrepl-hide-special-buffers t
+              cider-repl-history-file "~/.emacs.d/cider-history"
+              cider-repl-history-size 999
+              cider-repl-use-pretty-printing t
+              nrepl-hide-special-buffers t
               ;; Stop error buffer from popping up while working in buffers other than the REPL:
               nrepl-popup-stacktraces nil)
 
@@ -886,11 +888,10 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 (use-package phpunit
   :ensure t)
 #+END_SRC
-*** TODO Phpactor
+*** Phpactor
 #+BEGIN_SRC emacs-lisp
-;(use-package phpactor
-;  ; :pin melpa-stable
-;  :ensure t)
+(use-package phpactor
+  :ensure t)
 #+END_SRC
 *** Psysh
 #+BEGIN_SRC emacs-lisp
@@ -905,7 +906,7 @@ Create a Docker container for PHP and the required tooling to prevent system pol
   :ensure t
 :config (add-hook 'php-mode-hook #'flycheck-mode))
 #+END_SRC
-*** TODO Auto completion for PHP
+*** Auto completion for PHP
 #+BEGIN_SRC emacs-lisp
 (use-package ac-php
   :ensure t)
