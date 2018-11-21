@@ -865,6 +865,7 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 ;  :pin melpa-stable
   :ensure t)
 
+(setq browse-url-browser-function 'eww-browse-url)
 ;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
 ;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
 #+END_SRC
