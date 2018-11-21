@@ -854,11 +854,6 @@ phpactor.el - Interface to Phpactor (Intelligent completion and refactoring tool
 #+END_EXAMPLE
 
 Create a Docker container for PHP and the required tooling to prevent system pollution.
-*** Web-mode
-#+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  :ensure t)
-#+END_SRC
 *** Php-runtime
 #+BEGIN_SRC emacs-lisp
 (use-package php-runtime
@@ -948,32 +943,27 @@ scss mode
 ** HTML
 *** TODO [[http://web-mode.org/][Web mode]]
 #+BEGIN_SRC emacs-lisp
-;(use-package web-mode
+(use-package web-mode
 ;  :pin melpa-stable
-;  :ensure t
-;  :mode (("\\.erb\\'" . web-mode)
-;	 ("\\.mustache\\'" . web-mode)
-;	 ("\\.html?\\'" . web-mode)
-;	 ("\\.scss\\'" . web-mode)
-;	 ("\\.css\\'" . web-mode)
-;	 ("\\.js\\'" . web-mode)
-;	 ("\\.vue\\'" . web-mode)
-;   ("\\.blade\\.php\\'" . web-mode))
-;  :config (progn
-;            (setq web-mode-markup-indent-offset 2
-;		  web-mode-css-indent-offset 2
-;		  web-mode-code-indent-offset 4))
-;          (add-hook 'web-mode-hook
-;            (lambda ()
-;              (make-local-variable 'company-backends)
-;              (add-to-list 'company-backends
-;                           '(company-nxml company-web-html
-;                                          company-yasnippet company-css))
-;              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
-;              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
-;              )))
+  :ensure t
+  :mode (("\\.erb\\'" . web-mode)
+	 ("\\.mustache\\'" . web-mode)
+	 ("\\.html?\\'" . web-mode)
+	 ("\\.scss\\'" . web-mode)
+	 ("\\.css\\'" . web-mode)
+	 ("\\.js\\'" . web-mode)
+	 ("\\.vue\\'" . web-mode)
+   ("\\.blade\\.php\\'" . web-mode))
+  :config (progn
+            (setq web-mode-markup-indent-offset 2
+		  web-mode-css-indent-offset 2
+		  web-mode-code-indent-offset 4))
+          (add-hook 'web-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
+              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
+              )))
 #+END_SRC
-Disabled because it no longer works. Error message as follows: =Company backend ’company-web-html’ could not be initialized: Symbol’s function definition is void: company-web-html=
 *** [[https://github.com/smihica/emmet-mode][Emmet mode]]
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
@@ -1099,6 +1089,7 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 (add-hook 'markdown-mode-hook (lambda () (move-dup-mode)))
 (add-hook 'xml-mode-hook (lambda () (move-dup-mode)))
 (add-hook 'html-mode-hook (lambda () (move-dup-mode)))
+(add-hook 'web-mode-hook (lambda () (move-dup-mode)))
 #+END_SRC
 *** Truncating
 #+BEGIN_SRC emacs-lisp
@@ -1113,7 +1104,9 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 
 ;; Line numbers for various source file types.
 (add-hook 'html-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'web-mode-hook (lambda () (linum-mode 1)))
 (add-hook 'c-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'php-mode-hook (lambda () (linum-mode 1)))
 (add-hook 'clojure-mode-hook (lambda () (linum-mode 1)))
 (add-hook 'clojurec-mode-hook (lambda () (linum-mode 1)))
 (add-hook 'clojurescript-mode-hook (lambda () (linum-mode 1)))
