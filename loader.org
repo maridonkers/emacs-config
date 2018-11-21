@@ -631,7 +631,7 @@ String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
-  :bind (("C-c /". company-complete))
+  :bind (("<C-M-return>" . company-complete))
   :config (global-company-mode))
 
 ;;  (use-package company-flx
