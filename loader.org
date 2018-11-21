@@ -911,6 +911,15 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 (use-package company-phpactor
   :ensure t)
 #+END_SRC
+*** Snippets for PHP
+#+BEGIN_SRC emacs-lisp
+(use-package php-auto-yasnippets
+  :pin melpa-stable
+  :ensure t)
+(require 'php-auto-yasnippets)
+(setq php-auto-yasnippet-php-program "~/.emacs.d/elpa/php-auto-yasnippets-2.3.1/Create-PHP-YASnippet.php")
+(define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
+#+END_SRC
 ** Rust
 rust-mode
 #+BEGIN_SRC emacs-lisp
