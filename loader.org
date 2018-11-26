@@ -736,10 +736,9 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 *** Dumb-jump
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
-  :ensure t)
-
-(global-set-key (kbd "C-.") 'dumb-jump-go)
-(global-set-key (kbd "C-,") 'dumb-jump-back)
+  :ensure t
+  :bind (("C-." . dumb-jump-go)
+         ("C-," . dumb-jump-back)))
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -1182,9 +1181,6 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-S-F") 'find-dired)
 (global-set-key (kbd "C-%") 'replace-string)
-
-;; Recursive grep to e.g. find all references of an entered string
-(global-set-key (kbd "C-,") 'rgrep)
 
 (use-package ag
   :ensure t)
