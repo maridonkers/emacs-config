@@ -736,9 +736,10 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 *** Dumb-jump
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
-  :ensure t
-  :bind (("C-." . dumb-jump-go)
-         ("C-," . dumb-jump-back)))
+  :ensure t)
+
+(global-set-key (kbd "C-.") 'dumb-jump-go)
+(global-set-key (kbd "C-,") 'dumb-jump-back)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
