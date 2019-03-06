@@ -782,7 +782,7 @@ String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :ensure t
-  :diminish yas
+  :diminish yas-minor-mode
   :config (yas/global-mode 1)
           (add-to-list 'yas-snippet-dirs (concat init-dir "snippets"))
           (add-hook 'web-mode-hook #'(lambda () (yas-activate-extra-mode 'html-mode)))
@@ -838,7 +838,8 @@ Magit is the only thing you need when it comes to Version Control (Git)
 ;; can be placed in the root of a project. It can be used to exclude (or include)
 ;; directories (see: https://github.com/bbatsov/projectile).
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :diminish projectile-mode)
 
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
@@ -1342,6 +1343,7 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 ;; the macros-config directory before proceeding (see above paragraph)
 (use-package undo-tree
   :ensure t
+  :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
 ;; Replace regular undo and redo with respectively tree-undo and tree-redo.
