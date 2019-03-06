@@ -8,13 +8,13 @@
 
 * Introduction
 GNU Emacs org-mode configuration file. Based on Arjen Wiersma's
-[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]], Sacha Chua's [[http://pages.sachachua.com/.emacs.d/Sacha.html][Emacs configuration]] and Daniel Mai's [[https://github.com/danielmai/.emacs.d][Mai
-Emacs Configuration]]. Plus various snippets from the internet.
+[[https://gitlab.com/buildfunthings/emacs-config][emacs-config]], Sacha Chua's [[http://pages.sachachua.com/.emacs.d/Sacha.html][Emacs configuration]], Daniel Mai's [[https://github.com/danielmai/.emacs.d][Mai
+Emacs Configuration]] and [[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org][Uncle Dave's Emacs]]. Plus various snippets from the internet.
 
 You can find the latest version of this configuration at
 [[https://github.com/maridonkers/emacs-config]].
 
-Disclaimer: tested only on Linux, with emacs 25.1.
+Disclaimer: tested only (my configuration) on Linux, with emacs 25.1.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Mari Donkers")
@@ -98,13 +98,38 @@ this check and takes care of any loading of the packages.
   (error (package-refresh-contents)
          (init--install-packages)))
 #+END_SRC
-* GUI
+** Additionals for use-package
+Because use-package supports :diminish and :delight.
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t)
+(use-package delight
+  :ensure t)
+#+END_SRC
+* Emacs
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+#+END_SRC
+** Configuration
+*** Visit quickly
+#+BEGIN_SRC emacs-lisp
+(defun config-visit ()
+  "Visits ~/.emacs.d/loader.org"
+  (interactive)
+  (find-file "~/.emacs.d/loader.org"))
+(global-set-key (kbd "s-c v") 'config-visit)
+#+END_SRC
+*** Reload
+#+BEGIN_SRC emacs-lisp
+(defun config-reload ()
+  "Reloads ~/.emacs.d/loader.org at runtime"
+  (interactive)
+  (org-babel-load-file (expand-file-name "~/.emacs.d/loader.org")))
+(global-set-key (kbd "s-c r") 'config-reload)
 #+END_SRC
 ** Cursor
 *** TODO Set cursor color explicitly
@@ -124,11 +149,20 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :ensure t
+  :diminish multiple-cursors-mode
   :config (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
           (global-set-key (kbd "C-S-SPC") 'mc/edit-lines)
           (global-set-key (kbd "C->") 'mc/mark-next-like-this)
           (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
           (global-set-key (kbd "C-M-S-SPC") 'mc/mark-all-like-this))
+#+END_SRC
+*** Beacon
+#+BEGIN_SRC emacs-lisp
+(use-package beacon
+  :ensure t
+  :diminish beacon-mode
+  :config
+    (beacon-mode 1))
 #+END_SRC
 ** Prerequisite packages
   #+BEGIN_SRC emacs-lisp
@@ -370,12 +404,14 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :config (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
           (global-set-key (kbd "C-c C-r") 'ivy-resume)
           (global-set-key (kbd "<f6>") 'ivy-resume))
 
 (use-package counsel
   :ensure t
+  :diminish counsel-mode
   :config (global-set-key (kbd "M-x") 'counsel-M-x)
           (global-set-key (kbd "C-x C-f") 'counsel-find-file)
           (global-set-key (kbd "C-x C-S-r") 'counsel-recentf)
@@ -393,6 +429,7 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 
 (use-package counsel-projectile
   :ensure t
+  :diminish counsel-projectile-mode
   :config (counsel-projectile-mode))
 #+END_SRC
 *** Mark
@@ -447,6 +484,7 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config
   (which-key-mode))
 #+END_SRC
@@ -483,7 +521,97 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 (use-package sudo-edit
   :ensure t
   :bind
-    ("s-s" . sudo-edit))
+    ("s-e" . sudo-edit))
+#+END_SRC
+** async
+#+BEGIN_SRC emacs-lisp
+(use-package async
+  :ensure t
+  :init (dired-async-mode 1))
+#+END_SRC
+** dmenu
+#+BEGIN_SRC emacs-lisp
+(use-package dmenu
+  :ensure t
+  :bind
+    ("s-m" . 'dmenu))
+#+END_SRC
+** Default browser
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+#+END_SRC
+** Follow created window
+[[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org]]
+#+BEGIN_SRC emacs-lisp
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+#+END_SRC
+** Swiper
+Retrying Swiper (is it now faster with big files?)
+#+BEGIN_SRC emacs-lisp
+(use-package swiper
+  :ensure t
+  :bind ("C-s" . 'swiper))
+#+END_SRC
+** ibuffer
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; (setq ibuffer-expert t)
+#+END_SRC
+** Kill current buffer
+https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
+#+BEGIN_SRC emacs-lisp
+(defun kill-current-buffer ()
+  "Kills the current buffer."
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-current-buffer)
+#+END_SRC
+** Kill all buffers
+https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
+#+BEGIN_SRC emacs-lisp
+(defun close-all-buffers ()
+  "Kill all buffers without regard for their origin."
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+(global-set-key (kbd "C-M-s-k") 'close-all-buffers)
+#+END_SRC
+** Kill ring
+*** Size
+#+BEGIN_SRC emacs-lisp
+(setq kill-ring-max 100)
+#+END_SRC
+*** popup-kill-ring
+#+BEGIN_SRC emacs-lisp
+(use-package popup-kill-ring
+  :ensure t
+  :bind ("M-y" . popup-kill-ring))
+#+END_SRC
+** Bash
+#+BEGIN_SRC emacs-lisp
+(defvar my-term-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
+(ad-activate 'ansi-term)
+(global-set-key (kbd "s-z") 'ansi-term)
+#+END_SRC
+** Time
+#+BEGIN_SRC emacs-lisp
+(setq display-time-24hr-format t)
+(setq display-time-format "%H:%M - %d %B %Y")
+(display-time-mode 1)
 #+END_SRC
 * Org-mode
 Org-mode is an Emacs built-in.
@@ -496,6 +624,14 @@ Org-mode is an Emacs built-in.
 ;;(setq org-log-done t)
 
 (define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
+#+END_SRC
+** org-bullets
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :diminish org-bullets-mode
+  :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
 ** Exports
 #+BEGIN_SRC emacs-lisp
@@ -621,6 +757,7 @@ String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :init
     (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
@@ -628,6 +765,7 @@ String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
   :ensure t
+  :diminish rainbow-delimiters-mode
   :config (add-hook 'lisp-mode-hook
               (lambda() (rainbow-delimiters-mode)))
           (add-hook 'clojure-mode-hook
@@ -657,6 +795,7 @@ String manipulation routines for emacs lisp
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :diminish company-mode
   :bind (("<C-M-return>" . company-complete))
   :config (global-company-mode))
 
@@ -677,6 +816,7 @@ Disabled because it no longer works. Error message as follows: =Company backend 
 #+BEGIN_SRC emacs-lisp
 (use-package origami
   :ensure t
+  :diminish origami-mode
   :config (global-origami-mode)
   :bind (("C-c |" . origami-reset)
          ("C-c {" . origami-open-node-recursively)
@@ -740,6 +880,7 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 
 (use-package highlight-symbol
   :ensure t
+  :diminish highlight-symbol-mode
   :config (setq highlight-symbol-idle-delay  0.5)
   :bind (("C-*" . highlight-symbol)
          ("M-*" . highlight-symbol-remove-all)
@@ -759,8 +900,20 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
   :ensure t
+  :diminish dumb-jump-mode
   :bind (("C-." . dumb-jump-go)
          ("C-," . dumb-jump-back)))
+#+END_SRC
+*** hl-line
+#+BEGIN_SRC emacs-lisp
+(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+#+END_SRC
+** Flycheck syntax checker
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode)
+(add-hook 'prog-mode-hook #'flycheck-mode)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -769,6 +922,7 @@ supporting modules.
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :ensure t
+  :diminish cider-mode
   :pin melpa-stable
   :init (setq cider-show-error-buffer t
               cider-auto-select-error-buffer t
@@ -818,12 +972,14 @@ supporting modules.
 *** Flycheck-joker
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-joker
-  :ensure t)
+  :ensure t
+  :diminish flycheck-joker-mode)
 #+END_SRC
 *** clj-refactor
 #+BEGIN_SRC emacs-lisp
 (use-package clj-refactor
   :ensure t
+  :diminish clj-refactor-mode
   :init
   (add-hook 'clojure-mode-hook 'clj-refactor-mode)
   :config
@@ -837,7 +993,7 @@ supporting modules.
 ;from https://github.com/magnars/expand-region.el
 (use-package expand-region
   :ensure t
-  :bind ("M-S-SPC" . er/expand-region))
+  :bind ("s-r" . er/expand-region))
 #+END_SRC
 *** Sayid
 [[http://bpiel.github.io/sayid/][Sayid]] (siy EED) is a tool for debugging and profiling clojure code.
@@ -876,7 +1032,8 @@ Create a Docker container for PHP and the required tooling to prevent system pol
   :ensure t)
 
 ; http://ergoemacs.org/emacs/emacs_set_default_browser.html
-(setq browse-url-browser-function 'eww-browse-url)
+;; See above under [[Emacs][Emacs]]
+;;(setq browse-url-browser-function 'eww-browse-url)
 ;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
 ;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
 #+END_SRC
@@ -910,8 +1067,7 @@ Create a Docker container for PHP and the required tooling to prevent system pol
 (use-package phpstan
   :ensure t)
 (use-package flycheck-phpstan
-  :ensure t
-:config (add-hook 'php-mode-hook #'flycheck-mode))
+  :ensure t)
 #+END_SRC
 *** Auto completion for phpactor
 #+BEGIN_SRC emacs-lisp
@@ -996,6 +1152,42 @@ Docker modes (file and compose).
   :ensure t)
 #+END_SRC
 * Editing
+** Avy
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :bind
+    ("s-s" . avy-goto-char))
+#+END_SRC
+** Words
+*** Improved kill-word
+Why on earth does a function called kill-word not .. kill a word. It instead deletes characters from your cursors position to the end of the word, let’s make a quick fix and bind it properly.
+
+[[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org]]
+#+BEGIN_SRC emacs-lisp
+(defun daedreth/kill-inner-word ()
+  "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
+  (interactive)
+  (forward-char 1)
+  (backward-word)
+  (kill-word 1))
+(global-set-key (kbd "s-w k") 'daedreth/kill-inner-word)
+#+END_SRC
+*** Improved copy-word
+And again, the same as above but we make sure to not delete the source word.
+
+[[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org]]
+#+BEGIN_SRC emacs-lisp
+(defun daedreth/copy-whole-word ()
+  (interactive)
+  (save-excursion
+    (forward-char 1)
+    (backward-word)
+    (kill-word 1)
+    (yank)))
+(global-set-key (kbd "s-w c") 'daedreth/copy-whole-word)
+#+END_SRC
+
 ** Navigation one hand shortcuts
 #+BEGIN_SRC emacs-lisp
 ;; Delete sexp.
@@ -1114,14 +1306,9 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 (global-linum-mode 0)
 (set-default 'global-linum-mode 0)
 
-;; Line numbers for various source file types.
-(add-hook 'html-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'web-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'c-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'php-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'clojure-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'clojurec-mode-hook (lambda () (linum-mode 1)))
-(add-hook 'clojurescript-mode-hook (lambda () (linum-mode 1)))
+;; Line numbers for programming.
+(add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
+;(add-hook 'web-mode-hook (lambda () (linum-mode 1)))
 #+END_SRC
 
 *** Various
@@ -1205,7 +1392,8 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "C-%") 'replace-string)
 
 (use-package ag
-  :ensure t)
+  :ensure t
+  :diminish ag-mode)
 #+END_SRC
 ** Scroll
 #+BEGIN_SRC emacs-lisp
