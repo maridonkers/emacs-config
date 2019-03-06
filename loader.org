@@ -621,26 +621,8 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (setq display-time-format "%H:%M - %d %B %Y")
 (display-time-mode 1)
 #+END_SRC
-** Battery monitor
-#+BEGIN_SRC emacs-lisp
-(use-package fancy-battery
-  :ensure t
-  :config
-    (setq fancy-battery-show-percentage t)
-    (setq battery-update-interval 15)
-    (if window-system
-      (fancy-battery-mode)
-      (display-battery-mode)))
-#+END_SRC
-** System monitor
-#+BEGIN_SRC emacs-lisp
-(use-package symon
-  :ensure t
-  :config (symon-mode)
-  :bind
-  ("s-h" . symon-mode))
-#+END_SRC
 * exwm
+** Emacs Window Manager
 Remove comments for =exwm= (which is very nice indeed, but I'm afraid
 it'll give me carpal tunnel syndrome).
 #+BEGIN_COMMENT
@@ -750,6 +732,29 @@ it'll give me carpal tunnel syndrome).
          "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
 ;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-randr-enable)
+#+END_SRC
+#+END_COMMENT
+** Battery monitor
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package fancy-battery
+  :ensure t
+  :config
+    (setq fancy-battery-show-percentage t)
+    (setq battery-update-interval 15)
+    (if window-system
+      (fancy-battery-mode)
+      (display-battery-mode)))
+#+END_SRC
+#+END_COMMENT
+** System monitor
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
+(use-package symon
+  :ensure t
+  :config (symon-mode)
+  :bind
+  ("s-h" . symon-mode))
 #+END_SRC
 #+END_COMMENT
 * Org-mode
