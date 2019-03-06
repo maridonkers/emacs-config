@@ -110,7 +110,7 @@ Because use-package supports :diminish and :delight.
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode 1)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 #+END_SRC
@@ -532,9 +532,8 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 ** dmenu
 #+BEGIN_SRC emacs-lisp
 (use-package dmenu
-  :ensure t
-  :bind
-    ("s-m" . 'dmenu))
+  :ensure t)
+(global-set-key (kbd "C-c d") 'dmenu)
 #+END_SRC
 ** Default browser
 #+BEGIN_SRC emacs-lisp
@@ -564,6 +563,7 @@ Retrying Swiper (is it now faster with big files?)
 (use-package swiper
   :ensure t
   :bind ("C-s" . 'swiper))
+(global-set-key (kbd "s-s") 'isearch-forward)
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
@@ -613,7 +613,7 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (defadvice ansi-term (before force-bash)
   (interactive (list my-term-shell)))
 (ad-activate 'ansi-term)
-(global-set-key (kbd "s-z") 'ansi-term)
+(global-set-key (kbd "C-c b") 'ansi-term)
 #+END_SRC
 ** Time
 #+BEGIN_SRC emacs-lisp
@@ -621,6 +621,137 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (setq display-time-format "%H:%M - %d %B %Y")
 (display-time-mode 1)
 #+END_SRC
+** Battery monitor
+#+BEGIN_SRC emacs-lisp
+(use-package fancy-battery
+  :ensure t
+  :config
+    (setq fancy-battery-show-percentage t)
+    (setq battery-update-interval 15)
+    (if window-system
+      (fancy-battery-mode)
+      (display-battery-mode)))
+#+END_SRC
+** System monitor
+#+BEGIN_SRC emacs-lisp
+(use-package symon
+  :ensure t
+  :config (symon-mode)
+  :bind
+  ("s-h" . symon-mode))
+#+END_SRC
+* exwm
+Remove comments for =exwm= (which is very nice indeed, but I'm afraid
+it'll give me carpal tunnel syndrome).
+#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-
+(use-package exwm
+  :ensure t
+  :config
+
+    ;; necessary to configure exwm manually
+    (require 'exwm-config)
+
+    ;; fringe size, most people prefer 1 
+    (fringe-mode 3)
+    
+    ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
+    (server-start)
+
+    ;; this fixes issues with ido mode, if you use helm, get rid of it
+    (exwm-config-ido)
+
+    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 2 (multiple monitor).
+    (setq exwm-workspace-number 2)
+
+    ;; Workspaces.
+    ;(setq exwm-workspace-show-all-buffers t)
+    ;(setq exwm-layout-show-all-buffers t)
+
+    ; Rename buffer to window title (Otherwise EXWM#).
+    (defun exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))
+    (add-hook 'exwm-update-title-hook 'exwm-rename-buffer-to-title)
+
+    ;; this is a way to declare truly global/always working keybindings
+    ;; this is a nifty way to go back from char mode to line mode without using the mouse
+    (exwm-input-set-key (kbd "C-c w r") #'exwm-reset)
+    (exwm-input-set-key (kbd "C-c w k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "C-c w w") #'exwm-workspace-swap)
+    (exwm-input-set-key (kbd "C-c w s") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "C-c w m") #'exwm-workspace-move-window)
+
+    ;; the next loop will bind s-<number> to switch to the corresponding workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
+
+    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
+    (exwm-input-set-key (kbd "s-&")
+                        (lambda (command)
+                          (interactive (list (read-shell-command "$ ")))
+                          (start-process-shell-command command nil command)))
+
+    ;; an easy way to make keybindings work *only* in line mode
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
+    (exwm-input-set-simulation-keys
+     '(
+       ;; movement
+       ([?\C-b] . left)
+       ([?\M-b] . C-left)
+       ([?\C-f] . right)
+       ([?\M-f] . C-right)
+       ([?\C-p] . up)
+       ([?\C-n] . down)
+       ([?\C-a] . home)
+       ([?\C-e] . end)
+       ([?\M-v] . prior)
+       ([?\C-v] . next)
+       ([?\C-d] . delete)
+       ([?\C-k] . (S-end delete))
+       ;; cut/paste
+       ([?\C-w] . ?\C-x)
+       ([?\M-w] . ?\C-c)
+       ([?\C-y] . ?\C-v)
+       ;; search
+       ([?\C-s] . ?\C-f)))
+
+    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
+    (dolist (k '(XF86AudioLowerVolume
+               XF86AudioRaiseVolume
+               XF86PowerOff
+               XF86AudioMute
+               XF86AudioPlay
+               XF86AudioStop
+               XF86AudioPrev
+               XF86AudioNext
+               XF86ScreenSaver
+               XF68Back
+               XF86Forward
+               Scroll_Lock
+               print))
+    (cl-pushnew k exwm-input-prefix-keys))
+
+    (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
+
+    ;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+    ;; this just enables exwm, it started automatically once everything is ready
+    (exwm-enable))
+
+(require 'exwm-randr)
+(setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
+(add-hook 'exwm-randr-screen-change-hook
+      (lambda ()
+        (start-process-shell-command
+         "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
+;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+(exwm-randr-enable)
+#+END_SRC
+#+END_COMMENT
 * Org-mode
 Org-mode is an Emacs built-in.
 ** TODO Shortcuts
@@ -1167,7 +1298,7 @@ Docker modes (file and compose).
 (use-package avy
   :ensure t
   :bind
-    ("s-s" . avy-goto-char))
+    ("C-c c" . avy-goto-char))
 #+END_SRC
 ** Words
 *** Improved kill-word
@@ -1453,7 +1584,7 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "C-x C-m") 'shell)
 
 ;; Open an eshell.
-(global-set-key (kbd "<M-f12>") 'eshell)
+(global-set-key (kbd "C-c e") 'eshell)
 #+END_SRC
 * Notmuch (emacs email client)
 #+BEGIN_SRC emacs-lisp
