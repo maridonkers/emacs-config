@@ -620,7 +620,9 @@ String manipulation routines for emacs lisp
 *** Rainbow
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode
-  :ensure t)
+  :ensure t
+  :init
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 *** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
