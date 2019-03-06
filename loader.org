@@ -231,6 +231,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 *** Desktop
 #+BEGIN_SRC emacs-lisp
 ;; Store desktop (i.e. open files, etc.) at exit (restores when starting again).
+(setq desktop-path '("."))
 (desktop-save-mode 1)
 #+END_SRC
 *** Ignore error wrapping
@@ -470,6 +471,20 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 
 (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
 #+END_SRC
+** Disable auto save and -backup
+#+BEGIN_SRC emacs-lisp
+;disable backup
+(setq backup-inhibited t)
+;disable auto save
+(setq auto-save-default nil)
+#+END_SRC
+** sudo-edit
+#+BEGIN_SRC emacs-lisp
+(use-package sudo-edit
+  :ensure t
+  :bind
+    ("s-s" . sudo-edit))
+#+END_SRC
 * Org-mode
 Org-mode is an Emacs built-in.
 ** TODO Shortcuts
@@ -481,6 +496,11 @@ Org-mode is an Emacs built-in.
 ;;(setq org-log-done t)
 
 (define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
+#+END_SRC
+** Exports
+#+BEGIN_SRC emacs-lisp
+(use-package ox-twbs
+  :ensure t)
 #+END_SRC
 ** Indentation
 #+BEGIN_SRC emacs-lisp
