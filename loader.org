@@ -593,6 +593,14 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 #+BEGIN_SRC emacs-lisp
 (setq kill-ring-max 100)
 #+END_SRC
+*** Clear
+#+BEGIN_SRC emacs-lisp
+(defun clear-kill-ring ()
+  (interactive)
+  (setq kill-ring nil)
+  (garbage-collect))
+(global-set-key (kbd "s-y") 'clear-kill-ring)
+#+END_SRC
 *** popup-kill-ring
 #+BEGIN_SRC emacs-lisp
 (use-package popup-kill-ring
