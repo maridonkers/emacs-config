@@ -1145,6 +1145,7 @@ scss mode
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
 :ensure t
+:diminish emmet-mode
 :config (add-hook 'clojure-mode-hook 'emmet-mode)
         (add-hook 'web-mode-hook 'emmet-mode)
         (add-hook 'php-mode-hook 'emmet-mode))
