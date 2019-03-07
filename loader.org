@@ -567,7 +567,7 @@ Retrying Swiper (is it now faster with big files?)
 (use-package swiper
   :ensure t
   :bind ("C-s" . 'swiper))
-(global-set-key (kbd "s-s") 'isearch-forward)
+(global-set-key (kbd "M-s s") 'isearch-forward)
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
@@ -678,12 +678,12 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
 
     ;; this is a way to declare truly global/always working keybindings
     ;; this is a nifty way to go back from char mode to line mode without using the mouse
-    (exwm-input-set-key (kbd "C-c x") #'exwm-reset)
-    (exwm-input-set-key (kbd "C-c k") #'exwm-workspace-delete)
-    (exwm-input-set-key (kbd "C-c w") #'exwm-workspace-swap)
-    (exwm-input-set-key (kbd "C-c s") #'exwm-workspace-switch)
-    (exwm-input-set-key (kbd "C-c b") #'exwm-workspace-switch-to-buffer)
-    (exwm-input-set-key (kbd "C-c m") #'exwm-workspace-move-window)
+    (exwm-input-set-key (kbd "s-x") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+    (exwm-input-set-key (kbd "s-s") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
+    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
 
     ;; the next loop will bind s-<number> to switch to the corresponding workspace
     (dotimes (i 10)
