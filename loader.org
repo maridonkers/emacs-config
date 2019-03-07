@@ -711,6 +711,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     (exwm-input-set-key (kbd "s-s") #'exwm-workspace-switch)
     (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
     (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
+    (exwm-input-set-key (kbd "C-c x") #'exwm-randr-refresh)
 
     ;; the next loop will bind s-<number> to switch to the corresponding workspace
     (dotimes (i 10)
@@ -732,8 +733,6 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
     (exwm-input-set-simulation-keys
      '(
-       ;; resizing
-       ([?\C-S-x-left] . (C-S-x-left))
        ;; movement
        ([?\C-b] . left)
        ([?\M-b] . C-left)
@@ -770,7 +769,13 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     ;           print))
     ;(cl-pushnew k exwm-input-prefix-keys))
 
-    (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1")))
+    ;(setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
+)
+
+;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+;; this just enables exwm, it started automatically once everything is ready
+(require 'exwm-systemtray)
+(exwm-systemtray-enable)
 
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
@@ -780,11 +785,6 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
          "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
 ;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-randr-enable)
-
-;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
-;; this just enables exwm, it started automatically once everything is ready
-(require 'exwm-systemtray)
-(exwm-systemtray-enable)
 
 ;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-enable)
@@ -1376,7 +1376,7 @@ Why on earth does a function called kill-word not .. kill a word. It instead del
   (forward-char 1)
   (backward-word)
   (kill-word 1))
-(global-set-key (kbd "s-w k") 'daedreth/kill-inner-word)
+(global-set-key (kbd "C-c w k") 'daedreth/kill-inner-word)
 #+END_SRC
 *** Improved copy-word
 And again, the same as above but we make sure to not delete the source word.
@@ -1390,7 +1390,7 @@ And again, the same as above but we make sure to not delete the source word.
     (backward-word)
     (kill-word 1)
     (yank)))
-(global-set-key (kbd "s-w c") 'daedreth/copy-whole-word)
+(global-set-key (kbd "C-c w c") 'daedreth/copy-whole-word)
 #+END_SRC
 
 ** Navigation one hand shortcuts
