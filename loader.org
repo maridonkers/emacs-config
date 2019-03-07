@@ -110,7 +110,7 @@ Because use-package supports :diminish and :delight.
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode 1)
+(menu-bar-mode 0)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 #+END_SRC
@@ -130,6 +130,10 @@ Because use-package supports :diminish and :delight.
   (interactive)
   (org-babel-load-file (expand-file-name "~/.emacs.d/loader.org")))
 (global-set-key (kbd "s-c r") 'config-reload)
+#+END_SRC
+** Menu bar switch
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c h") 'menu-bar-mode)
 #+END_SRC
 ** Cursor
 *** TODO Set cursor color explicitly
@@ -613,13 +617,32 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (defadvice ansi-term (before force-bash)
   (interactive (list my-term-shell)))
 (ad-activate 'ansi-term)
-(global-set-key (kbd "C-c b") 'ansi-term)
+(global-set-key (kbd "C-c t") 'ansi-term)
 #+END_SRC
 ** Time
 #+BEGIN_SRC emacs-lisp
 (setq display-time-24hr-format t)
 (setq display-time-format "%H:%M - %d %B %Y")
 (display-time-mode 1)
+#+END_SRC
+** Alsa
+*** Volume controls
+#+BEGIN_SRC emacs-lisp
+(defun audio/mute ()
+  (interactive)
+  (start-process "audio-mute" nil "amixer" "-q" "sset" "Master" "toggle"))
+
+(defun audio/raise-volume ()
+  (interactive)
+  (start-process "raise-volume" nil "amixer" "-q" "sset" "Master" "10%+"))
+
+(defun audio/lower-volume ()
+  (interactive)
+(start-process "lower-volume" nil "amixer" "-q" "sset" "Master" "10%-"))
+
+(global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
+(global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
+(global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
 * exwm
 ** Emacs Window Manager
@@ -718,11 +741,7 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
                print))
     (cl-pushnew k exwm-input-prefix-keys))
 
-    (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
-
-    ;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
-    ;; this just enables exwm, it started automatically once everything is ready
-    (exwm-enable))
+    (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1")))
 
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
@@ -732,6 +751,13 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
          "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
 ;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-randr-enable)
+
+;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+    ;; this just enables exwm, it started automatically once everything is ready
+(require 'exwm-systemtray)
+(exwm-systemtray-enable)
+
+(exwm-enable)
 #+END_SRC
 ** Battery monitor
 #+BEGIN_SRC emacs-lisp
