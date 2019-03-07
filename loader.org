@@ -110,7 +110,7 @@ Because use-package supports :diminish and :delight.
 ** Initialization
 - Turn off mouse interface early in startup to avoid momentary display.
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 #+END_SRC
@@ -624,9 +624,8 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 * exwm
 ** Emacs Window Manager
 Remove comments for =exwm= (which is very nice indeed, but I'm afraid
-it'll give me carpal tunnel syndrome).
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-
+it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
+#+BEGIN_SRC emacs-lisp
 (use-package exwm
   :ensure t
   :config
@@ -733,9 +732,7 @@ it'll give me carpal tunnel syndrome).
 ;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-randr-enable)
 #+END_SRC
-#+END_COMMENT
 ** Battery monitor
-#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package fancy-battery
   :ensure t
@@ -746,9 +743,7 @@ it'll give me carpal tunnel syndrome).
       (fancy-battery-mode)
       (display-battery-mode)))
 #+END_SRC
-#+END_COMMENT
 ** System monitor
-#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (use-package symon
   :ensure t
@@ -756,7 +751,6 @@ it'll give me carpal tunnel syndrome).
   :bind
   ("s-h" . symon-mode))
 #+END_SRC
-#+END_COMMENT
 * Org-mode
 Org-mode is an Emacs built-in.
 ** TODO Shortcuts
@@ -794,17 +788,18 @@ When exporting documents to HTML documents, such as code fragments, we need to h
   :ensure t)
 #+END_SRC
 ** TODO Reveal.js
-Tool to create presentations via an emacs org file export. See
-[[http://matt.hackinghistory.ca/2015/07/11/creating-and-publishing-presentations-with-org-reveal/][Creating and Publishing Presentations with org-reveal]].
+Tool to create presentations via an emacs org file export. See: [[https://github.com/emacsmirror/org-re-reveal]].
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 ;;TODO doesn't appear to work (breaks org-mode export of title sections).
-;;(use-package ox-reveal
-;;    :ensure ox-reveal)
+(use-package org-re-reveal
+  :ensure t)
 
 ;; Reveal.js location and ox-reveal.
 ;;(setq org-reveal-root "file:///home/mdo/lib/reveal.js")
 ;;(setq org-reveal-mathjax t)
-#+END_SRC 
+#+END_SRC
+#+END_COMMENT
 * Edit indirect
 The edit-indirect package is used by Markdown for editing code blocks.
 #+BEGIN_SRC emacs-lisp
