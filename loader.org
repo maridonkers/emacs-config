@@ -627,6 +627,8 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 #+END_SRC
 ** Alsa
 *** Volume controls
+This appears to be done by the =desktop-environment= package.
+#+BEGIN_COMMENT
 #+BEGIN_SRC emacs-lisp
 (defun audio/mute ()
   (interactive)
@@ -644,10 +646,31 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
+#+END_COMMENT
+** Screen lock, Suspend and Hibernate
+Beware: the =light-locker= daemon must be running for the screen locking to work.
+#+BEGIN_SRC emacs-lisp
+(defun light-lock-screen ()
+  (interactive)
+  (shell-command "light-locker-command -l"))
+(exwm-input-set-key (kbd "<Scroll_Lock>") #'light-lock-screen)
+
+(defun systemctl-suspend ()
+  (interactive)
+  (shell-command "systemctl suspend"))
+(exwm-input-set-key (kbd "C-<Scroll_Lock>") #'systemctl-suspend)
+
+(defun systemctl-hibernate ()
+  (interactive)
+  (shell-command "systemctl hibernate"))
+(exwm-input-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
+#+END_SRC
 * exwm
 ** Emacs Window Manager
 Remove comments for =exwm= (which is very nice indeed, but I'm afraid
 it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
+
+Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 #+BEGIN_SRC emacs-lisp
 (use-package exwm
   :ensure t
@@ -671,6 +694,10 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
     ;; Workspaces.
     ;(setq exwm-workspace-show-all-buffers t)
     ;(setq exwm-layout-show-all-buffers t)
+
+    ;; reize windows with mouse.
+    (setq window-divider-default-right-width 1)
+    (window-divider-mode)
 
     ; Rename buffer to window title (Otherwise EXWM#).
     (defun exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))
@@ -705,6 +732,8 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
     ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
     (exwm-input-set-simulation-keys
      '(
+       ;; resizing
+       ([?\C-S-x-left] . (C-S-x-left))
        ;; movement
        ([?\C-b] . left)
        ([?\M-b] . C-left)
@@ -726,20 +755,20 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
        ([?\C-s] . ?\C-f)))
 
     ;; this little bit will make sure that XF86 keys work in exwm buffers as well
-    (dolist (k '(XF86AudioLowerVolume
-               XF86AudioRaiseVolume
-               XF86PowerOff
-               XF86AudioMute
-               XF86AudioPlay
-               XF86AudioStop
-               XF86AudioPrev
-               XF86AudioNext
-               XF86ScreenSaver
-               XF68Back
-               XF86Forward
-               Scroll_Lock
-               print))
-    (cl-pushnew k exwm-input-prefix-keys))
+    ;(dolist (k '(XF86AudioLowerVolume
+    ;           XF86AudioRaiseVolume
+    ;           XF86PowerOff
+    ;           XF86AudioMute
+    ;           XF86AudioPlay
+    ;           XF86AudioStop
+    ;           XF86AudioPrev
+    ;           XF86AudioNext
+    ;           XF86ScreenSaver
+    ;           XF68Back
+    ;           XF86Forward
+    ;           Scroll_Lock
+    ;           print))
+    ;(cl-pushnew k exwm-input-prefix-keys))
 
     (setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1")))
 
@@ -749,15 +778,23 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
       (lambda ()
         (start-process-shell-command
          "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
-;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-randr-enable)
 
-;;TODO! Only enable if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
-    ;; this just enables exwm, it started automatically once everything is ready
+;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+;; this just enables exwm, it started automatically once everything is ready
 (require 'exwm-systemtray)
 (exwm-systemtray-enable)
 
+;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
 (exwm-enable)
+#+END_SRC
+** desktop-environment
+Extension package for e.g. volume keys and screen lock with s-l.
+#+BEGIN_SRC emacs-lisp
+(use-package desktop-environment
+  :diminish desktop-environment-mode
+  :ensure t)
 #+END_SRC
 ** Battery monitor
 #+BEGIN_SRC emacs-lisp
