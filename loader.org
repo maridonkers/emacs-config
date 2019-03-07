@@ -659,6 +659,7 @@ it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
     (exwm-input-set-key (kbd "C-c w k") #'exwm-workspace-delete)
     (exwm-input-set-key (kbd "C-c w w") #'exwm-workspace-swap)
     (exwm-input-set-key (kbd "C-c w s") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "C-c w b") #'exwm-workspace-switch-to-buffer)
     (exwm-input-set-key (kbd "C-c w m") #'exwm-workspace-move-window)
 
     ;; the next loop will bind s-<number> to switch to the corresponding workspace
