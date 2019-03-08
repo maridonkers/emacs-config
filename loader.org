@@ -653,17 +653,18 @@ Beware: the =light-locker= daemon must be running for the screen locking to work
 (defun light-lock-screen ()
   (interactive)
   (shell-command "light-locker-command -l"))
-(exwm-input-set-key (kbd "<Scroll_Lock>") #'light-lock-screen)
+(global-set-key (kbd "<Scroll_Lock>") #'light-lock-screen)
 
 (defun systemctl-suspend ()
   (interactive)
   (shell-command "systemctl suspend"))
 (exwm-input-set-key (kbd "C-<Scroll_Lock>") #'systemctl-suspend)
+(global-set-key (kbd "<XF86ScreenSaver>") #'systemctl-suspend)
 
 (defun systemctl-hibernate ()
   (interactive)
   (shell-command "systemctl hibernate"))
-(exwm-input-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
+(global-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
 #+END_SRC
 * exwm
 ** Emacs Window Manager
@@ -680,20 +681,20 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     (require 'exwm-config)
 
     ;; fringe size, most people prefer 1 
-    (fringe-mode 3)
+    (fringe-mode 1)
     
     ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
     (server-start)
 
     ;; this fixes issues with ido mode, if you use helm, get rid of it
-    (exwm-config-ido)
+    ;(exwm-config-ido)
 
-    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 2 (multiple monitor).
+    ;; a number between 1 and 9, exwm creates workspaces dynamically; start out with 2 (multiple monitor).
     (setq exwm-workspace-number 2)
 
     ;; Workspaces.
-    ;(setq exwm-workspace-show-all-buffers t)
-    ;(setq exwm-layout-show-all-buffers t)
+    (setq exwm-workspace-show-all-buffers t)
+    (setq exwm-layout-show-all-buffers t)
 
     ;; reize windows with mouse.
     (setq window-divider-default-right-width 1)
@@ -707,8 +708,8 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     ;; this is a nifty way to go back from char mode to line mode without using the mouse
     (exwm-input-set-key (kbd "s-x") #'exwm-reset)
     (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
-    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
-    (exwm-input-set-key (kbd "s-s") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "s-s") #'exwm-workspace-swap)
     (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
     (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
     (exwm-input-set-key (kbd "C-c x") #'exwm-randr-refresh)
@@ -753,6 +754,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
        ;; search
        ([?\C-s] . ?\C-f)))
 
+    ;; Commented out because desktop-environment package apparently supplies this.
     ;; this little bit will make sure that XF86 keys work in exwm buffers as well
     ;(dolist (k '(XF86AudioLowerVolume
     ;           XF86AudioRaiseVolume
@@ -813,6 +815,7 @@ Extension package for e.g. volume keys and screen lock with s-l.
 #+BEGIN_SRC emacs-lisp
 (use-package symon
   :ensure t
+  :diminish symon-mode
   :config (symon-mode)
   :bind
   ("s-h" . symon-mode))
