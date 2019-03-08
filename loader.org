@@ -676,7 +676,6 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 (use-package exwm
   :ensure t
   :config
-
     ;; necessary to configure exwm manually
     (require 'exwm-config)
 
@@ -782,6 +781,8 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 
 (require 'exwm-randr)
 
+;; Snippet taken from RandR (multi-screen) at: https://github.com/ch11ng/exwm/wiki
+;; and converted to two active screens. Also added call to exwm-randr-refresh.
 (defun exwm-change-screen-hook ()
   (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
         primary-output)
@@ -803,13 +804,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
                                                   (list 0 primary-output)))
         (exwm-randr-refresh))))
 
-;(setq exwm-randr-workspace-output-plist (list 0 "LVDS-1" 1 "HDMI-1"))
 (add-hook 'exwm-randr-screen-change-hook 'exwm-change-screen-hook)
-
-;(add-hook 'exwm-randr-screen-change-hook
-;      (lambda ()
-;        (start-process-shell-command
-;         "xrandr" nil "xrandr --output LVDS-1 --primary --auto --output HDMI-1 --auto --left-of LVDS-1")))
 
 ;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
 (message "Enabling EXWM RANDR.")
