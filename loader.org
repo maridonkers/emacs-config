@@ -774,21 +774,49 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     ;(setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
 )
 
-;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
 ;; this just enables exwm, it started automatically once everything is ready
 (require 'exwm-systemtray)
+(message "Enabling EXWM SYSTEMTRAY.")
 (exwm-systemtray-enable)
 
 (require 'exwm-randr)
-(setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
-(add-hook 'exwm-randr-screen-change-hook
-      (lambda ()
-        (start-process-shell-command
-         "xrandr" nil "xrandr --output HDMI-1 --primary --auto --output LVDS-1 --auto --right-of HDMI-1")))
-;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+
+(defun exwm-change-screen-hook ()
+  (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
+        primary-output)
+    (with-temp-buffer
+      (call-process "xrandr" nil t nil)
+      (goto-char (point-min))
+      (re-search-forward xrandr-output-regexp nil 'noerror)
+      (setq primary-output (match-string 1))
+      (forward-line)
+      (setq multiple-outputs (re-search-forward xrandr-output-regexp nil 'noerror))
+      (if (not multiple-outputs)
+        (call-process "xrandr" nil nil nil "--output" primary-output "--auto")
+        (call-process
+          "xrandr" nil nil nil
+          "--output" (match-string 1) "--primary" "--auto"
+          "--output" primary-output "--auto" "--right-of" (match-string 1)))
+        (setq exwm-randr-workspace-output-plist (if multiple-outputs
+                                                  (list 0 primary-output 1 (match-string 1))
+                                                  (list 0 primary-output)))
+        (exwm-randr-refresh))))
+
+;(setq exwm-randr-workspace-output-plist (list 0 "LVDS-1" 1 "HDMI-1"))
+(add-hook 'exwm-randr-screen-change-hook 'exwm-change-screen-hook)
+
+;(add-hook 'exwm-randr-screen-change-hook
+;      (lambda ()
+;        (start-process-shell-command
+;         "xrandr" nil "xrandr --output LVDS-1 --primary --auto --output HDMI-1 --auto --left-of LVDS-1")))
+
+;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
+(message "Enabling EXWM RANDR.")
 (exwm-randr-enable)
 
-;;TODO! Only if in EXWM desktop check if environment variable DESKTOP_SESSION=exwm
+;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
+(message "Enabling EXWM.")
 (exwm-enable)
 #+END_SRC
 ** desktop-environment
