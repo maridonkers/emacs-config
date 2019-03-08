@@ -681,13 +681,13 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     (require 'exwm-config)
 
     ;; fringe size, most people prefer 1 
-    (fringe-mode 1)
+    (fringe-mode 3)
     
     ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
     (server-start)
 
-    ;; this fixes issues with ido mode, if you use helm, get rid of it
-    ;(exwm-config-ido)
+    ;; this fixes issues with ido mode (e.g. dmenu not fully showing), if you use helm, get rid of it
+    (exwm-config-ido)
 
     ;; a number between 1 and 9, exwm creates workspaces dynamically; start out with 2 (multiple monitor).
     (setq exwm-workspace-number 2)
