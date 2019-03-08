@@ -746,7 +746,9 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
        ([?\C-v] . next)
        ([?\C-d] . delete)
        ([?\C-k] . (S-end delete))
-       ;; cut/paste
+       ;; select/cut/paste
+       ;([?\C-x ?h] . ?\C-a) ; only works in emacs 27+ -- https://github.com/ch11ng/exwm/issues/348
+       ([?\M-a] . ?\C-a) ; workaround
        ([?\C-w] . ?\C-x)
        ([?\M-w] . ?\C-c)
        ([?\C-y] . ?\C-v)
@@ -814,6 +816,9 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 (message "Enabling EXWM.")
 (exwm-enable)
 #+END_SRC
+
+#+RESULTS:
+
 ** desktop-environment
 Extension package for e.g. volume keys and screen lock with s-l.
 #+BEGIN_SRC emacs-lisp
