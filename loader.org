@@ -705,13 +705,13 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 
     ;; this is a way to declare truly global/always working keybindings
     ;; this is a nifty way to go back from char mode to line mode without using the mouse
-    (exwm-input-set-key (kbd "s-x") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
     (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
     (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
     (exwm-input-set-key (kbd "s-s") #'exwm-workspace-swap)
     (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
     (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
-    (exwm-input-set-key (kbd "C-c x") #'exwm-randr-refresh)
+    (exwm-input-set-key (kbd "s-x") #'exwm-randr-refresh)
 
     ;; the next loop will bind s-<number> to switch to the corresponding workspace
     (dotimes (i 10)
@@ -1225,7 +1225,7 @@ supporting modules.
 ;from https://github.com/magnars/expand-region.el
 (use-package expand-region
   :ensure t
-  :bind ("s-r" . er/expand-region))
+  :bind ("C-x x" . er/expand-region))
 #+END_SRC
 *** Sayid
 [[http://bpiel.github.io/sayid/][Sayid]] (siy EED) is a tool for debugging and profiling clojure code.
