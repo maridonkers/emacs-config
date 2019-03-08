@@ -794,7 +794,9 @@ Extension package for e.g. volume keys and screen lock with s-l.
 #+BEGIN_SRC emacs-lisp
 (use-package desktop-environment
   :diminish desktop-environment-mode
-  :ensure t)
+  :ensure t
+  :config (if window-system
+            (desktop-environment-mode)))
 #+END_SRC
 ** Battery monitor
 #+BEGIN_SRC emacs-lisp
