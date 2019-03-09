@@ -713,6 +713,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
     (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
     (exwm-input-set-key (kbd "s-x") #'exwm-randr-refresh)
+    (exwm-input-set-key (kbd "s-f") #'exwm-layout-set-fullscreen)
     (exwm-input-set-key (kbd "s-d") #'dmenu)
 
     ;; the next loop will bind s-<number> to switch to the corresponding workspace
