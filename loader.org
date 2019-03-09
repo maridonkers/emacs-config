@@ -723,6 +723,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 
     (defvar exwm-workspace-previous-index nil "The previous active workspace index.")
 
+;; Workspace previous/next; see snippet at: https://emacs.stackexchange.com/questions/33105/in-exwm-emacs-x-window-manager-how-can-i-switch-to-previous-workspace
 ;   (defun exwm-workspace--current-to-previous-index (_x)
 ;     (setq exwm-workspace-previous-index exwm-workspace-current-index))
 
