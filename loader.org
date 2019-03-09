@@ -752,6 +752,8 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
    (exwm-input-set-key (kbd "s-\\") #'exwm-workspace-switch-to-latest)
    (exwm-input-set-key (kbd "s-[") #'exwm-workspace-switch-to-previous)
    (exwm-input-set-key (kbd "s-]") #'exwm-workspace-switch-to-next)
+   (exwm-input-set-key (kbd "<s-iso-lefttab>") #'exwm-workspace-switch-to-previous)
+   (exwm-input-set-key (kbd "<s-tab>") #'exwm-workspace-switch-to-next)
 
    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
    (exwm-input-set-key (kbd "s-&")
