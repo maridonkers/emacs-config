@@ -628,8 +628,8 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 ** Alsa
 *** Volume controls
 This appears to be done by the =desktop-environment= package.
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 (defun audio/mute ()
   (interactive)
   (start-process "audio-mute" nil "amixer" "-q" "sset" "Master" "toggle"))
@@ -645,8 +645,7 @@ This appears to be done by the =desktop-environment= package.
 (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
-#+END_SRC
-#+END_COMMENT
+#+END_EXAMPLE
 ** Screen lock, Suspend and Hibernate
 Beware: the =light-locker= daemon must be running for the screen locking to work.
 #+BEGIN_SRC emacs-lisp
@@ -668,11 +667,11 @@ Beware: the =light-locker= daemon must be running for the screen locking to work
 #+END_SRC
 * exwm
 ** Emacs Window Manager
-Remove comments for =exwm= (which is very nice indeed, but I'm afraid
-it'll give me carpal tunnel syndrome; too late, I'm already addicted to it).
+Replace EXAMPLE with SRC emacs-lisp to enable =exwm= (which is very nice indeed, but I'm afraid
+it'll give me carpal tunnel syndrome; sticking to OpenBox).
 
 Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE
 (use-package exwm
   :ensure t
   :config
@@ -851,21 +850,20 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 ;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
 (message "Enabling EXWM.")
 (exwm-enable)
-#+END_SRC
-
-#+RESULTS:
-
+#+END_EXAMPLE
 ** desktop-environment
+Replace EXAMPLE with SRC emacs-lisp to enable.
 Extension package for e.g. volume keys and screen lock with s-l.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE
 (use-package desktop-environment
   :diminish desktop-environment-mode
   :ensure t
   :config (if window-system
             (desktop-environment-mode)))
-#+END_SRC
+#+END_EXAMPLE
 ** Battery monitor
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 (use-package fancy-battery
   :ensure t
   :config
@@ -874,9 +872,10 @@ Extension package for e.g. volume keys and screen lock with s-l.
     (if window-system
       (fancy-battery-mode)
       (display-battery-mode)))
-#+END_SRC
+#+END_EXAMPLE
 ** System monitor
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 (use-package symon
   :ensure t
   :diminish symon-mode
@@ -889,9 +888,7 @@ Extension package for e.g. volume keys and screen lock with s-l.
     (symon-mode)
   :bind
   ("s-h" . symon-mode))
-
-
-#+END_SRC
+#+END_EXAMPLE
 * Org-mode
 Org-mode is an Emacs built-in.
 ** TODO Shortcuts
@@ -930,8 +927,8 @@ When exporting documents to HTML documents, such as code fragments, we need to h
 #+END_SRC
 ** TODO Reveal.js
 Tool to create presentations via an emacs org file export. See: [[https://github.com/emacsmirror/org-re-reveal]].
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 ;;TODO doesn't appear to work (breaks org-mode export of title sections).
 (use-package org-re-reveal
   :ensure t)
@@ -939,8 +936,7 @@ Tool to create presentations via an emacs org file export. See: [[https://github
 ;; Reveal.js location and ox-reveal.
 ;;(setq org-reveal-root "file:///home/mdo/lib/reveal.js")
 ;;(setq org-reveal-mathjax t)
-#+END_SRC
-#+END_COMMENT
+#+END_EXAMPLE
 * Edit indirect
 The edit-indirect package is used by Markdown for editing code blocks.
 #+BEGIN_SRC emacs-lisp
@@ -1729,8 +1725,8 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 #+END_SRC
 * Treemacs
 Requires Emacs 25.2+...
-#+BEGIN_COMMENT
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 ;; treemacs set up
 (use-package treemacs
   :pin melpa-stable
@@ -1779,8 +1775,7 @@ Requires Emacs 25.2+...
 ;; do without images
 ;; track treemacs issue #53 - this isn't ready yet
 ;; (setq treemacs-no-images t)
-#+END_SRC
-#+END_COMMENT
+#+END_EXAMPLE
 * Notmuch (emacs email client)
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
