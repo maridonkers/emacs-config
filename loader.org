@@ -566,8 +566,7 @@ Retrying Swiper (is it now faster with big files?)
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
   :ensure t
-  :bind ("C-s" . 'swiper))
-(global-set-key (kbd "M-s s") 'isearch-forward)
+  :bind ("C-=" . 'swiper))
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
@@ -1253,7 +1252,8 @@ supporting modules.
   :diminish flycheck-joker-mode)
 #+END_SRC
 *** clj-refactor
-#+BEGIN_SRC emacs-lisp
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 (use-package clj-refactor
   :ensure t
   :diminish clj-refactor-mode
@@ -1263,7 +1263,7 @@ supporting modules.
   ;; Configure the Clojure Refactoring prefix:
   (cljr-add-keybindings-with-prefix "C-c C-/")
   :diminish clj-refactor-mode)
-#+END_SRC
+#+END_EXAMPLE
 *** Expand region
 #+BEGIN_SRC emacs-lisp
 ;expand-region functionality is really great for lisp/clojure editing
@@ -1271,152 +1271,6 @@ supporting modules.
 (use-package expand-region
   :ensure t
   :bind ("C-x x" . er/expand-region))
-#+END_SRC
-*** Sayid
-[[http://bpiel.github.io/sayid/][Sayid]] (siy EED) is a tool for debugging and profiling clojure code.
-
-Sayid works by intercepting and recording the inputs and outputs of functions. It can even record function calls that occur inside of functions. The user can select which functions to trace. Functions can be selected individually or by namespace. The recorded data can be displayed, queried and profiled.
-#+BEGIN_SRC emacs-lisp
-;; http://bpiel.github.io/sayid/
-(use-package sayid
-  :ensure t)
-
-(eval-after-load 'clojure-mode
-   '(sayid-setup-package))
-#+END_SRC
-** Geiser
-[[http://www.nongnu.org/geiser/][Geiser]] is a collection of Emacs major and minor modes that conspire with one or more Scheme interpreters to keep the Lisp Machine Spirit alive. It draws inspiration (and a bit more) from environments such as Common Lisp’s Slime, Factor’s FUEL, Squeak or Emacs itself, and does its best to make Scheme hacking inside Emacs (even more) fun.
-
-#+BEGIN_SRC emacs-lisp
-(use-package geiser
-  :ensure t)
-#+END_SRC
-** TODO PHP
-Let's get some of that low hanging fruit...
-
-Use the packages listed for [[https://github.com/emacs-php/php-suite][php-suite]].
-
-Create a Docker container for PHP and the required tooling to prevent system pollution.
-*** Php-runtime
-#+BEGIN_SRC emacs-lisp
-(use-package php-runtime
-  :ensure t)
-#+END_SRC
-*** TODO [[https://github.com/ejmr/php-mode][php-mode]]
-#+BEGIN_SRC emacs-lisp
-(use-package php-mode
-;  :pin melpa-stable
-  :ensure t)
-
-; http://ergoemacs.org/emacs/emacs_set_default_browser.html
-;; See above under [[Emacs][Emacs]]
-;;(setq browse-url-browser-function 'eww-browse-url)
-;; "etags `find . \\( -name '*.php' -o -name '*.sql' \\)`"
-;; "etags TAGS `git ls-files | egrep '*.(php|sql)'`"
-#+END_SRC
-*** TODO php-extras
-#+BEGIN_SRC emacs-lisp
-;;(use-package php-extras
-;;  :ensure t)
-#+END_SRC
-*** Composer
-#+BEGIN_SRC emacs-lisp
-(use-package composer
-  :ensure t)
-#+END_SRC
-*** Phpunit
-#+BEGIN_SRC emacs-lisp
-(use-package phpunit
-  :ensure t)
-#+END_SRC
-*** Phpactor
-#+BEGIN_SRC emacs-lisp
-(use-package phpactor
-  :ensure t)
-#+END_SRC
-*** Psysh
-#+BEGIN_SRC emacs-lisp
-(use-package psysh
-  :ensure t)
-#+END_SRC
-*** Phpstan
-#+BEGIN_SRC emacs-lisp
-(use-package phpstan
-  :ensure t)
-(use-package flycheck-phpstan
-  :ensure t)
-#+END_SRC
-*** Auto completion for phpactor
-#+BEGIN_SRC emacs-lisp
-(use-package company-phpactor
-  :ensure t)
-#+END_SRC
-*** Snippets for PHP
-#+BEGIN_SRC emacs-lisp
-(use-package php-auto-yasnippets
-  :pin melpa-stable
-  :ensure t)
-(require 'php-auto-yasnippets)
-(setq php-auto-yasnippet-php-program "~/.emacs.d/elpa/php-auto-yasnippets-2.3.1/Create-PHP-YASnippet.php")
-(define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-#+END_SRC
-** Rust
-rust-mode
-#+BEGIN_SRC emacs-lisp
-(use-package rust-mode
-  :pin melpa-stable
-  :ensure t)
-#+END_SRC
-** Julia
-julia-mode
-#+BEGIN_SRC emacs-lisp
-(use-package julia-mode
-  :ensure t)
-#+END_SRC
-** TypeScript
-#+BEGIN_SRC emacs
-(use-package typescript-mode
-  :ensure t
-  :mode "\\.ts\\'")
-#+END_SRC
-** SCSS
-scss mode
-#+BEGIN_SRC emacs-lisp
-(use-package scss-mode
-  :ensure t)
-#+END_SRC
-** HTML
-*** TODO [[http://web-mode.org/][Web mode]]
-#+BEGIN_SRC emacs-lisp
-(use-package web-mode
-;  :pin melpa-stable
-  :ensure t
-  :mode (("\\.erb\\'" . web-mode)
-	 ("\\.mustache\\'" . web-mode)
-	 ("\\.html?\\'" . web-mode)
-	 ("\\.scss\\'" . web-mode)
-	 ("\\.css\\'" . web-mode)
-	 ("\\.js\\'" . web-mode)
-	 ("\\.vue\\'" . web-mode)
-   ("\\.blade\\.php\\'" . web-mode))
-  :config (progn
-            (setq web-mode-markup-indent-offset 2
-		  web-mode-css-indent-offset 2
-		  web-mode-code-indent-offset 4))
-          (add-hook 'web-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'web-beautify-html-buffer t t)
-              ;; (add-hook 'after-save-hook 'web-mode-reload t t)
-              )))
-#+END_SRC
-*** [[https://github.com/smihica/emmet-mode][Emmet mode]]
-#+BEGIN_SRC emacs-lisp
-(use-package emmet-mode
-:ensure t
-:diminish emmet-mode
-:config (add-hook 'clojure-mode-hook 'emmet-mode)
-        (add-hook 'web-mode-hook 'emmet-mode)
-        (add-hook 'php-mode-hook 'emmet-mode))
 #+END_SRC
 * Docker
 Docker modes (file and compose).
