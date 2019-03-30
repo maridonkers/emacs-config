@@ -1180,9 +1180,10 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
   :bind (("C-." . dumb-jump-go)
          ("C-," . dumb-jump-back)))
 #+END_SRC
-*** hl-line
+*** TODO hl-line
+This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
-(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
 ** Flycheck syntax checker
 #+BEGIN_SRC emacs-lisp
