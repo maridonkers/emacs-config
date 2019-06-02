@@ -27,7 +27,7 @@
  '(highlight-symbol-idle-delay 0.5)
  '(package-selected-packages
    (quote
-    (lua-mode org-re-reveal delight diminish org-bullets popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets flycheck-joker flycheck-clojure dumb-jump clj-refactor scss-mode company-web geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile company-php clojure-snippets bm auctex ag)))
+    (lua-mode org-re-reveal delight diminish org-bullets popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets flycheck-joker flycheck-clojure dumb-jump scss-mode company-web geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile company-php clojure-snippets bm auctex ag)))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (dev) (go) (cljs-repl))")
