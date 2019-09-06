@@ -1304,6 +1304,13 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package lua-mode
     :ensure t)
 #+END_SRC
+** PHP
+*** Drupal mode
+#+BEGIN_SRC emacs-lisp
+(use-package drupal-mode
+  :ensure t
+  :diminish drupal-mode)
+#+END_SRC
 * Docker
 Docker modes (file and compose).
 #+BEGIN_SRC emacs-lisp
