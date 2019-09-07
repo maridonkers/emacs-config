@@ -1311,6 +1311,12 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :ensure t
   :diminish drupal-mode)
 #+END_SRC
+*** Geben (Xdebug)
+#+BEGIN_SRC emacs-lisp
+(use-package geben
+  :ensure t
+  :diminish geben)
+#+END_SRC
 * Docker
 Docker modes (file and compose).
 #+BEGIN_SRC emacs-lisp
