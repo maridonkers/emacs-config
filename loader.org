@@ -1249,6 +1249,11 @@ supporting modules.
 (add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'highlight-symbol-mode)
 #+END_SRC
+*** Indentation customization
+See documentation [[https://github.com/clojure-emacs/clojure-mode/][clojure-mode]]. Below are customizations for specific indentations.
+#+BEGIN_SRC emacs-lisp
+(put-clojure-indent '>defn 2)
+#+END_SRC
 *** Flycheck-joker
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-joker
@@ -1620,7 +1625,7 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 (global-set-key (kbd "C-x C-m") 'shell)
 
 ;; Open an eshell.
-(global-set-key (kbd "C-c e") 'eshell)
+(global-set-key (kbd "<f12>") 'eshell)
 #+END_SRC
 * Treemacs
 Requires Emacs 25.2+...
