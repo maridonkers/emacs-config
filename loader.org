@@ -1317,6 +1317,12 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package lua-mode
     :ensure t)
 #+END_SRC
+** HTML/CSS
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :ensure t
+  :diminish web-mode)
+#+END_SRC
 ** PHP
 *** Drupal mode
 #+BEGIN_SRC emacs-lisp
