@@ -961,14 +961,22 @@ major mode supports the adoc format.
 (add-hook 'adoc-mode-hook (lambda() (buffer-face-mode t)))
 #+END_SRC
 * LaTex
+This installs the [[https://www.gnu.org/software/auctex/][auctex]] and [[https://github.com/tom-tan/auctex-latexmk][auctex-latexmk]] packages.
 #+BEGIN_SRC emacs-lisp
 (use-package tex
     :ensure auctex
     :config (setq TeX-auto-save t)
             (setq TeX-parse-self t)
-            (setq TeX-save-query nil))
+            (setq TeX-save-query nil)
+            (setq latex-run-command "pdflatex"))
 ;;(setq TeX-PDF-mode t)
 (require 'tex)
+
+(use-package auctex-latexmk
+    :ensure auctex-latexmk)
+(require 'auctex-latexmk)
+(auctex-latexmk-setup)
+(setq auctex-latexmk-inherit-TeX-PDF-mode t)
 #+END_SRC
 * Programming
 ** General
@@ -1321,6 +1329,15 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package geben
   :ensure t
   :diminish geben)
+#+END_SRC
+*** web-mode
+#+BEGIN_SRC emacs-lisp
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+(setq web-mode-engines-alist
+  '(("php"    . "\\.phtml\\'")
+    ("blade"  . "\\.blade\\."))
+)
 #+END_SRC
 * Docker
 Docker modes (file and compose).
