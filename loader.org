@@ -283,6 +283,24 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
       (ignore-errors
         (funcall fn)))))
 #+END_SRC
+*** TODO evil mode
+VI key bindings for emacs. The TODO is to check for incompabilities with the existing configuration (e.g. keybindings, etc.)
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :init ;; tweak evil's configuration before loading it
+    (setq evil-search-module 'evil-search)
+    (setq evil-ex-complete-emacs-commands nil)
+    (setq evil-vsplit-window-right t)
+    (setq evil-split-window-below t)
+    (setq evil-shift-round nil)
+    (setq evil-want-C-u-scroll t) 
+  :config ; tweak evil after loading
+    (evil-mode))
+    
+;; example how to map a command in normal mode (called 'normal state' in evil)
+;;(define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
+#+END_SRC
 *** Moving around
 **** Bookmarks
 #+BEGIN_SRC emacs-lisp
