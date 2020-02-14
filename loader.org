@@ -1323,6 +1323,16 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :ensure t
   :diminish web-mode)
 #+END_SRC
+Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+  :ensure t
+  :diminish emmet-mode)
+
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+#+END_SRC
+
 ** PHP
 *** Drupal mode
 #+BEGIN_SRC emacs-lisp
