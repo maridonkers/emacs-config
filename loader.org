@@ -1329,7 +1329,8 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
   :ensure t
   :diminish emmet-mode)
 
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'web-mode-hook 'emmet-mode)  ;; Auto-start on web-mode.
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes.
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 #+END_SRC
 
