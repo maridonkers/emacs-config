@@ -344,15 +344,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 *** Window moving
 #+BEGIN_SRC emacs-lisp
   ;; Windmove configuration.
-  ;; (global-set-key (kbd "<s-left>") (ignore-error-wrapper 'windmove-left))
-  ;; (global-set-key (kbd "<s-right>") (ignore-error-wrapper 'windmove-right))
-  ;; (global-set-key (kbd "<s-up>") (ignore-error-wrapper 'windmove-up))
-  ;; (global-set-key (kbd "<s-down>") (ignore-error-wrapper 'windmove-down))
-
-(global-set-key (kbd "C-c <C-left>") (ignore-error-wrapper 'windmove-left))
-(global-set-key (kbd "C-c <C-right>") (ignore-error-wrapper 'windmove-right))
-(global-set-key (kbd "C-c <C-up>") (ignore-error-wrapper 'windmove-up))
-(global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
+  (global-set-key (kbd "C-c <C-left>") (ignore-error-wrapper 'windmove-left))
+  (global-set-key (kbd "C-c <C-right>") (ignore-error-wrapper 'windmove-right))
+  (global-set-key (kbd "C-c <C-up>") (ignore-error-wrapper 'windmove-up))
+  (global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
 #+END_SRC
 *** Window minimize/maximize
 #+BEGIN_SRC emacs-lisp
@@ -1356,6 +1351,11 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
     ("blade"  . "\\.blade\\."))
 )
 #+END_SRC
+** nix-mode
+#+BEGIN_SRC emacs-lisp
+(use-package nix-mode
+  :ensure t)
+#+END_SRC
 * Docker
 Docker modes (file and compose).
 #+BEGIN_SRC emacs-lisp
@@ -1404,14 +1404,12 @@ And again, the same as above but we make sure to not delete the source word.
 (global-set-key (kbd "C-c w c") 'daedreth/copy-whole-word)
 #+END_SRC
 
-** Navigation one hand shortcuts
+** Navigation convenience shortcuts
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<s-home>") 'beginning-of-buffer)
-(global-set-key (kbd "<s-end>") 'end-of-buffer)
-(global-set-key (kbd "<s-up>") 'scroll-up-line)
-(global-set-key (kbd "<s-down>") 'scroll-down-line)
-(global-set-key (kbd "<s-left>") 'previous-buffer)
-(global-set-key (kbd "<s-right>") 'next-buffer)
+(global-set-key (kbd "<S-s-up>") 'scroll-up-line)
+(global-set-key (kbd "<S-s-down>") 'scroll-down-line)
+(global-set-key (kbd "<S-s-left>") 'previous-buffer)
+(global-set-key (kbd "<S-s-right>") 'next-buffer)
 #+END_SRC
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
