@@ -267,6 +267,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 #+END_SRC 
 *** Desktop
+Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-stale-desktop-lock-files-after-emacs-system-crash][Handle stale desktop lock files after emacs/system crash]]
 #+BEGIN_SRC emacs-lisp
 ;; Store desktop (i.e. open files, etc.) at exit (restores when starting again).
 (setq desktop-path '("."))
@@ -470,9 +471,9 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
 #+END_SRC
-*** Default browser
+*** TODO Default browser
 #+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-url-chromium)
+;;(setq browse-url-browser-function 'browse-url-chromium)
 #+END_SRC
 ** Break & Debug
 #+BEGIN_SRC emacs-lisp
@@ -520,7 +521,7 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 (use-package sudo-edit
   :ensure t
   :bind
-    ("s-e" . sudo-edit))
+    ("C-M-e" . sudo-edit))
 #+END_SRC
 ** async
 #+BEGIN_SRC emacs-lisp
@@ -537,7 +538,7 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 ** Default browser
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+      browse-url-generic-program "firefox")
 #+END_SRC
 ** Follow created window
 [[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org]]
@@ -931,6 +932,17 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 ;;(setq org-reveal-root "file:///home/mdo/lib/reveal.js")
 ;;(setq org-reveal-mathjax t)
 #+END_EXAMPLE
+* Comma Separated Files
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode
+  :ensure t)
+#+END_SRC
+* Mediawiki
+MediaWiki mode.
+#+BEGIN_SRC emacs-lisp
+(use-package mediawiki
+  :ensure t)
+#+END_SRC
 * Edit indirect
 The edit-indirect package is used by Markdown for editing code blocks.
 #+BEGIN_SRC emacs-lisp
@@ -1306,6 +1318,28 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package expand-region
   :ensure t
   :bind ("C-x x" . er/expand-region))
+#+END_SRC
+** Haskell
+#+BEGIN_SRC emacs-lisp
+(use-package haskell-mode
+    :pin melpa-stable
+    :ensure t)
+#+END_SRC
+** HLedger
+#+BEGIN_SRC emacs-lisp
+(use-package hledger-mode
+    :ensure t)
+#+END_SRC
+** Kotlin
+#+BEGIN_SRC emacs-lisp
+(use-package kotlin-mode
+    :ensure t)
+#+END_SRC
+** Rust
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode
+    :pin melpa-stable
+    :ensure t)
 #+END_SRC
 ** Lua
 #+BEGIN_SRC emacs-lisp

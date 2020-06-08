@@ -21,3 +21,7 @@ backups
 /projectile.cache
 /ido.last
 /savehist
+/.cache/
+/loader.pdf
+/loader.tex
+/loader.txt
