@@ -1320,9 +1320,15 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :bind ("C-x x" . er/expand-region))
 #+END_SRC
 ** Haskell
+*** haskell-mode
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode
     :pin melpa-stable
+    :ensure t)
+#+END_SRC
+*** hindent
+#+BEGIN_SRC emacs-lisp
+(use-package hindent
     :ensure t)
 #+END_SRC
 ** HLedger
