@@ -1,5 +1,5 @@
 #+TITLE: Emacs configuration using org-mode
-#+STARTUP: indent 
+#+STARTUP: indent
 #+OPTIONS: H:5 num:nil tags:nil toc:nil timestamps:t
 #+LAYOUT: post
 #+DESCRIPTION: Loading emacs configuration using org-babel
@@ -193,14 +193,14 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
 ;; Clearer active window bar.
 (set-face-attribute  'mode-line-inactive
-                    nil 
+                    nil
                     :foreground "white"
                     :background "#232323"
                     ;; :box '(:line-width 1 :style released-button)
                     :box nil)
 
 (set-face-attribute  'mode-line
-                    nil 
+                    nil
                     :foreground "black"
                     :background "darkcyan"
                     ;; :box '(:line-width 1 :style released-button)
@@ -265,7 +265,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-#+END_SRC 
+#+END_SRC
 *** Desktop
 Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-stale-desktop-lock-files-after-emacs-system-crash][Handle stale desktop lock files after emacs/system crash]]
 #+BEGIN_SRC emacs-lisp
@@ -660,7 +660,8 @@ Beware: the =light-locker= daemon must be running for the screen locking to work
   (shell-command "systemctl hibernate"))
 (global-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
 #+END_SRC
-* exwm
+* TODO exwm
+Move this into a separate Emacs configuration and start it via =HOME=pathtoseparateemacsd emacs &= to separate from regular Emacs.
 ** Emacs Window Manager
 Replace EXAMPLE with SRC emacs-lisp to enable =exwm= (which is very nice indeed, but I'm afraid
 it'll give me carpal tunnel syndrome; sticking to KDE + tiling shortcuts).
@@ -673,9 +674,9 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
     ;; necessary to configure exwm manually
     (require 'exwm-config)
 
-    ;; fringe size, most people prefer 1 
+    ;; fringe size, most people prefer 1
     (fringe-mode 3)
-    
+
     ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
     (server-start)
 
@@ -728,7 +729,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 
    (defun exwm-workspace-switch-to-latest ()
      (interactive)
-     "Switch to the latest active workspace." 
+     "Switch to the latest active workspace."
      (let ((index exwm-workspace-latest-index))
        (exwm-workspace-switch index)))
 
@@ -884,11 +885,11 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :bind
   ("s-h" . symon-mode))
 #+END_EXAMPLE
-* TODO evil
+* evil
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t)
-  
+
 ;(require 'evil)
 ;(evil-mode 1)
 (define-key projectile-mode-map (kbd "M-+") 'evil-mode)
@@ -1167,7 +1168,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
 ; (use-package hl-sexp
 ;   :ensure t
 ;   :config (add-hook 'lisp-mode-hook #'hl-sexp-mode)
-;           (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode) 
+;           (add-hook 'emacs-lisp-mode-hook #'hl-sexp-mode)
 ;   :bind (("C-M-'" . hl-sexp-mode)))
 #+END_SRC
 **** Highlight symbol
@@ -1245,7 +1246,7 @@ supporting modules.
 ;;  :config (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
 ;;          (add-hook 'cider-repl-mode-hook #'company-mode)
 ;;          (add-hook 'cider-mode-hook #'company-mode)
-;;          (add-hook 'cider-mode-hook #'eldoc-mode)            
+;;          (add-hook 'cider-mode-hook #'eldoc-mode)
 ;;          (setq cider-repl-history-file "~/.emacs.d/cider-history")
 ;;          (setq cider-repl-use-clojure-font-lock t)
 ;;          (setq cider-repl-result-prefix ";; => ")
@@ -1520,10 +1521,10 @@ Version 2015-02-07
   (interactive "*p")
   (let ((use-region (use-region-p)))
     (if use-region
-	(delete-region (region-beginning) (region-end))
+        (delete-region (region-beginning) (region-end))
       (let ((pos (- (point) (line-beginning-position)))) ;Save column
-	(delete-region (line-beginning-position) (line-end-position))
-	(kill-whole-line)))))
+        (delete-region (line-beginning-position) (line-end-position))
+        (kill-whole-line)))))
 
 ;; Delete region.
 (global-set-key (kbd "C-S-D") 'delete-line-or-region)
@@ -1537,9 +1538,9 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
   (interactive "*p")
   (let ((use-region (use-region-p)))
     (if use-region
-	(comment-region (region-beginning) (region-end))
+        (comment-region (region-beginning) (region-end))
       (let ((pos (- (point) (line-beginning-position)))) ;Save column
-	(comment-region (line-beginning-position) (line-end-position))))))
+        (comment-region (line-beginning-position) (line-end-position))))))
 
 ;; Comment current line or region.
 (global-set-key (kbd "C-;") 'comment-line-or-region)
@@ -1638,19 +1639,19 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
    opening parenthesis one level up."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1))
-	(t
-	 (backward-char 1)
-	 (cond ((looking-at "\\s\)")
-		(forward-char 1) (backward-list 1))
-	       (t
-		(while (not (looking-at "\\s("))
-		  (backward-char 1)
-		  (cond ((looking-at "\\s\)")
-			 (message "->> )")
-			 (forward-char 1)
-			 (backward-list 1)
-			 (backward-char 1)))
-		  ))))))
+        (t
+         (backward-char 1)
+         (cond ((looking-at "\\s\)")
+                (forward-char 1) (backward-list 1))
+               (t
+                (while (not (looking-at "\\s("))
+                  (backward-char 1)
+                  (cond ((looking-at "\\s\)")
+                         (message "->> )")
+                         (forward-char 1)
+                         (backward-list 1)
+                         (backward-char 1)))
+                  ))))))
 
 (global-set-key (kbd "C-S-P") 'goto-match-paren)
 #+END_SRC
@@ -1824,17 +1825,17 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
           (notmuch-show-tag (list "+spam")))))
 #+END_SRC
 * TODO Ignore-errors configuration
-Is this ignore-errors construct necessary? 
+Is this ignore-errors construct necessary?
 #+BEGIN_SRC emacs-lisp
 ;; These can produce errors when not in GUI mode (i.e. emacs --daemon).
 (ignore-errors
   ;; Makes scrolling less jumpy.
   (setq scroll-margin 1
-	scroll-conservatively 0
-	scroll-up-aggressively 0.01
-	scroll-down-aggressively 0.01)
+        scroll-conservatively 0
+        scroll-up-aggressively 0.01
+        scroll-down-aggressively 0.01)
   (setq-default scroll-up-aggressively 0.01
-		scroll-down-aggressively 0.01)
+                scroll-down-aggressively 0.01)
 
   ;; scroll one line at a time (less "jumpy" than defaults)
   ;;  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
