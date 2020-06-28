@@ -661,10 +661,12 @@ Beware: the =light-locker= daemon must be running for the screen locking to work
 (global-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
 #+END_SRC
 * TODO exwm
-Move this into a separate Emacs configuration and start it via =HOME=pathtoseparateemacsd emacs &= to separate from regular Emacs.
+Move this into a separate Emacs configuration and start it via
+=HOME=pathtoseparateemacsd emacs &= to separate from regular Emacs.
 ** Emacs Window Manager
-Replace EXAMPLE with SRC emacs-lisp to enable =exwm= (which is very nice indeed, but I'm afraid
-it'll give me carpal tunnel syndrome; sticking to KDE + tiling shortcuts).
+Replace EXAMPLE with SRC emacs-lisp to enable =exwm= (which is very
+nice indeed, but I'm afraid it'll give me carpal tunnel syndrome;
+sticking to KDE + tiling shortcuts).
 
 Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 #+BEGIN_EXAMPLE
@@ -1333,7 +1335,8 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 *** racket-mode
 #+BEGIN_SRC emacs-lisp
 (use-package racket-mode
-    :ensure t)
+    :ensure t
+    :init (add-hook 'racket-mode-hook #'smartparens-strict-mode))
 #+END_SRC
 ** Haskell
 *** haskell-mode
