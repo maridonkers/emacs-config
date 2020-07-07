@@ -1552,26 +1552,12 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
 #+END_SRC
 *** Move-dup
 #+BEGIN_SRC emacs-lisp
-(use-package move-dup
-  :ensure t)
+  (use-package move-dup
+    :ensure t)
 
-;; Global mode or text-mode-hook interferes with e.g. org-mode M-down and M-up.
-;;(global-move-dup-mode)
-;;(add-hook 'text-mode-hook 'move-dup-mode)
-
-(add-hook 'clojure-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'clojurescript-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'lisp-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'sql-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'c-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'sh-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'python-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'perl-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'php-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'markdown-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'xml-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'html-mode-hook (lambda () (move-dup-mode)))
-(add-hook 'web-mode-hook (lambda () (move-dup-mode)))
+  ;; Enable for all text but disable for org-mode.
+  (add-hook 'text-mode-hook (lambda () (move-dup-mode)))
+  (add-hook 'org-mode-hook (lambda () (move-dup-mode 0)))
 #+END_SRC
 *** Truncating
 #+BEGIN_SRC emacs-lisp
