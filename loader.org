@@ -378,15 +378,15 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
   (enlarge-window 10))
 
 ;; Window resize bindings.
-(global-set-key (kbd "C-S-X <C-S-left>") 'shrink-window-horizontally-stepped)
-(global-set-key (kbd "C-S-X <C-S-right>") 'enlarge-window-horizontally-stepped)
-(global-set-key (kbd "C-S-X <C-S-down>") 'shrink-window-stepped)
-(global-set-key (kbd "C-S-X <C-S-up>") 'enlarge-window-stepped)
+(global-set-key (kbd "C-S-x <C-S-left>") 'shrink-window-horizontally-stepped)
+(global-set-key (kbd "C-S-x <C-S-right>") 'enlarge-window-horizontally-stepped)
+(global-set-key (kbd "C-S-x <C-S-down>") 'shrink-window-stepped)
+(global-set-key (kbd "C-S-x <C-S-up>") 'enlarge-window-stepped)
 
-(global-set-key (kbd "C-S-C <C-S-left>") 'shrink-window-horizontally)
-(global-set-key (kbd "C-S-C <C-S-right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-S-C <C-S-down>") 'shrink-window)
-(global-set-key (kbd "C-S-C <C-S-up>") 'enlarge-window)
+(global-set-key (kbd "C-S-c <C-S-left>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-S-c <C-S-right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-S-c <C-S-down>") 'shrink-window)
+(global-set-key (kbd "C-S-c <C-S-up>") 'enlarge-window)
 #+END_SRC
 *** Minibuffer
 #+BEGIN_SRC emacs-lisp
@@ -471,9 +471,37 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
 #+END_SRC
-*** TODO Default browser
+*** Default browser
+You can set Firefox to open all external links in the same tab.
+
+ - Enter about:config in the address bar.
+ - Click the confirmation button if shown.
+ - Filter for browser.link.open_newwindow.
+ - Double click.
+ - Set value to 1.
+ - OK.
 #+BEGIN_SRC emacs-lisp
-;;(setq browse-url-browser-function 'browse-url-chromium)
+  ;; (setq browse-url-browser-function 'browse-url-generic
+  ;;       browse-url-generic-program "xdg-open")
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
+
+  ;; (setq browse-url-browser-function 'browse-url-generic
+  ;;       browse-url-generic-program "xdg-open")
+
+  ;; (setq browse-url-browser-function 'browse-url-chromium
+  ;;       browse-url-generic-program "chromium")
+  ;; (defun browse-url-chromium (url &optional new-window)
+  ;;  "Open URL in a new Chromium window."
+  ;;  (interactive (browse-url-interactive-arg "URL: "))
+  ;;  (unless
+  ;;      (string= ""
+  ;;               (shell-command-to-string
+  ;;                (concat "chromium " url)))
+  ;;    (message "Starting Chromium...")
+  ;;    (start-process (concat "chromium " url) nil "chromium " url)
+  ;;    (message "Starting Chromium... done")))
 #+END_SRC
 ** Break & Debug
 #+BEGIN_SRC emacs-lisp
@@ -534,11 +562,6 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 (use-package dmenu
   :ensure t)
 (global-set-key (kbd "C-c d") 'dmenu)
-#+END_SRC
-** Default browser
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
 #+END_SRC
 ** Follow created window
 [[https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org]]
@@ -641,25 +664,6 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_EXAMPLE
-** Screen lock, Suspend and Hibernate
-Beware: the =light-locker= daemon must be running for the screen locking to work.
-#+BEGIN_SRC emacs-lisp
-(defun light-lock-screen ()
-  (interactive)
-  (shell-command "light-locker-command -l"))
-(global-set-key (kbd "<Scroll_Lock>") #'light-lock-screen)
-
-(defun systemctl-suspend ()
-  (interactive)
-  (shell-command "systemctl suspend"))
-(global-set-key (kbd "C-<Scroll_Lock>") #'systemctl-suspend)
-(global-set-key (kbd "<XF86ScreenSaver>") #'systemctl-suspend)
-
-(defun systemctl-hibernate ()
-  (interactive)
-  (shell-command "systemctl hibernate"))
-(global-set-key (kbd "C-M-<Scroll_Lock>") #'systemctl-hibernate)
-#+END_SRC
 * TODO exwm
 Move this into a separate Emacs configuration and start it via
 =HOME=pathtoseparateemacsd emacs &= to separate from regular Emacs.
@@ -1292,7 +1296,7 @@ Taken from: [[https://github.com/hoplon/hoplon/wiki/For-Emacs-users][Hoplon for 
 
 To recognize hoplon files correctly add this to your .emacs
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.cljs\\.hl\\'" . clojurescript-mode))
+(add-to-list 'auto-mode-alist '("\\.cljs\\.hl" . clojurescript-mode))
 #+END_SRC
 
 To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
@@ -1345,7 +1349,38 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode
     :pin melpa-stable
-    :ensure t)
+    :ensure t
+    :bind ("M-<return>" . haskell-hoogle))
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+#+END_SRC
+See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
+*** Dante
+[[https://github.com/jyp/dante][Dante]] is a fork of Intero mode which aims exclusively at providing a
+convenient frontend to GHCi. It steals good ideas from Intero, but it
+aims for light weightedness (see below for a detailed comparison).
+#+BEGIN_SRC emacs-lisp
+(use-package dante
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
+  :init (add-hook 'haskell-mode-hook 'flycheck-mode)
+  ;; OR:
+  ;; (add-hook 'haskell-mode-hook 'flymake-mode)
+        (add-hook 'haskell-mode-hook 'dante-mode)
+  :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint)))
+
+(setq flymake-no-changes-timeout nil)
+(setq flymake-start-syntax-check-on-newline nil)
+(setq flycheck-check-syntax-automatically '(save mode-enabled))
+#+END_SRC
+*** Attrap!
+[[https://github.com/jyp/attrap#attrap-emacs-mode-to-fix-the-flycheck-error-at-point][Attrap!]] provides a command to attempt to fix the flycheck error at point.
+#+BEGIN_SRC emacs-lisp
+(use-package attrap
+  :ensure t
+  :bind (("C-x /" . attrap-attrap))) ;; use any binding of your choice
 #+END_SRC
 *** hindent
 #+BEGIN_SRC emacs-lisp
@@ -1356,6 +1391,7 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_SRC emacs-lisp
 (use-package hledger-mode
     :ensure t)
+(add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
 #+END_SRC
 ** Kotlin
 #+BEGIN_SRC emacs-lisp
@@ -1406,7 +1442,7 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
 *** web-mode
 #+BEGIN_SRC emacs-lisp
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php" . web-mode))
 (setq web-mode-engines-alist
   '(("php"    . "\\.phtml\\'")
     ("blade"  . "\\.blade\\."))
@@ -1467,10 +1503,10 @@ And again, the same as above but we make sure to not delete the source word.
 
 ** Navigation convenience shortcuts
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<S-s-up>") 'scroll-up-line)
-(global-set-key (kbd "<S-s-down>") 'scroll-down-line)
-(global-set-key (kbd "<S-s-left>") 'previous-buffer)
-(global-set-key (kbd "<S-s-right>") 'next-buffer)
+(global-set-key (kbd "<C-M-S-up>") 'scroll-up-line)
+(global-set-key (kbd "<C-M-S-down>") 'scroll-down-line)
+(global-set-key (kbd "<C-M-S-left>") 'previous-buffer)
+(global-set-key (kbd "<C-M-S-right>") 'next-buffer)
 #+END_SRC
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
@@ -1555,8 +1591,8 @@ Instead of this check out [[https://github.com/yuutayamada/commenter][commenter]
   (use-package move-dup
     :ensure t)
 
-  ;; Enable for all text but disable for org-mode.
-  (add-hook 'text-mode-hook (lambda () (move-dup-mode)))
+  ;; Enable globally but disable for org-mode.
+  (global-move-dup-mode)
   (add-hook 'org-mode-hook (lambda () (move-dup-mode 0)))
 #+END_SRC
 *** Truncating
@@ -1762,13 +1798,17 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 ;; track treemacs issue #53 - this isn't ready yet
 ;; (setq treemacs-no-images t)
 #+END_EXAMPLE
-* E-mail clients
-** TODO Wanderlust
+* E-mail/usenet clients
+** TODO gnus
+:PROPERTIES:
+:CUSTOM_ID: sec:gnus
+:END:
+See: [[https://protesilaos.com/dotemacs/][protesilaos.com/dotemacs/]] for an example configuration.
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package wanderlust
-  ;;     :ensure t)
+
 #+END_SRC
-** Notmuch (emacs email client)
+** TODO Notmuch (emacs email client)
+Check configuration with [[#sec:gnus]] above.
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
     :ensure t)
