@@ -131,6 +131,10 @@ Because use-package supports :diminish and :delight.
   (org-babel-load-file (expand-file-name "~/.emacs.d/loader.org")))
 (global-set-key (kbd "s-c r") 'config-reload)
 #+END_SRC
+*** Delete frame
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x <C-backspace>") 'delete-frame)
+#+END_SRC
 ** Menu bar switch
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c h") 'menu-bar-mode)
