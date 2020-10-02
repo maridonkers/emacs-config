@@ -55,12 +55,12 @@ Each archive will write its files in a seperate archive directory.
 Initialize the archive and refresh the contents in case there is no cached archive.
 
 #+BEGIN_SRC emacs-lisp
-(package-initialize)
+  ;; (package-initialize)
 
-(unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
-             (file-exists-p (concat init-dir "elpa/archives/melpa"))
-             (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
-        (package-refresh-contents))
+  (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
+               (file-exists-p (concat init-dir "elpa/archives/melpa"))
+               (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
+          (package-refresh-contents))
 #+END_SRC
 
 At each load the package list will be evaluated and any missing
@@ -135,6 +135,11 @@ Because use-package supports :diminish and :delight.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x <C-backspace>") 'delete-frame)
 #+END_SRC
+*** Lockfiles
+Don't want them.
+#+BEGIN_SRC emacs-lisp
+(setq create-lockfiles nil)
+#+END_SRC
 ** Menu bar switch
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c h") 'menu-bar-mode)
@@ -174,7 +179,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 #+END_SRC
 ** Prerequisite packages
   #+BEGIN_SRC emacs-lisp
-  (require 'cl)
+    ;; (require 'cl)
   #+END_SRC
 ** Look and feel
 *** Theme
@@ -279,14 +284,14 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 #+END_SRC
 *** Ignore error wrapping
 #+BEGIN_SRC emacs-lisp
-(defun ignore-error-wrapper (fn)
-  "Funtion return new function that ignore errors.
-   The function wraps a function with `ignore-errors' macro."
-  (lexical-let ((fn fn))
-    (lambda ()
-      (interactive)
-      (ignore-errors
-        (funcall fn)))))
+;(defun ignore-error-wrapper (fn)
+;  "Funtion return new function that ignore errors.
+;   The function wraps a function with `ignore-errors' macro."
+;  (lexical-let ((fn fn))
+;    (lambda ()
+;      (interactive)
+;      (ignore-errors
+;        (funcall fn)))))
 #+END_SRC
 *** Moving around
 **** Bookmarks
@@ -349,10 +354,15 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 *** Window moving
 #+BEGIN_SRC emacs-lisp
   ;; Windmove configuration.
-  (global-set-key (kbd "C-c <C-left>") (ignore-error-wrapper 'windmove-left))
-  (global-set-key (kbd "C-c <C-right>") (ignore-error-wrapper 'windmove-right))
-  (global-set-key (kbd "C-c <C-up>") (ignore-error-wrapper 'windmove-up))
-  (global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
+;  (global-set-key (kbd "C-c <C-left>") (ignore-error-wrapper 'windmove-left))
+;  (global-set-key (kbd "C-c <C-right>") (ignore-error-wrapper 'windmove-right))
+;  (global-set-key (kbd "C-c <C-up>") (ignore-error-wrapper 'windmove-up))
+;  (global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
+
+  (global-set-key (kbd "C-c <C-left>") 'windmove-left)
+  (global-set-key (kbd "C-c <C-right>") 'windmove-right)
+  (global-set-key (kbd "C-c <C-up>") 'windmove-up)
+  (global-set-key (kbd "C-c <C-down>") 'windmove-down)
 #+END_SRC
 *** Window minimize/maximize
 #+BEGIN_SRC emacs-lisp
@@ -1354,37 +1364,56 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package haskell-mode
     :pin melpa-stable
     :ensure t
-    :bind ("M-<return>" . haskell-hoogle))
+    :bind ("M-<return>" . haskell-hoogle)
+          ("M-F" . haskell-mode-stylish-buffer))
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
-*** Dante
+*** TODO Dante
+Investigate [[https://github.com/haskell/ghcide][ghcide]] Emacs support.
 [[https://github.com/jyp/dante][Dante]] is a fork of Intero mode which aims exclusively at providing a
 convenient frontend to GHCi. It steals good ideas from Intero, but it
 aims for light weightedness (see below for a detailed comparison).
 #+BEGIN_SRC emacs-lisp
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init (add-hook 'haskell-mode-hook 'flycheck-mode)
-  ;; OR:
-  ;; (add-hook 'haskell-mode-hook 'flymake-mode)
-        (add-hook 'haskell-mode-hook 'dante-mode)
-  :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint)))
+  ;; (use-package dante
+  ;;   :ensure t
+  ;;   :after haskell-mode
+  ;;   :commands 'dante-mode
+  ;;   :init (add-hook 'haskell-mode-hook 'flycheck-mode)
+  ;;   ;; OR:
+  ;;   ;; UNUSED -- (add-hook 'haskell-mode-hook 'flymake-mode)
+  ;;         (add-hook 'haskell-mode-hook 'dante-mode)
+  ;;   :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
+  ;; )
 
-(setq flymake-no-changes-timeout nil)
-(setq flymake-start-syntax-check-on-newline nil)
-(setq flycheck-check-syntax-automatically '(save mode-enabled))
+  ;; (setq flymake-no-changes-timeout nil)
+  ;; (setq flymake-start-syntax-check-on-newline nil)
+  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+END_SRC
-*** Attrap!
+*** TODO Attrap!
 [[https://github.com/jyp/attrap#attrap-emacs-mode-to-fix-the-flycheck-error-at-point][Attrap!]] provides a command to attempt to fix the flycheck error at point.
 #+BEGIN_SRC emacs-lisp
-(use-package attrap
+  ;; (use-package attrap
+  ;;   :ensure t
+  ;;   :bind (("C-x /" . attrap-attrap))) ;; use any binding of your choice
+#+END_SRC
+*** flymake-haskell-multi
+#+BEGIN_SRC emacs-lisp
+(use-package flymake-haskell-multi
   :ensure t
-  :bind (("C-x /" . attrap-attrap))) ;; use any binding of your choice
+  :after haskell-mode)
+#+END_SRC
+
+*** TODO ghcide
+See [[https://github.com/haskell/ghcide][haskell / ghcide]] And [[https://github.com/joaotavora/eglot/issues/180][Comparison lsp-mode/elgot is out-of-date/wrong/irrelevant]]
+
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package lsp-mode
+  ;;   :commands lsp
+  ;;   :init (setq lsp-auto-guess-root t)
+  ;;   :config (require 'lsp-clients))
 #+END_SRC
 *** hindent
 #+BEGIN_SRC emacs-lisp
@@ -1397,20 +1426,10 @@ aims for light weightedness (see below for a detailed comparison).
     :ensure t)
 (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
 #+END_SRC
-** Kotlin
-#+BEGIN_SRC emacs-lisp
-(use-package kotlin-mode
-    :ensure t)
-#+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
     :pin melpa-stable
-    :ensure t)
-#+END_SRC
-** Lua
-#+BEGIN_SRC emacs-lisp
-(use-package lua-mode
     :ensure t)
 #+END_SRC
 ** HTML/CSS
@@ -1429,7 +1448,6 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes.
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 #+END_SRC
-
 ** PHP
 *** Drupal mode
 #+BEGIN_SRC emacs-lisp
