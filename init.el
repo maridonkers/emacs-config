@@ -39,5 +39,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Noto Sans Mono" :foundry "GOOG" :slant normal :weight normal :height 128 :width normal))))
  '(magit-diff-added ((t (:background "PaleGreen4" :foreground "white smoke"))))
  '(magit-diff-removed ((t (:background "DarkOrange4" :foreground "white smoke")))))
