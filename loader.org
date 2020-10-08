@@ -177,7 +177,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
   :config
     (beacon-mode 1))
 #+END_SRC
-** Prerequisite packages
+** TODO Prerequisite packages
   #+BEGIN_SRC emacs-lisp
     ;; (require 'cl)
   #+END_SRC
@@ -1230,12 +1230,12 @@ This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-** Flycheck syntax checker
+** TODO Flycheck syntax checker
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :ensure t
-  :diminish flycheck-mode)
-(add-hook 'prog-mode-hook #'flycheck-mode)
+  ;; (use-package flycheck
+  ;;   :ensure t
+  ;;   :diminish flycheck-mode)
+  ;; (add-hook 'prog-mode-hook #'flycheck-mode)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -1364,6 +1364,7 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package haskell-mode
     :pin melpa-stable
     :ensure t
+    :config (setq haskell-process-suggest-restart nil)
     :bind ("M-<return>" . haskell-hoogle)
           ("M-F" . haskell-mode-stylish-buffer))
 
@@ -1406,14 +1407,52 @@ aims for light weightedness (see below for a detailed comparison).
   :after haskell-mode)
 #+END_SRC
 
-*** TODO ghcide
-See [[https://github.com/haskell/ghcide][haskell / ghcide]] And [[https://github.com/joaotavora/eglot/issues/180][Comparison lsp-mode/elgot is out-of-date/wrong/irrelevant]]
+*** TODO lsp-mode
+First install =haskell-language-server=; under NixOS using the following command:
 
+#+BEGIN_SRC shell
+nix-env -f "<nixos-unstable>" -iA haskellPackages.haskell-language-server
+#+END_SRC
+
+See [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP Mode - LSP support for Emacs]] and [[https://github.com/haskell/haskell-language-server][haskell-language-server]] and [[https://github.com/korayal/hls-nix][korayal/hls-nix]].
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package lsp-mode
-  ;;   :commands lsp
-  ;;   :init (setq lsp-auto-guess-root t)
-  ;;   :config (require 'lsp-clients))
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "M-L")
+
+  (use-package lsp-mode
+      :ensure t
+      :pin melpa-stable
+      :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+              (haskell-mode . lsp)
+              ;; if you want which-key integration
+              (lsp-mode . lsp-enable-which-key-integration))
+      :commands lsp)
+
+  ;; optionally
+  (use-package lsp-ui
+      :ensure t
+      :pin melpa-stable
+      :commands lsp-ui-mode)
+  ;; if you are helm user
+  ; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+  ;; if you are ivy user
+  (use-package lsp-ivy
+      :ensure t
+      :pin melpa-stable
+      :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-treemacs
+      :ensure t
+      :pin melpa-stable
+      :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  ; (use-package dap-mode)
+  ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+  ;; optional if you want which-key integration
+  ;; (use-package which-key
+  ;;     :config
+  ;;     (which-key-mode))
 #+END_SRC
 *** hindent
 #+BEGIN_SRC emacs-lisp
