@@ -1365,33 +1365,40 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
     :pin melpa-stable
     :ensure t
     :config (setq haskell-process-suggest-restart nil)
-    :bind ("M-<return>" . haskell-hoogle)
+    :bind ("C-c o" . haskell-hoogle)
+          ("M-<return>" . haskell-process-do-info)
           ("M-F" . haskell-mode-stylish-buffer))
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
+*** flymake-haskell-multi
+#+BEGIN_SRC emacs-lisp
+(use-package flymake-haskell-multi
+  :ensure t
+  :after haskell-mode)
+#+END_SRC
 *** TODO Dante
 Investigate [[https://github.com/haskell/ghcide][ghcide]] Emacs support.
 [[https://github.com/jyp/dante][Dante]] is a fork of Intero mode which aims exclusively at providing a
 convenient frontend to GHCi. It steals good ideas from Intero, but it
-aims for light weightedness (see below for a detailed comparison).
+aims for *light weightedness* (see below for a detailed comparison).
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package dante
-  ;;   :ensure t
-  ;;   :after haskell-mode
-  ;;   :commands 'dante-mode
-  ;;   :init (add-hook 'haskell-mode-hook 'flycheck-mode)
-  ;;   ;; OR:
-  ;;   ;; UNUSED -- (add-hook 'haskell-mode-hook 'flymake-mode)
-  ;;         (add-hook 'haskell-mode-hook 'dante-mode)
-  ;;   :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
-  ;; )
+  (use-package dante
+     :ensure t
+     :after haskell-mode
+     :commands 'dante-mode
+     :init (add-hook 'haskell-mode-hook 'flycheck-mode)
+     ;; OR:
+     ;; UNUSED -- (add-hook 'haskell-mode-hook 'flymake-mode)
+           (add-hook 'haskell-mode-hook 'dante-mode)
+     :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
+  )
 
-  ;; (setq flymake-no-changes-timeout nil)
-  ;; (setq flymake-start-syntax-check-on-newline nil)
-  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq flymake-no-changes-timeout nil)
+  (setq flymake-start-syntax-check-on-newline nil)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+END_SRC
 *** TODO Attrap!
 [[https://github.com/jyp/attrap#attrap-emacs-mode-to-fix-the-flycheck-error-at-point][Attrap!]] provides a command to attempt to fix the flycheck error at point.
@@ -1399,60 +1406,6 @@ aims for light weightedness (see below for a detailed comparison).
   ;; (use-package attrap
   ;;   :ensure t
   ;;   :bind (("C-x /" . attrap-attrap))) ;; use any binding of your choice
-#+END_SRC
-*** flymake-haskell-multi
-#+BEGIN_SRC emacs-lisp
-(use-package flymake-haskell-multi
-  :ensure t
-  :after haskell-mode)
-#+END_SRC
-
-*** TODO lsp-mode
-First install =haskell-language-server=; under NixOS using the following command:
-
-#+BEGIN_SRC shell
-nix-env -f "<nixos-unstable>" -iA haskellPackages.haskell-language-server
-#+END_SRC
-
-See [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP Mode - LSP support for Emacs]] and [[https://github.com/haskell/haskell-language-server][haskell-language-server]] and [[https://github.com/korayal/hls-nix][korayal/hls-nix]].
-#+BEGIN_SRC emacs-lisp
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "M-L")
-
-  (use-package lsp-mode
-      :ensure t
-      :pin melpa-stable
-      :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-              (haskell-mode . lsp)
-              ;; if you want which-key integration
-              (lsp-mode . lsp-enable-which-key-integration))
-      :commands lsp)
-
-  ;; optionally
-  (use-package lsp-ui
-      :ensure t
-      :pin melpa-stable
-      :commands lsp-ui-mode)
-  ;; if you are helm user
-  ; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-  ;; if you are ivy user
-  (use-package lsp-ivy
-      :ensure t
-      :pin melpa-stable
-      :commands lsp-ivy-workspace-symbol)
-  (use-package lsp-treemacs
-      :ensure t
-      :pin melpa-stable
-      :commands lsp-treemacs-errors-list)
-
-  ;; optionally if you want to use debugger
-  ; (use-package dap-mode)
-  ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
-
-  ;; optional if you want which-key integration
-  ;; (use-package which-key
-  ;;     :config
-  ;;     (which-key-mode))
 #+END_SRC
 *** hindent
 #+BEGIN_SRC emacs-lisp
