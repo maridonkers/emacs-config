@@ -1230,12 +1230,14 @@ This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-** TODO Flycheck syntax checker
+** Flycheck syntax checker
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package flycheck
-  ;;   :ensure t
-  ;;   :diminish flycheck-mode)
-  ;; (add-hook 'prog-mode-hook #'flycheck-mode)
+  (use-package flycheck
+    :ensure t
+    :diminish flycheck-mode
+    :bind (("C-C >" . flycheck-next-error)
+           ("C-C <" . flycheck-previous-error)))
+  (add-hook 'prog-mode-hook #'flycheck-mode)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -1373,12 +1375,6 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
-*** flymake-haskell-multi
-#+BEGIN_SRC emacs-lisp
-(use-package flymake-haskell-multi
-  :ensure t
-  :after haskell-mode)
-#+END_SRC
 *** TODO Dante
 Investigate [[https://github.com/haskell/ghcide][ghcide]] Emacs support.
 [[https://github.com/jyp/dante][Dante]] is a fork of Intero mode which aims exclusively at providing a
@@ -1396,8 +1392,8 @@ aims for *light weightedness* (see below for a detailed comparison).
      :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
   )
 
-  (setq flymake-no-changes-timeout nil)
-  (setq flymake-start-syntax-check-on-newline nil)
+;;  (setq flymake-no-changes-timeout nil)
+;;  (setq flymake-start-syntax-check-on-newline nil)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+END_SRC
 *** TODO Attrap!
