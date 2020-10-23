@@ -1236,7 +1236,8 @@ This interferes with search colors.
     :ensure t
     :diminish flycheck-mode
     :bind (("C-C >" . flycheck-next-error)
-           ("C-C <" . flycheck-previous-error)))
+           ("C-C <" . flycheck-previous-error)
+           ("C-C ?" . flycheck-list-errors)))
   (add-hook 'prog-mode-hook #'flycheck-mode)
 #+END_SRC
 ** Clojure
@@ -1351,15 +1352,6 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :ensure t
   :bind ("C-x x" . er/expand-region))
 #+END_SRC
-** Racket
-*** racket-mode
-#+BEGIN_SRC emacs-lisp
-(use-package racket-mode
-    :ensure t
-    :init
-    (add-hook 'racket-mode-hook #'smartparens-strict-mode)
-    (add-hook 'racket-repl-mode-hook #'smartparens-strict-mode))
-#+END_SRC
 ** Haskell
 *** haskell-mode
 #+BEGIN_SRC emacs-lisp
@@ -1373,6 +1365,12 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'highlight-symbol-mode)
+
+(custom-set-variables
+  '(haskell-process-suggest-remove-import-lines t)
+  '(haskell-process-auto-import-loaded-modules t)
+  '(haskell-process-log t))
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
 *** TODO Dante
@@ -1392,9 +1390,9 @@ aims for *light weightedness* (see below for a detailed comparison).
      :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
   )
 
-;;  (setq flymake-no-changes-timeout nil)
-;;  (setq flymake-start-syntax-check-on-newline nil)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+(setq flymake-no-changes-timeout nil)
+(setq flymake-start-syntax-check-on-newline nil)
+(setq flycheck-check-syntax-automatically '(save mode-enabled))
 #+END_SRC
 *** TODO Attrap!
 [[https://github.com/jyp/attrap#attrap-emacs-mode-to-fix-the-flycheck-error-at-point][Attrap!]] provides a command to attempt to fix the flycheck error at point.
