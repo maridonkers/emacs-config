@@ -926,13 +926,14 @@ Org-mode is an Emacs built-in.
 
 (define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
 #+END_SRC
-** org-bullets
+** TODO org-bullets
+Disabled this because it results in 100% CPU usage.
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :diminish org-bullets-mode
-  :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+;; (use-package org-bullets
+;;   :ensure t
+;;   :diminish org-bullets-mode
+;;   :config
+;;     (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
 ** Exports
 #+BEGIN_SRC emacs-lisp
@@ -1351,6 +1352,12 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package expand-region
   :ensure t
   :bind ("C-x x" . er/expand-region))
+#+END_SRC
+** Python
+*** elpy
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  :ensure t)
 #+END_SRC
 ** Haskell
 *** haskell-mode
