@@ -1358,6 +1358,8 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t)
+
+(add-hook 'python-mode-hook 'highlight-symbol-mode)
 #+END_SRC
 ** Haskell
 *** haskell-mode
@@ -1888,5 +1890,10 @@ Is this ignore-errors construct necessary?
   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
   (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
   (setq scroll-step 1) ;; keyboard scroll one line at a time
+
+  ;; TODO Check and verify
+  (setq scroll-step 1)
+  (setq scroll-conservatively 10000)
+  (setq auto-window-vscroll nil)
 )
 #+END_SRC
