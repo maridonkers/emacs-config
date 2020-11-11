@@ -20,13 +20,17 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(browse-url-chromium-program "google-chrome-stable")
+ '(company-backends
+   '(company-bbdb company-semantic company-cmake company-capf company-clang company-files
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse company-dabbrev company-ghci company-ghc))
  '(company-idle-delay 0.25)
  '(custom-safe-themes
    (quote
     ("d6922c974e8a78378eacb01414183ce32bc8dbf2de78aabcc6ad8172547cb074" "551596f9165514c617c99ad6ce13196d6e7caa7035cea92a0e143dbe7b28be0e" default)))
  '(highlight-symbol-idle-delay 0.5)
  '(package-selected-packages
-   '(lsp-haskell lsp-mode flymake-haskell-multi evil racket-mode wanderlust hindent csv-mode kotlin-mode hledger-mode haskell-mode vlf mediawiki dokuwiki docuwiki nix-mode auctex-latexmk flycheck-joker geben lua-mode org-re-reveal delight diminish popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets flycheck-clojure dumb-jump scss-mode company-web geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile company-php clojure-snippets bm auctex ag))
+   '(company-ghci company-ghc evil racket-mode hindent csv-mode hledger-mode haskell-mode vlf mediawiki dokuwiki docuwiki nix-mode auctex-latexmk lua-mode org-re-reveal delight diminish popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets dumb-jump scss-mode geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile clojure-snippets bm auctex ag))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (dev) (go) (cljs-repl))")
