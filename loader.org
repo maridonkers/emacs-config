@@ -82,7 +82,6 @@ this check and takes care of any loading of the packages.
     (delete-other-windows))
 #+END_SRC
 ** The package
-
 #+BEGIN_SRC emacs-lisp
 ;; Install extensions if they're missing
 (defun init--install-packages ()
@@ -114,6 +113,12 @@ Because use-package supports :diminish and :delight.
 (scroll-bar-mode -1)
 #+END_SRC
 ** Configuration
+*** gc-cons-threshold
+To solve lsp-mode slowness after e.g. find definition.
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold (eval-when-compile (* 1024 1024 1024)))
+(run-with-idle-timer 2 t (lambda () (garbage-collect)))
+#+END_SRC
 *** Visit quickly
 #+BEGIN_SRC emacs-lisp
 (defun config-visit ()
@@ -1353,6 +1358,7 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
   :ensure t)
 #+END_SRC
 ** Haskell
+See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configuration (Or, Emacs is Agar for Brain Worms) - 2020-09-14]]
 *** company-ghci
 #+BEGIN_SRC emacs-lisp
 (use-package company-ghci
@@ -1394,6 +1400,41 @@ See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs
 #+BEGIN_SRC emacs-lisp
 (use-package hindent
     :ensure t)
+#+END_SRC
+*** lsp-mode
+See: [[https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off][A guide on disabling/enabling lsp-mode features]]
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-execute-code-action)
+  :hook ((go-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-mode . lsp-diagnostics-modeline-mode))
+  :bind ("C-c C-c" . #'lsp-execute-code-action)
+  :custom
+  (lsp-print-performance t)
+  (lsp-log-io t)
+  (lsp-diagnostics-modeline-scope :project)
+  (lsp-file-watch-threshold 5000)
+  (lsp-enable-file-watchers nil))
+
+(use-package lsp-ui
+  :ensure t
+  :custom
+  (lsp-ui-doc-delay 0.75)
+  (lsp-ui-doc-max-height 200)
+  (lsp-ui-sideline-enable nil)
+  (lsp-ui-sideline-show-code-actions nil)
+  :after lsp-mode)
+
+(use-package lsp-ivy
+  :ensure t
+  :after (ivy lsp-mode))
+
+(use-package company-lsp
+  :ensure t
+  :custom (company-lsp-enable-snippet t)
+  :after (company lsp-mode))
 #+END_SRC
 *** lsp-haskell
 #+BEGIN_SRC emacs-lisp
