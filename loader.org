@@ -81,7 +81,6 @@ this check and takes care of any loading of the packages.
     (package-initialize)
     (delete-other-windows))
 #+END_SRC
-
 ** The package
 
 #+BEGIN_SRC emacs-lisp
@@ -1373,47 +1372,77 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
           ("M-F" . haskell-mode-stylish-buffer))
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'highlight-symbol-mode)
 
-(custom-set-variables
-  '(haskell-process-suggest-remove-import-lines t)
-  '(haskell-process-auto-import-loaded-modules t)
-  '(haskell-process-log t))
+;;(custom-set-variables
+;;  '(haskell-process-suggest-remove-import-lines t)
+;;  '(haskell-process-auto-import-loaded-modules t)
+;;  '(haskell-process-log t))
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
-*** TODO Dante
-Investigate [[https://github.com/haskell/ghcide][ghcide]] Emacs support.
-[[https://github.com/jyp/dante][Dante]] is a fork of Intero mode which aims exclusively at providing a
-convenient frontend to GHCi. It steals good ideas from Intero, but it
-aims for *light weightedness* (see below for a detailed comparison).
-#+BEGIN_SRC emacs-lisp
-  (use-package dante
-     :ensure t
-     :after haskell-mode
-     :commands 'dante-mode
-     :init (add-hook 'haskell-mode-hook 'flycheck-mode)
-     ;; OR:
-     ;; UNUSED -- (add-hook 'haskell-mode-hook 'flymake-mode)
-           (add-hook 'haskell-mode-hook 'dante-mode)
-     :config (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
-  )
-
-(setq flymake-no-changes-timeout nil)
-(setq flymake-start-syntax-check-on-newline nil)
-(setq flycheck-check-syntax-automatically '(save mode-enabled))
-#+END_SRC
-*** TODO Attrap!
-[[https://github.com/jyp/attrap#attrap-emacs-mode-to-fix-the-flycheck-error-at-point][Attrap!]] provides a command to attempt to fix the flycheck error at point.
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package attrap
-  ;;   :ensure t
-  ;;   :bind (("C-x /" . attrap-attrap))) ;; use any binding of your choice
-#+END_SRC
 *** hindent
 #+BEGIN_SRC emacs-lisp
 (use-package hindent
     :ensure t)
+#+END_SRC
+*** nix-mode
+#+BEGIN_SRC emacs-lisp
+(use-package nix-mode
+  :ensure t)
+#+END_SRC
+*** lsp-mode
+#+BEGIN_SRC emacs-lisp
+;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+(setq lsp-keymap-prefix "C-c l")
+
+(use-package lsp-mode
+    :ensure t
+    :hook ((haskell-mode . lsp))
+    :commands lsp)
+
+;; optionally
+(use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
+
+;; if you are helm user
+;;(use-package helm-lsp
+;;    :ensure t
+;;    :commands helm-lsp-workspace-symbol)
+;; if you are ivy user
+(use-package lsp-ivy
+    :ensure t
+    :commands lsp-ivy-workspace-symbol)
+;;(use-package lsp-treemacs
+;;    :ensure t
+;;    :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+;(use-package dap-mode)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+;; optional if you want which-key integration
+;;(use-package which-key
+;;    :config
+;;    (which-key-mode))
+#+END_SRC
+*** lsp-haskell
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-haskell
+    :ensure t)
+
+(require 'lsp)
+(require 'lsp-haskell)
+;; Hooks so haskell and literate haskell major modes trigger LSP setup
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
+#+END_SRC
+*** company-ghc
+#+BEGIN_SRC emacs-lisp
+(use-package company-ghc
+    :ensure t
+)
 #+END_SRC
 ** HLedger
 #+BEGIN_SRC emacs-lisp
@@ -1464,11 +1493,6 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
   '(("php"    . "\\.phtml\\'")
     ("blade"  . "\\.blade\\."))
 )
-#+END_SRC
-** nix-mode
-#+BEGIN_SRC emacs-lisp
-(use-package nix-mode
-  :ensure t)
 #+END_SRC
 * Docker
 Docker modes (file and compose).
