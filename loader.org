@@ -1222,15 +1222,17 @@ This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-** Flycheck syntax checker
+** TODO Flycheck syntax checker
+This apparently breaks haskell-language-server (hie.yaml).
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :diminish flycheck-mode
-    :bind (("C-C >" . flycheck-next-error)
-           ("C-C <" . flycheck-previous-error)
-           ("C-C ?" . flycheck-list-errors)))
-  (add-hook 'prog-mode-hook #'flycheck-mode)
+  ;;(use-package flycheck
+  ;;  :ensure t
+  ;;  :diminish flycheck-mode
+  ;;  :bind (("C-C >" . flycheck-next-error)
+  ;;         ("C-C <" . flycheck-previous-error)
+  ;;         ("C-C ?" . flycheck-list-errors)))
+
+  ;;(add-hook 'prog-mode-hook #'flycheck-mode)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -1294,11 +1296,11 @@ See documentation [[https://github.com/clojure-emacs/clojure-mode/][clojure-mode
 #+BEGIN_SRC emacs-lisp
 (put-clojure-indent '>defn 2)
 #+END_SRC
-*** Flycheck-joker
+*** TODO Flycheck-joker
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck-joker
-  :ensure t
-  :diminish flycheck-joker-mode)
+;;(use-package flycheck-joker
+;;  :ensure t
+;;  :diminish flycheck-joker-mode)
 #+END_SRC
 *** Hoplon
 Taken from: [[https://github.com/hoplon/hoplon/wiki/For-Emacs-users][Hoplon for Emacs users]].
@@ -1388,12 +1390,13 @@ Not necessary with eglot.
           ("M-<return>" . haskell-process-do-info)
           ("M-F" . haskell-mode-stylish-buffer)
           ;;("<C-M-return>" . company-ghci)
+          ("C-c <up>" . flymake-goto-prev-error)
+          ("C-c <down>" . flymake-goto-next-error)
           )
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
 *** eglot
 See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client that stays out of your way]]
-
 #+BEGIN_SRC emacs-lisp
 (use-package eglot
     :ensure t)
