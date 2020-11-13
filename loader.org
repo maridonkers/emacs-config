@@ -1223,7 +1223,7 @@ This interferes with search colors.
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
 ** TODO Flycheck syntax checker
-This apparently breaks haskell-language-server (hie.yaml).
+This apparently intervenes with haskell-language-server (unrecognized modules).
 #+BEGIN_SRC emacs-lisp
   ;;(use-package flycheck
   ;;  :ensure t
@@ -1295,12 +1295,6 @@ supporting modules.
 See documentation [[https://github.com/clojure-emacs/clojure-mode/][clojure-mode]]. Below are customizations for specific indentations.
 #+BEGIN_SRC emacs-lisp
 (put-clojure-indent '>defn 2)
-#+END_SRC
-*** TODO Flycheck-joker
-#+BEGIN_SRC emacs-lisp
-;;(use-package flycheck-joker
-;;  :ensure t
-;;  :diminish flycheck-joker-mode)
 #+END_SRC
 *** Hoplon
 Taken from: [[https://github.com/hoplon/hoplon/wiki/For-Emacs-users][Hoplon for Emacs users]].
@@ -1403,6 +1397,7 @@ See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client 
 
 (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
 (add-hook 'haskell-mode-hook 'eglot-ensure)
+(define-key eglot-mode-map (kbd "<C-return>") 'eldoc-print-current-symbol-info)
 #+END_SRC
 *** haskell-snippets
 #+BEGIN_SRC emacs-lisp
