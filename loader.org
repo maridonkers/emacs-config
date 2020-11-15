@@ -1381,9 +1381,10 @@ Not necessary with eglot.
           ("C-x c I" . haskell-navigate-imports-return)
           ("C-c C-z" . haskell-interactive-switch)
           ("C-c o" . haskell-hoogle)
-          ("M-<return>" . haskell-process-do-info)
+          ("<C-return>" . haskell-process-do-info)
           ("M-F" . haskell-mode-stylish-buffer)
           ;;("<C-M-return>" . company-ghci)
+          ("C-c SPC" . flymake-show-diagnostics-buffer)
           ("C-c <up>" . flymake-goto-prev-error)
           ("C-c <down>" . flymake-goto-next-error)
           )
@@ -1397,7 +1398,9 @@ See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client 
 
 (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
 (add-hook 'haskell-mode-hook 'eglot-ensure)
-(define-key eglot-mode-map (kbd "<C-return>") 'eldoc-print-current-symbol-info)
+(setq eldoc-echo-area-use-multiline-p 6)
+(setq eldoc-prefer-doc-buffer t)
+(define-key eglot-mode-map (kbd "<M-return>") 'eldoc-print-current-symbol-info)
 #+END_SRC
 *** haskell-snippets
 #+BEGIN_SRC emacs-lisp
