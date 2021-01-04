@@ -1361,6 +1361,11 @@ Not necessary with eglot.
 ;;(use-package company-ghci
 ;;    :ensure t)
 #+END_SRC
+*** ormolu
+#+BEGIN_SRC emacs-lisp
+(use-package ormolu
+    :ensure t)
+#+END_SRC
 *** haskell-mode
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode
@@ -1382,7 +1387,8 @@ Not necessary with eglot.
           ("C-c C-z" . haskell-interactive-switch)
           ("C-c o" . haskell-hoogle)
           ("<C-return>" . haskell-process-do-info)
-          ("M-F" . haskell-mode-stylish-buffer)
+          ;; ("M-F" . haskell-mode-stylish-buffer)
+          ("M-F" . ormolu-format-buffer)
           ;;("<C-M-return>" . company-ghci)
           ("C-c SPC" . flymake-show-diagnostics-buffer)
           ("C-c <up>" . flymake-goto-prev-error)
@@ -1390,6 +1396,11 @@ Not necessary with eglot.
           )
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
+*** hindent
+#+BEGIN_SRC emacs-lisp
+(use-package hindent
+    :ensure t)
+#+END_SRC
 *** eglot
 See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client that stays out of your way]]
 #+BEGIN_SRC emacs-lisp
@@ -1397,7 +1408,9 @@ See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client 
     :ensure t)
 
 (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
-(add-hook 'haskell-mode-hook 'eglot-ensure)
+;; To enable by default remove the comment.
+;;(add-hook 'haskell-mode-hook 'eglot-ensure)
+
 (setq eldoc-echo-area-use-multiline-p 6)
 (setq eldoc-prefer-doc-buffer t)
 (define-key eglot-mode-map (kbd "<M-return>") 'eldoc-print-current-symbol-info)
@@ -1409,21 +1422,26 @@ See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client 
     :after (haskell-mode yasnippet)
     :defer)
 #+END_SRC
-*** hindent
-#+BEGIN_SRC emacs-lisp
-(use-package hindent
-    :ensure t)
-#+END_SRC
 ** HLedger
 #+BEGIN_SRC emacs-lisp
 (use-package hledger-mode
     :ensure t)
 (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
 #+END_SRC
+** GraphQL
+#+BEGIN_SRC emacs-lisp
+(use-package graphql-mode
+    :ensure t)
+#+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
     :pin melpa-stable
+    :ensure t)
+#+END_SRC
+** JSON
+#+BEGIN_SRC emacs-lisp
+(use-package json-mode
     :ensure t)
 #+END_SRC
 ** HTML/CSS

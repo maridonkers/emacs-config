@@ -30,7 +30,7 @@
     ("d6922c974e8a78378eacb01414183ce32bc8dbf2de78aabcc6ad8172547cb074" "551596f9165514c617c99ad6ce13196d6e7caa7035cea92a0e143dbe7b28be0e" default)))
  '(highlight-symbol-idle-delay 0.5)
  '(package-selected-packages
-   '(eglot evil racket-mode hindent csv-mode hledger-mode haskell-mode vlf mediawiki dokuwiki docuwiki nix-mode auctex-latexmk lua-mode org-re-reveal delight diminish popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets dumb-jump scss-mode geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile clojure-snippets bm auctex ag))
+   '(ormolu redspace json-mode graphql-mode eglot evil racket-mode hindent csv-mode hledger-mode haskell-mode vlf mediawiki dokuwiki docuwiki nix-mode auctex-latexmk lua-mode org-re-reveal delight diminish popup-kill-ring mark-multiple avy sunrise-commander dmenu beacon sudo-edit ox-twbs php-auto-yasnippets dumb-jump scss-mode geiser julia-mode rust-mode edit-indirect which-key web-mode use-package undo-tree try smartparens sayid restclient rainbow-delimiters point-undo origami notmuch multiple-cursors move-dup markdown-mode magit hydra htmlize hl-sexp highlight-symbol highlight-parentheses goto-last-change expand-region emmet-mode cyberpunk-theme counsel-projectile clojure-snippets bm auctex ag))
  '(safe-local-variable-values
    (quote
     ((cider-cljs-lein-repl . "(do (dev) (go) (cljs-repl))")
@@ -43,6 +43,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Noto Sans Mono" :foundry "GOOG" :slant normal :weight normal :height 128 :width normal))))
+ '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 143 :width normal))))
  '(magit-diff-added ((t (:background "PaleGreen4" :foreground "white smoke"))))
  '(magit-diff-removed ((t (:background "DarkOrange4" :foreground "white smoke")))))
