@@ -139,6 +139,14 @@ To solve lsp-mode slowness after e.g. find definition. Is it necessary with eglo
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x <C-backspace>") 'delete-frame)
 #+END_SRC
+*** Kill Emacs
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c <C-backspace>") 'kill-emacs)
+#+END_SRC
+*** pwd
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-?") 'pwd)
+#+END_SRC
 *** Lockfiles
 Don't want them.
 #+BEGIN_SRC emacs-lisp
@@ -285,6 +293,7 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 ;; Store desktop (i.e. open files, etc.) at exit (restores when starting again).
 (setq desktop-path '("."))
 (desktop-save-mode 1)
+(global-set-key (kbd "C-c C-d") 'desktop-save)
 #+END_SRC
 *** Ignore error wrapping
 #+BEGIN_SRC emacs-lisp
@@ -367,6 +376,10 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
   (global-set-key (kbd "C-c <C-right>") 'windmove-right)
   (global-set-key (kbd "C-c <C-up>") 'windmove-up)
   (global-set-key (kbd "C-c <C-down>") 'windmove-down)
+#+END_SRC
+*** Frame toggle full screen
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<C-s-SPC>") 'toggle-frame-fullscreen)
 #+END_SRC
 *** Window minimize/maximize
 #+BEGIN_SRC emacs-lisp
@@ -472,13 +485,14 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+END_SRC
 **** Convenience mapping for navigating back to your previous editing spots
 #+BEGIN_SRC emacs-lisp
-;; Does C-U C-SPC programatically.
-(defun set-mark-command-prefix-arg ()
-  (interactive)
-  (setq current-prefix-arg '(4)) ; C-u
-  (call-interactively 'set-mark-command))
+  ;; Does C-U C-SPC programatically.
+  (defun set-mark-command-prefix-arg ()
+    (interactive)
+    (setq current-prefix-arg '(4)) ; C-u
+    (call-interactively 'set-mark-command))
 
-(global-set-key (kbd "<s-SPC>") 'set-mark-command-prefix-arg)
+  (global-set-key (kbd "M-]") 'counsel-mark-ring)
+  (global-set-key (kbd "M-[") 'set-mark-command-prefix-arg)
 #+END_SRC
 *** Tabs
 #+BEGIN_SRC emacs-lisp
@@ -691,6 +705,7 @@ nice indeed, but I'm afraid it'll give me carpal tunnel syndrome;
 sticking to KDE + tiling shortcuts).
 
 Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
+Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_EXAMPLE
 (use-package exwm
   :ensure t
@@ -874,6 +889,7 @@ Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
 ** desktop-environment
 Replace EXAMPLE with SRC emacs-lisp to enable.
 Extension package for e.g. volume keys and screen lock with s-l.
+Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_EXAMPLE
 (use-package desktop-environment
   :diminish desktop-environment-mode
@@ -1206,8 +1222,8 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
 #+END_SRC
 *** Re-map xref keybindings
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-M-.") 'xref-find-definitions)
-(global-set-key (kbd "C-M-,") 'xref-pop-marker-stack)
+(global-set-key (kbd "M-.") 'xref-find-definitions)
+(global-set-key (kbd "M-,") 'xref-pop-marker-stack)
 #+END_SRC
 *** Dumb-jump
 #+BEGIN_SRC emacs-lisp
@@ -1222,17 +1238,26 @@ This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-** TODO Flycheck syntax checker
-This apparently intervenes with haskell-language-server (unrecognized modules).
-#+BEGIN_SRC emacs-lisp
-  ;;(use-package flycheck
-  ;;  :ensure t
-  ;;  :diminish flycheck-mode
-  ;;  :bind (("C-C >" . flycheck-next-error)
-  ;;         ("C-C <" . flycheck-previous-error)
-  ;;         ("C-C ?" . flycheck-list-errors)))
+** Flycheck syntax checker
+See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.org/installation]].
 
-  ;;(add-hook 'prog-mode-hook #'flycheck-mode)
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :pin melpa-stable
+    :ensure t
+    ;; :init (global-flycheck-mode)
+    :diminish flycheck-mode
+    :bind (("C-C f" . flycheck-buffer)
+           ("C-C >" . flycheck-next-error)
+           ("C-C <" . flycheck-previous-error)
+           ("C-C ?" . flycheck-list-errors)))
+
+  ;; (add-hook 'prog-mode-hook #'flycheck-mode)
+#+END_SRC
+** eldoc
+The =eldoc-doc-buffer=
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c e") 'eldoc-doc-buffer)
 #+END_SRC
 ** Clojure
 The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
@@ -1348,6 +1373,21 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 
 (add-hook 'python-mode-hook 'highlight-symbol-mode)
 #+END_SRC
+** TODO format-all
+The =format-all= code formatter package a.o. supports brittany (for Haskell).
+ [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]] 
+#+BEGIN_EXAMPLE
+  ;; (use-package lanuage-id
+  ;;   :pin melpa-stable
+  ;;   :ensure t
+  ;; )
+  ;; (use-
+   package format-all
+    :pin melpa-stable
+    :ensure t
+    :bind ("M-F" . format-all-buffer)
+  )
+#+END_EXAMPLE
 ** nix-mode
 #+BEGIN_SRC emacs-lisp
 (use-package nix-mode
@@ -1361,39 +1401,43 @@ Not necessary with eglot.
 ;;(use-package company-ghci
 ;;    :ensure t)
 #+END_SRC
-*** ormolu
-#+BEGIN_SRC emacs-lisp
+*** TODO ormolu
+#+BEGIN_EXAMPLE
+Replace EXAMPLE with SRC emacs-lisp to enable.
 (use-package ormolu
     :ensure t)
-#+END_SRC
+#+END_EXAMPLE
 *** haskell-mode
 #+BEGIN_SRC emacs-lisp
-(use-package haskell-mode
-    :ensure t
-    :config
-    ;; haskell-mode doesn't know about newer GHC features.
-    (let ((new-extensions '("QuantifiedConstraints"
-                            "DerivingVia"
-                            "BlockArguments"
-                            "DerivingStrategies"
-                            "StandaloneKindSignatures"
-                            )))
-      (setq
-       haskell-ghc-supported-extensions
-       (append haskell-ghc-supported-extensions new-extensions)))
-    :bind ("C-x c c" . haskell-cabal-visit-file)
-          ("C-x c i" . haskell-navigate-imports)
-          ("C-x c I" . haskell-navigate-imports-return)
-          ("C-c C-z" . haskell-interactive-switch)
-          ("C-c o" . haskell-hoogle)
-          ("<C-return>" . haskell-process-do-info)
-          ;; ("M-F" . haskell-mode-stylish-buffer)
-          ("M-F" . ormolu-format-buffer)
-          ;;("<C-M-return>" . company-ghci)
-          ("C-c SPC" . flymake-show-diagnostics-buffer)
-          ("C-c <up>" . flymake-goto-prev-error)
-          ("C-c <down>" . flymake-goto-next-error)
-          )
+  (use-package haskell-mode
+      :ensure t
+      :config
+      ;; haskell-mode doesn't know about newer GHC features.
+      (let ((new-extensions '("QuantifiedConstraints"
+                              "DerivingVia"
+                              "BlockArguments"
+                              "DerivingStrategies"
+                              "StandaloneKindSignatures"
+                              )))
+        (setq
+         haskell-ghc-supported-extensions
+         (append haskell-ghc-supported-extensions new-extensions)))
+      :bind ("C-x c c" . haskell-cabal-visit-file)
+            ("C-x c i" . haskell-navigate-imports)
+            ("C-x c I" . haskell-navigate-imports-return)
+            ("C-c C-z" . haskell-interactive-switch)
+            ("C-c <C-delete>" . haskell-process-restart)
+            ("C-c o" . haskell-hoogle)
+            ("<C-return>" . haskell-process-do-info)
+            ;; ("M-F" . haskell-mode-stylish-buffer)
+            ;; ("M-F" . ormolu-format-buffer)
+            ;;("<C-M-return>" . company-ghci)
+            ("C-c SPC" . flymake-show-diagnostics-buffer)
+            ("C-c <up>" . flymake-goto-prev-error)
+            ("C-c <down>" . flymake-goto-next-error)
+            ("M-F" . haskell-mode-stylish-buffer)
+            )
+  (add-hook 'haskell-mode-hook #'highlight-symbol-mode)
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
 *** hindent
@@ -1401,9 +1445,47 @@ See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs
 (use-package hindent
     :ensure t)
 #+END_SRC
-*** eglot
-See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client that stays out of your way]]
+*** Flycheck
 #+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :pin melpa-stable
+  :ensure t
+  :init (global-flycheck-mode)
+  :diminish flycheck-mode
+  :bind (("C-C >" . flycheck-next-error)
+         ("C-C <" . flycheck-previous-error)
+         ("C-C ?" . flycheck-list-errors)))
+#+END_SRC
+*** Dante + Attrap
+See [[https://github.com/jyp/dante#installation][jyp/dante]] and [[https://github.com/jyp/attrap][jyp/attrap]].
+#+BEGIN_SRC emacs-lisp
+  (defun dante-info-follow-window ()
+    (interactive)
+    (dante-info)
+    (other-window 1))
+
+  (use-package dante
+    :ensure t
+    :after haskell-mode
+    :commands 'dante-mode
+    :init
+    (add-hook 'haskell-mode-hook 'flycheck-mode)
+    (add-hook 'haskell-mode-hook 'dante-mode)
+    ;; :config
+    ;; (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
+    :bind (("<M-return>" . dante-info))
+    )
+
+  (use-package attrap
+    :ensure t
+    :bind (("C-x /" . attrap-attrap))
+  )
+
+#+END_SRC
+*** TODO eglot
+See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client that stays out of your way]]
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 (use-package eglot
     :ensure t)
 
@@ -1414,7 +1496,7 @@ See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client 
 (setq eldoc-echo-area-use-multiline-p 6)
 (setq eldoc-prefer-doc-buffer t)
 (define-key eglot-mode-map (kbd "<M-return>") 'eldoc-print-current-symbol-info)
-#+END_SRC
+#+END_EXAMPLE
 *** haskell-snippets
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-snippets
@@ -1774,7 +1856,7 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 ;; Open an eshell.
 (global-set-key (kbd "<f12>") 'eshell)
 #+END_SRC
-* Treemacs
+* TODO Treemacs
 Requires Emacs 25.2+...
 Replace EXAMPLE with SRC emacs-lisp to enable.
 #+BEGIN_EXAMPLE
