@@ -675,256 +675,6 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (setq display-time-format "%H:%M - %d %B %Y")
 (display-time-mode 1)
 #+END_SRC
-** Alsa
-*** Volume controls
-This appears to be done by the =desktop-environment= package.
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(defun audio/mute ()
-  (interactive)
-  (start-process "audio-mute" nil "amixer" "-q" "sset" "Master" "toggle"))
-
-(defun audio/raise-volume ()
-  (interactive)
-  (start-process "raise-volume" nil "amixer" "-q" "sset" "Master" "10%+"))
-
-(defun audio/lower-volume ()
-  (interactive)
-(start-process "lower-volume" nil "amixer" "-q" "sset" "Master" "10%-"))
-
-(global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
-(global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
-(global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
-#+END_EXAMPLE
-* TODO exwm
-Move this into a separate Emacs configuration and start it via
-=HOME=pathtoseparateemacsd emacs &= to separate from regular Emacs.
-** Emacs Window Manager
-Replace EXAMPLE with SRC emacs-lisp to enable =exwm= (which is very
-nice indeed, but I'm afraid it'll give me carpal tunnel syndrome;
-sticking to KDE + tiling shortcuts).
-
-Wiki: [[https://github.com/ch11ng/exwm/wiki][EXWM wiki]].
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package exwm
-  :ensure t
-  :config
-    ;; necessary to configure exwm manually
-    (require 'exwm-config)
-
-    ;; fringe size, most people prefer 1
-    (fringe-mode 3)
-
-    ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
-    (server-start)
-
-    ;; this fixes issues with ido mode (e.g. dmenu not fully showing), if you use helm, get rid of it
-    ;(exwm-enable-ido-workaround)
-    (exwm-config-ido)
-
-    ;; a number between 1 and 9, exwm creates workspaces dynamically; start out with 2 (multiple monitor).
-    (setq exwm-workspace-number 2)
-
-    ;; Workspaces.
-    (setq exwm-workspace-show-all-buffers t)
-    (setq exwm-layout-show-all-buffers t)
-
-    ;; reize windows with mouse.
-    (setq window-divider-default-right-width 1)
-    (window-divider-mode)
-
-    ; Rename buffer to window title (Otherwise EXWM#).
-    (defun exwm-rename-buffer-to-title () (exwm-workspace-rename-buffer exwm-title))
-    (add-hook 'exwm-update-title-hook 'exwm-rename-buffer-to-title)
-
-    ;; this is a way to declare truly global/always working keybindings
-    ;; this is a nifty way to go back from char mode to line mode without using the mouse
-    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
-    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-    (exwm-input-set-key (kbd "s-s") #'exwm-workspace-swap)
-    (exwm-input-set-key (kbd "s-b") #'exwm-workspace-switch-to-buffer)
-    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move-window)
-    (exwm-input-set-key (kbd "s-x") #'exwm-randr-refresh)
-    (exwm-input-set-key (kbd "s-f") #'exwm-layout-set-fullscreen)
-    (exwm-input-set-key (kbd "s-d") #'dmenu)
-
-    ;; the next loop will bind s-<number> to switch to the corresponding workspace
-    (dotimes (i 10)
-      (exwm-input-set-key (kbd (format "s-%d" i))
-                          `(lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,i))))
-
-   ;; Workspace previous/next; see snippet at: https://emacs.stackexchange.com/questions/33105/in-exwm-emacs-x-window-manager-how-can-i-switch-to-previous-workspace
-
-   (defvar exwm-workspace-latest-index nil "The previous active workspace index.")
-
-   (defun exwm-workspace-current-to-latest-index (_x)
-     (setq exwm-workspace-latest-index exwm-workspace-current-index))
-
-   (advice-add 'exwm-workspace-switch :before #'exwm-workspace-current-to-latest-index)
-
-   (defun exwm-workspace-switch-to-latest ()
-     (interactive)
-     "Switch to the latest active workspace."
-     (let ((index exwm-workspace-latest-index))
-       (exwm-workspace-switch index)))
-
-   (defun exwm-workspace-switch-to-previous ()
-     "Switch to the previous workspace."
-     (interactive)
-     (let ((index exwm-workspace-current-index))
-       (exwm-workspace-switch (if (> index 0) (- index 1) index))))
-
-   (defun exwm-workspace-switch-to-next ()
-     "Switch to the next workspace."
-     (interactive)
-     (let ((index exwm-workspace-current-index))
-       (exwm-workspace-switch (+ index 1))))
-
-   (exwm-input-set-key (kbd "s-\\") #'exwm-workspace-switch-to-latest)
-   (exwm-input-set-key (kbd "s-[") #'exwm-workspace-switch-to-previous)
-   (exwm-input-set-key (kbd "s-]") #'exwm-workspace-switch-to-next)
-   (exwm-input-set-key (kbd "<s-iso-lefttab>") #'exwm-workspace-switch-to-previous)
-   (exwm-input-set-key (kbd "<s-tab>") #'exwm-workspace-switch-to-next)
-
-   ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
-   (exwm-input-set-key (kbd "s-&")
-                       (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-
-    ;; an easy way to make keybindings work *only* in line mode
-    (push ?\C-q exwm-input-prefix-keys)
-    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
-
-    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
-    (exwm-input-set-simulation-keys
-     '(
-       ;; movement
-       ([?\C-b] . left)
-       ([?\M-b] . C-left)
-       ([?\C-f] . right)
-       ([?\M-f] . C-right)
-       ([?\C-p] . up)
-       ([?\C-n] . down)
-       ([?\C-a] . home)
-       ([?\C-e] . end)
-       ([?\M-v] . prior)
-       ([?\C-v] . next)
-       ([?\C-d] . delete)
-       ([?\C-k] . (S-end delete))
-       ;; select/cut/paste
-       ;([?\C-x ?h] . ?\C-a) ; only works in emacs 27+ -- https://github.com/ch11ng/exwm/issues/348
-       ([?\M-a] . ?\C-a) ; workaround
-       ([?\C-w] . ?\C-x)
-       ([?\M-w] . ?\C-c)
-       ([?\C-y] . ?\C-v)
-       ;; search
-       ([?\C-s] . ?\C-f)))
-
-    ;; Commented out because desktop-environment package apparently supplies this.
-    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
-    ;(dolist (k '(XF86AudioLowerVolume
-    ;           XF86AudioRaiseVolume
-    ;           XF86PowerOff
-    ;           XF86AudioMute
-    ;           XF86AudioPlay
-    ;           XF86AudioStop
-    ;           XF86AudioPrev
-    ;           XF86AudioNext
-    ;           XF86ScreenSaver
-    ;           XF68Back
-    ;           XF86Forward
-    ;           Scroll_Lock
-    ;           print))
-    ;(cl-pushnew k exwm-input-prefix-keys))
-
-    ;(setq exwm-randr-workspace-output-plist '(0 "LVDS-1" 1 "HDMI-1"))
-)
-
-;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
-;; this just enables exwm, it started automatically once everything is ready
-(require 'exwm-systemtray)
-(message "Enabling EXWM SYSTEMTRAY.")
-(exwm-systemtray-enable)
-
-(require 'exwm-randr)
-
-;; Snippet taken from RandR (multi-screen) at: https://github.com/ch11ng/exwm/wiki
-;; and converted to two active screens. Also added call to exwm-randr-refresh.
-(defun exwm-change-screen-hook ()
-  (let ((xrandr-output-regexp "\n\\([^ ]+\\) connected ")
-        primary-output)
-    (with-temp-buffer
-      (call-process "xrandr" nil t nil)
-      (goto-char (point-min))
-      (re-search-forward xrandr-output-regexp nil 'noerror)
-      (setq primary-output (match-string 1))
-      (forward-line)
-      (setq multiple-outputs (re-search-forward xrandr-output-regexp nil 'noerror))
-      (if (not multiple-outputs)
-        (call-process "xrandr" nil nil nil "--output" primary-output "--auto")
-        (call-process
-          "xrandr" nil nil nil
-          "--output" (match-string 1) "--primary" "--auto"
-          "--output" primary-output "--auto" "--right-of" (match-string 1)))
-        (setq exwm-randr-workspace-output-plist (if multiple-outputs
-                                                  (list 0 primary-output 1 (match-string 1))
-                                                  (list 0 primary-output)))
-        (exwm-randr-refresh))))
-
-(add-hook 'exwm-randr-screen-change-hook 'exwm-change-screen-hook)
-
-;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
-(message "Enabling EXWM RANDR.")
-(exwm-randr-enable)
-
-;;TODO! Check environment variable DESKTOP_SESSION=exwm to determine if enable.
-(message "Enabling EXWM.")
-(exwm-enable)
-#+END_EXAMPLE
-** desktop-environment
-Replace EXAMPLE with SRC emacs-lisp to enable.
-Extension package for e.g. volume keys and screen lock with s-l.
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package desktop-environment
-  :diminish desktop-environment-mode
-  :ensure t
-  :config (if window-system
-            (desktop-environment-mode)))
-#+END_EXAMPLE
-** Battery monitor
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package fancy-battery
-  :ensure t
-  :config
-    (setq fancy-battery-show-percentage t)
-    (setq battery-update-interval 15)
-    (if window-system
-      (fancy-battery-mode)
-      (display-battery-mode)))
-#+END_EXAMPLE
-** System monitor
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package symon
-  :ensure t
-  :diminish symon-mode
-  :config
-    (setq symon-monitors '(symon-current-time-monitor
-                           symon-linux-memory-monitor
-                           symon-linux-cpu-monitor
-                           symon-linux-network-rx-monitor
-                           symon-linux-network-tx-monitor))
-    (symon-mode)
-  :bind
-  ("s-h" . symon-mode))
-#+END_EXAMPLE
 * evil
 #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -1038,7 +788,7 @@ This installs the [[https://www.gnu.org/software/auctex/][auctex]] and [[https:/
 #+END_SRC
 * Programming
 ** General
-Setup for GNU Emacs, Clojure and ClojureScript. Plus [[https://github.com/Fuco1/smartparens][Smartparens]].
+Setup for GNU Emacs, software development. Plus [[https://github.com/Fuco1/smartparens][Smartparens]].
 
 The structured editing of smartparens is useful in a LOT of languages, as
 long as there are parenthesis, brackets or quotes.
@@ -1179,8 +929,9 @@ Magit is the only thing you need when it comes to Version Control (Git)
   :ensure t)
 #+END_SRC
 
-*** Imenu
-#+BEGIN_SRC emacs-lisp
+*** TODO Imenu
+Replace EXAMPLE with SRC emacs-lisp to enable.
+#+BEGIN_EXAMPLE
 ;; Add imenu to menu bar and make it automatically rescan.
 (add-hook 'clojure-mode-hook #'imenu-add-menubar-index)
 (add-hook 'clojurec-mode-hook #'imenu-add-menubar-index)
@@ -1189,7 +940,7 @@ Magit is the only thing you need when it comes to Version Control (Git)
 
 ;; Incremental imenu.
 (global-set-key (kbd "C-S-l") 'imenu)
-#+END_SRC
+#+END_EXAMPLE
 *** Symbols
 **** TODO Highlight s-exp
 #+BEGIN_SRC emacs-lisp
@@ -1259,112 +1010,6 @@ The =eldoc-doc-buffer=
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c e") 'eldoc-doc-buffer)
 #+END_SRC
-** Clojure
-The clojure ecosystem for GNU Emacs consists out of CIDER and bunch of
-supporting modules.
-*** Cider
-#+BEGIN_SRC emacs-lisp
-(use-package cider
-  :ensure t
-  :diminish cider-mode
-  :pin melpa-stable
-  :init (setq cider-show-error-buffer t
-              cider-auto-select-error-buffer t
-              ;;cider-repl-pop-to-buffer-on-connect nil
-              cider-repl-use-clojure-font-lock t
-              cider-repl-wrap-history t
-              cider-repl-history-file "~/.emacs.d/cider-history"
-              cider-repl-history-size 999
-              cider-repl-use-pretty-printing t
-              nrepl-hide-special-buffers t
-              ;; Stop error buffer from popping up while working in buffers other than the REPL:
-              nrepl-popup-stacktraces nil)
-
-        (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-        (add-hook 'cider-repl-mode-hook #'company-mode)
-        (add-hook 'cider-mode-hook #'company-mode)
-        (add-hook 'cider-mode-hook #'eldoc-mode)
-
-;;  :config (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-;;          (add-hook 'cider-repl-mode-hook #'company-mode)
-;;          (add-hook 'cider-mode-hook #'company-mode)
-;;          (add-hook 'cider-mode-hook #'eldoc-mode)
-;;          (setq cider-repl-history-file "~/.emacs.d/cider-history")
-;;          (setq cider-repl-use-clojure-font-lock t)
-;;          (setq cider-repl-result-prefix ";; => ")
-;;          (setq cider-repl-wrap-history t)
-;;          (setq cider-repl-history-size 9999)
-;;          (setq cider-repl-use-pretty-printing t)
-;;          (setq cider-repl-display-help-banner nil)
-;;          ;(setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
-
-  :bind (("M-r" . cider-namespace-refresh)
-         ("C-c r" . cider-repl-reset)
-         ("C-c ." . cider-reset-test-run-tests)
-         ("C-c C-v C-e" . cider-eval-defun-at-point)
-         ;("M-<return>" . cider-doc)
-         ("<f8>" . cider-clear-compilation-highlights)))
-
-(require 'clojure-mode)
-(define-key clojure-mode-map (kbd "M-<return>") 'cider-doc)
-
-;; Scrolling behaviour has changed in more recent Cider versions; fix it.
-(add-hook 'cider-repl-mode-hook '(lambda () (setq scroll-conservatively 101)))
-
-(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojurec-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojurescript-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojure-mode-hook #'highlight-symbol-mode)
-#+END_SRC
-*** Indentation customization
-See documentation [[https://github.com/clojure-emacs/clojure-mode/][clojure-mode]]. Below are customizations for specific indentations.
-#+BEGIN_SRC emacs-lisp
-(put-clojure-indent '>defn 2)
-#+END_SRC
-*** Hoplon
-Taken from: [[https://github.com/hoplon/hoplon/wiki/For-Emacs-users][Hoplon for Emacs users]].
-
-To recognize hoplon files correctly add this to your .emacs
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.cljs\\.hl" . clojurescript-mode))
-#+END_SRC
-
-To properly indent hoplon macros. The following is extended from Alan's dotspacemacs:
-#+BEGIN_SRC emacs-lisp
-(add-hook 'clojure-mode-hook
-            '(lambda ()
-               ;; Hoplon functions and macros
-               (dolist (pair '((page . 'defun)
-                               (loop-tpl . 'defun)
-                               (if-tpl . '1)
-                               (for-tpl . '1)
-                               (case-tpl . '1)
-                               (cond-tpl . 'defun)))
-                 (put-clojure-indent (car pair)
-                                     (car (last pair))))))
-#+END_SRC
-*** clj-refactor
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package clj-refactor
-  :pin melpa-stable
-  :ensure t
-  :diminish clj-refactor-mode
-  :init
-  (add-hook 'clojure-mode-hook 'clj-refactor-mode)
-  :config
-  ;; Configure the Clojure Refactoring prefix:
-  (cljr-add-keybindings-with-prefix "C-c C-/")
-  :diminish clj-refactor-mode)
-#+END_EXAMPLE
-*** Expand region
-#+BEGIN_SRC emacs-lisp
-;expand-region functionality is really great for lisp/clojure editing
-;from https://github.com/magnars/expand-region.el
-(use-package expand-region
-  :ensure t
-  :bind ("C-x x" . er/expand-region))
-#+END_SRC
 ** Python
 *** elpy
 #+BEGIN_SRC emacs-lisp
@@ -1373,21 +1018,6 @@ Replace EXAMPLE with SRC emacs-lisp to enable.
 
 (add-hook 'python-mode-hook 'highlight-symbol-mode)
 #+END_SRC
-** TODO format-all
-The =format-all= code formatter package a.o. supports brittany (for Haskell).
- [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]] 
-#+BEGIN_EXAMPLE
-  ;; (use-package lanuage-id
-  ;;   :pin melpa-stable
-  ;;   :ensure t
-  ;; )
-  ;; (use-
-   package format-all
-    :pin melpa-stable
-    :ensure t
-    :bind ("M-F" . format-all-buffer)
-  )
-#+END_EXAMPLE
 ** nix-mode
 #+BEGIN_SRC emacs-lisp
 (use-package nix-mode
@@ -1395,18 +1025,11 @@ The =format-all= code formatter package a.o. supports brittany (for Haskell).
 #+END_SRC
 ** Haskell
 See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configuration (Or, Emacs is Agar for Brain Worms) - 2020-09-14]]
-*** TODO company-ghci
-Not necessary with eglot.
+*** company-ghci
 #+BEGIN_SRC emacs-lisp
-;;(use-package company-ghci
-;;    :ensure t)
-#+END_SRC
-*** TODO ormolu
-#+BEGIN_EXAMPLE
-Replace EXAMPLE with SRC emacs-lisp to enable.
-(use-package ormolu
+(use-package company-ghci
     :ensure t)
-#+END_EXAMPLE
+#+END_SRC
 *** haskell-mode
 #+BEGIN_SRC emacs-lisp
   (use-package haskell-mode
@@ -1482,21 +1105,6 @@ See [[https://github.com/jyp/dante#installation][jyp/dante]] and [[https://githu
   )
 
 #+END_SRC
-*** TODO eglot
-See: [[https://github.com/joaotavora/eglot][Emacs Polyglot: an Emacs LSP client that stays out of your way]]
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-(use-package eglot
-    :ensure t)
-
-(add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
-;; To enable by default remove the comment.
-;;(add-hook 'haskell-mode-hook 'eglot-ensure)
-
-(setq eldoc-echo-area-use-multiline-p 6)
-(setq eldoc-prefer-doc-buffer t)
-(define-key eglot-mode-map (kbd "<M-return>") 'eldoc-print-current-symbol-info)
-#+END_EXAMPLE
 *** haskell-snippets
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-snippets
@@ -1856,59 +1464,6 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 ;; Open an eshell.
 (global-set-key (kbd "<f12>") 'eshell)
 #+END_SRC
-* TODO Treemacs
-Requires Emacs 25.2+...
-Replace EXAMPLE with SRC emacs-lisp to enable.
-#+BEGIN_EXAMPLE
-;; treemacs set up
-(use-package treemacs
-  :pin melpa-stable
-  :ensure t)
-
-(use-package treemacs-projectile
-  :pin melpa-stable
-  :ensure t)
-
-(global-set-key (kbd "s-f p") 'treemacs-projectile) ;; works if current buffer is a projectile buffer; shows contents of parent folders as well
-(global-set-key (kbd "s-f c") 'treemacs) ;; shows files and folders in current folder only
-;;(global-set-key [fx] 'treemacs-projectile-toggle) ;; not using this - let treemacs-toggle do the job
-(global-set-key (kbd "s-f t") 'treemacs-toggle)
-
-(treemacs-follow-mode t)
-(treemacs-filewatch-mode t)
-
-(setq treemacs-follow-after-init          t
-      treemacs-width                      35
-      treemacs-indentation                2
-      treemacs-git-integration            t
-      treemacs-collapse-dirs              3
-      treemacs-silent-refresh             nil
-      treemacs-change-root-without-asking nil
-      treemacs-sorting                    'alphabetic-desc
-      treemacs-show-hidden-files          t
-      treemacs-never-persist              nil
-      treemacs-is-never-other-window      nil
-      treemacs-goto-tag-strategy          'refetch-index
-      treemacs-no-png-images              t)
-
-   ;;(describe-variable 'treemacs-show-hidden-files)
-
-;; temporary fix for missing icon issue in treemacs
-(setq treemacs--not-selected-icon-background "gray8"
-      treemacs--selected-icon-background     "darkolivegreen")
-(--each treemacs--icons
-  (progn
-    (treemacs--set-img-property
-     (get-text-property 0 'img-selected it)
-     :background treemacs--selected-icon-background)
-    (treemacs--set-img-property
-     (get-text-property 0 'img-unselected it)
-     :background treemacs--not-selected-icon-background)))
-
-;; do without images
-;; track treemacs issue #53 - this isn't ready yet
-;; (setq treemacs-no-images t)
-#+END_EXAMPLE
 * E-mail/usenet clients
 ** TODO gnus
 :PROPERTIES:
