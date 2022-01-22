@@ -1035,16 +1035,39 @@ See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configura
   (use-package haskell-mode
       :ensure t
       :config
-      ;; haskell-mode doesn't know about newer GHC features.
-      (let ((new-extensions '("QuantifiedConstraints"
-                              "DerivingVia"
-                              "BlockArguments"
-                              "DerivingStrategies"
-                              "StandaloneKindSignatures"
-                              )))
-        (setq
-         haskell-ghc-supported-extensions
-         (append haskell-ghc-supported-extensions new-extensions)))
+        (defcustom haskell-formatter 'ormolu
+          "The Haskell formatter to use. One of: 'ormolu, 'stylish, nil. Set it per-project in .dir-locals."
+          :safe 'symbolp)
+
+        (defun haskell-smart-format ()
+          "Format a buffer based on the value of 'haskell-formatter'."
+          (interactive)
+          (cl-ecase haskell-formatter
+            ('ormolu (ormolu-format-buffer))
+            ('stylish (haskell-mode-stylish-buffer))
+            (nil nil)
+            ))
+
+        (defun haskell-switch-formatters ()
+          "Switch from ormolu to stylish-haskell, or vice versa."
+          (interactive)
+          (setq haskell-formatter
+                (cl-ecase haskell-formatter
+                  ('ormolu 'stylish)
+                  ('stylish 'ormolu)
+                  (nil nil))))
+
+        ;; haskell-mode doesn't know about newer GHC features.
+        (let ((new-extensions '("QuantifiedConstraints"
+                                "DerivingVia"
+                                "BlockArguments"
+                                "DerivingStrategies"
+                                "StandaloneKindSignatures"
+                                )))
+          (setq
+           haskell-ghc-supported-extensions
+           (append haskell-ghc-supported-extensions new-extensions)))
+
       :bind ("C-x c c" . haskell-cabal-visit-file)
             ("C-x c i" . haskell-navigate-imports)
             ("C-x c I" . haskell-navigate-imports-return)
@@ -1052,13 +1075,12 @@ See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configura
             ("C-c <C-delete>" . haskell-process-restart)
             ("C-c o" . haskell-hoogle)
             ("<C-return>" . haskell-process-do-info)
-            ;; ("M-F" . haskell-mode-stylish-buffer)
-            ;; ("M-F" . ormolu-format-buffer)
             ;;("<C-M-return>" . company-ghci)
             ("C-c SPC" . flymake-show-diagnostics-buffer)
             ("C-c <up>" . flymake-goto-prev-error)
             ("C-c <down>" . flymake-goto-next-error)
-            ("M-F" . haskell-mode-stylish-buffer)
+            ("M-F" . haskell-smart-format)
+            ("M-R" . haskell-switch-formatters)
             )
   (add-hook 'haskell-mode-hook #'highlight-symbol-mode)
 #+END_SRC
@@ -1066,6 +1088,11 @@ See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs
 *** hindent
 #+BEGIN_SRC emacs-lisp
 (use-package hindent
+    :ensure t)
+#+END_SRC
+*** ormolu
+#+BEGIN_SRC emacs-lisp
+(use-package ormolu
     :ensure t)
 #+END_SRC
 *** Flycheck
