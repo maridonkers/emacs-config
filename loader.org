@@ -1058,12 +1058,12 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
            (append haskell-ghc-supported-extensions new-extensions)))
 
       :bind ("C-x c c" . haskell-cabal-visit-file)
-            ("C-c C-l" . haskell-process-load-file)
             ("C-x c i" . haskell-navigate-imports)
             ("C-x c I" . haskell-navigate-imports-return)
             ("C-c C-z" . haskell-interactive-switch)
             ("C-c <C-delete>" . haskell-process-restart)
             ("<M-return>" . haskell-hoogle)
+            ("<C-S-return>" . haskell-process-load-file)
             ("<C-return>" . haskell-process-do-info)
             ;;("<C-M-return>" . company-ghci)
             ("C-c SPC" . flymake-show-diagnostics-buffer)
