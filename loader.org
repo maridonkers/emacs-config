@@ -1058,6 +1058,7 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
            (append haskell-ghc-supported-extensions new-extensions)))
 
       :bind ("C-x c c" . haskell-cabal-visit-file)
+            ("C-C C-l" . haskell-process-load-file)
             ("C-x c i" . haskell-navigate-imports)
             ("C-x c I" . haskell-navigate-imports-return)
             ("C-c C-z" . haskell-interactive-switch)
