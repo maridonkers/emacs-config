@@ -980,11 +980,13 @@ This interferes with search colors.
 ** Flycheck syntax checker
 See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.org/installation]].
 
+BTW: flycheck mode is not enabled by default because my computer is
+too slow (with Haskell code).
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :pin melpa-stable
     :ensure t
-    :init (global-flycheck-mode)
+    ;; :init (global-flycheck-mode)
     :diminish flycheck-mode
     :bind (("C-C f" . flycheck-buffer)
            ("C-C >" . flycheck-next-error)
@@ -1070,9 +1072,6 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
             ("<C-return>" . haskell-process-do-info)
             ("<C-S-M-return>" . haskell-mode-show-type-at)
             ;;("<C-M-return>" . company-ghci)
-            ("C-c SPC" . flymake-show-diagnostics-buffer)
-            ("C-c <up>" . flymake-goto-prev-error)
-            ("C-c <down>" . flymake-goto-next-error)
             ("M-F" . haskell-smart-format)
             ("M-R" . haskell-switch-formatters)
             )
