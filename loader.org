@@ -981,7 +981,13 @@ This interferes with search colors.
 See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.org/installation]].
 
 BTW: flycheck mode is not enabled by default because my computer is
-too slow (with Haskell code).
+too slow (with Haskell code) because every small change triggers
+expensive checking. Instead I now manually initiate interactive
+Haskell mode via the <C-S-return> and/or C-Z keybindings, which
+activates its functions ('hover over' type info in the minibuffer,
+<C-return> haskell-process-do-info, etc). File loading is still
+somewhat slow but when it's loaded and a <C-S-return> is done, it's
+very usable).
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :pin melpa-stable
