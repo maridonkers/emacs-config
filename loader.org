@@ -192,6 +192,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 ** TODO Prerequisite packages
   #+BEGIN_SRC emacs-lisp
     ;; (require 'cl)
+    (setq byte-compile-warnings '(cl-functions))
   #+END_SRC
 ** Look and feel
 *** Theme
@@ -1032,28 +1033,6 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
   (use-package haskell-mode
       :ensure t
       :config
-        (defcustom haskell-formatter 'ormolu
-          "The Haskell formatter to use. One of: 'ormolu, 'stylish, nil. Set it per-project in .dir-locals."
-          :safe 'symbolp)
-
-        (defun haskell-smart-format ()
-          "Format a buffer based on the value of 'haskell-formatter'."
-          (interactive)
-          (cl-ecase haskell-formatter
-            ('ormolu (ormolu-format-buffer))
-            ('stylish (haskell-mode-stylish-buffer))
-            (nil nil)
-            ))
-
-        (defun haskell-switch-formatters ()
-          "Switch from ormolu to stylish-haskell, or vice versa."
-          (interactive)
-          (setq haskell-formatter
-                (cl-ecase haskell-formatter
-                  ('ormolu 'stylish)
-                  ('stylish 'ormolu)
-                  (nil nil))))
-
         ;; haskell-mode doesn't know about newer GHC features.
         (let ((new-extensions '("QuantifiedConstraints"
                                 "DerivingVia"
@@ -1069,7 +1048,9 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
         (setq haskell-process-use-presentation-mode t)
 
         ;; https://www.reddit.com/r/haskell/comments/e5gcq0/best_emacs_experience_for_haskell/
-        (setq haskell-hoogle-url "http://localhost:8080/?hoogle=%s")
+        (setq haskell-hoogle-url "https://hoogle.haskell.org/?hoogle=%s")
+
+        (setq haskell-mode-tag-find t)
 
       :bind ("C-x c c" . haskell-cabal-visit-file)
             ("C-x c i" . haskell-navigate-imports)
@@ -1082,20 +1063,32 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
             ("<C-return>" . haskell-process-do-info)
             ("<C-S-M-return>" . haskell-mode-show-type-at)
             ;;("<C-M-return>" . company-ghci)
-            ("M-F" . haskell-smart-format)
-            ("M-R" . haskell-switch-formatters)
             )
   (add-hook 'haskell-mode-hook #'highlight-symbol-mode)
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
 *** hindent
 #+BEGIN_SRC emacs-lisp
-(use-package hindent
+  (use-package hindent
     :ensure t)
 #+END_SRC
-*** ormolu
+*** format-all
+See [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]]
 #+BEGIN_SRC emacs-lisp
-(use-package ormolu
+  (use-package format-all
+    :ensure t
+    :bind
+       ("M-F" . format-all-buffer)
+       ("M-R" . format-all-region)
+  )
+
+  (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
+  (add-hook 'haskell-mode-hook 'format-all-mode)
+  (add-hook 'php-mode-hook 'format-all-mode)
+#+END_SRC
+*** TODO ormolu
+#+BEGIN_SRC emacs-lisp
+  (use-package ormolu
     :ensure t)
 #+END_SRC
 *** haskell-snippets
