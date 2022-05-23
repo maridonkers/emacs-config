@@ -152,6 +152,11 @@ Don't want them.
 #+BEGIN_SRC emacs-lisp
 (setq create-lockfiles nil)
 #+END_SRC
+*** Windows
+Delete other windows.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-'") 'delete-other-windows)
+#+END_SRC
 ** Menu bar switch
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c h") 'menu-bar-mode)
@@ -986,8 +991,8 @@ too slow (with Haskell code) because every small change triggers
 expensive checking. Instead I now manually initiate interactive
 Haskell mode via the <C-S-return> and/or C-Z keybindings, which
 activates its functions ('hover over' type info in the minibuffer,
-<C-return> haskell-process-do-info, etc). File loading is still
-somewhat slow but when it's loaded and a <C-S-return> is done, it's
+C-c RET haskell-process-do-info, etc). File loading is still
+somewhat slow but when it's loaded and a C-c S-RET is done, it's
 very usable).
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
@@ -1060,8 +1065,8 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
             ("C-c o" . haskell-hoogle)
             ("<M-return>" . haskell-hoogle-lookup-from-website)
             ("<C-S-return>" . haskell-process-load-file)
-            ("<C-return>" . haskell-process-do-info)
-            ("<C-S-M-return>" . haskell-mode-show-type-at)
+            ("C-c RET" . haskell-process-do-info)
+            ("C-c S-RET" . haskell-mode-show-type-at)
             ;;("<C-M-return>" . company-ghci)
             )
   (add-hook 'haskell-mode-hook #'highlight-symbol-mode)
@@ -1089,6 +1094,27 @@ See [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-a
 *** TODO ormolu
 #+BEGIN_SRC emacs-lisp
   (use-package ormolu
+    :ensure t)
+#+END_SRC
+*** dante
+See: [[https://github.com/jyp/dante#installation][jyp/dante#installation]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dante
+   :ensure t
+   :after haskell-mode
+   :commands 'dante-mode
+   :bind
+       ("<C-return>" . dante-info)
+   :init
+    (add-hook 'haskell-mode-hook 'flycheck-mode)
+    (add-hook 'haskell-mode-hook 'dante-mode))
+#+END_SRC
+*** direnv
+See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-direnv#installation]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package direnv
     :ensure t)
 #+END_SRC
 *** haskell-snippets
