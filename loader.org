@@ -566,15 +566,17 @@ You can set Firefox to open all external links in the same tab.
 #+END_SRC
 ** Large files
 #+BEGIN_SRC emacs-lisp
-;; Large files slow emacs down to a grind. Main offender is fundamental mode.
-(defun my-find-file-check-make-large-file-read-only-hook ()
-  "If a file is over a given size, make the buffer read only."
-  (when (> (buffer-size) (* 1024 1024))
-    ;;(setq buffer-read-only t)
-    ;;(buffer-disable-undo)
-    (fundamental-mode)))
+  ;; Large files slow emacs down to a grind. Main offender is fundamental mode.
+  (defun my-find-file-check-make-large-file-read-only-hook ()
+    "If a file is over a given size, make the buffer read only."
+    (when (> (buffer-size) (* 1024 1024))
+      ;;(setq buffer-read-only t)
+      ;;(buffer-disable-undo)
+      (fundamental-mode)))
 
-(add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
+  (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
+
+  (global-set-key (kbd "M-o") 'read-only-mode)
 #+END_SRC
 ** Disable auto save and -backup
 #+BEGIN_SRC emacs-lisp
@@ -984,12 +986,35 @@ See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.
 
 BTW: flycheck mode is not enabled by default because my computer is
 too slow (with Haskell code) because every small change triggers
-expensive checking. Instead I now manually initiate interactive
-Haskell mode via the <C-S-return> and/or C-Z keybindings, which
-activates its functions ('hover over' type info in the minibuffer,
-C-c RET haskell-process-do-info, etc). File loading is still
-somewhat slow but when it's loaded and a C-c S-RET is done, it's
-very usable).
+expensive checking. Instead I now enable it (and =dante-mode=) per
+project, via =.dir-locals.el=. Also I initiate interactive Haskell
+mode via the <C-S-return> and/or C-Z keybindings, which activates its
+functions ('hover over' type info in the minibuffer, C-c RET
+haskell-process-do-info, etc). File loading is still somewhat slow but
+when it's loaded and a C-c S-RET is done, it's very usable).
+
+e.g. as follows:
+#+BEGIN_EXAMPLE
+((nil
+  (custom-set-variables
+ ;; Customization related to indentation.
+    '(haskell-indentation-layout-offset 2)
+    '(haskell-indentation-starter-offset 2)
+    '(haskell-indentation-left-offset 2)
+    '(haskell-indentation-where-pre-offset 2)
+    '(haskell-indentation-where-post-offset 2)
+  )
+  (dante-repl-command-line . ("cabal" "repl"))
+  (haskell-process-type . ghci)
+  (format-all-formatters
+   ("Haskell" ormolu)
+   ("Literate Haskell" ormolu)
+  )
+  (eval . (dante-mode 1))
+  (eval . (flycheck-mode 1))
+)) 
+#+END_EXAMPLE
+
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :pin melpa-stable
@@ -1002,6 +1027,7 @@ very usable).
            ("C-C ?" . flycheck-list-errors)))
 
   ;; (add-hook 'prog-mode-hook #'flycheck-mode)
+  (flycheck-mode 0)
 #+END_SRC
 ** eldoc
 The =eldoc-doc-buffer=
@@ -1112,8 +1138,11 @@ See: [[https://github.com/jyp/dante#installation][jyp/dante#installation]]
    :bind
        ("<C-return>" . dante-info)
    :init
-    (add-hook 'haskell-mode-hook 'flycheck-mode)
-    (add-hook 'haskell-mode-hook 'dante-mode))
+    ; Disabled per default; enabled per project via .dir-locals.el
+    ;(add-hook 'haskell-mode-hook 'flycheck-mode)
+    ;(add-hook 'haskell-mode-hook 'dante-mode)
+  )
+  (dante-mode 0)
 #+END_SRC
 *** direnv
 See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-direnv#installation]]
