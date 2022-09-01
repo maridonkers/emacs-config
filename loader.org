@@ -308,7 +308,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
         (:propertize " %l:%c " face (:background "black" :foreground "white" :weight light))
         ;; Show full path.
         (:eval
-           (propertize " (%f) "))
+           (propertize " %f "))
         ))
 
   ;; (setq-default frame-title-format "%b (%f)")
