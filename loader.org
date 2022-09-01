@@ -247,46 +247,79 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 *** Sane defaults
 [[https://github.com/danielmai/.emacs.d/blob/master/config.org]].
 #+BEGIN_SRC emacs-lisp
-;; These functions are useful. Activate them.
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
+  ;; These functions are useful. Activate them.
+  (put 'downcase-region 'disabled nil)
+  (put 'upcase-region 'disabled nil)
+  (put 'narrow-to-region 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
 
-;; Answering just 'y' or 'n' will do
-(defalias 'yes-or-no-p 'y-or-n-p)
+  ;; Answering just 'y' or 'n' will do
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; UTF-8 please
-(setq locale-coding-system 'utf-8) ; pretty
-(set-terminal-coding-system 'utf-8) ; pretty
-(set-keyboard-coding-system 'utf-8) ; pretty
-(set-selection-coding-system 'utf-8) ; please
-(prefer-coding-system 'utf-8) ; with sugar on top
-(setq-default indent-tabs-mode nil)
+  ;; UTF-8 please
+  (setq locale-coding-system 'utf-8) ; pretty
+  (set-terminal-coding-system 'utf-8) ; pretty
+  (set-keyboard-coding-system 'utf-8) ; pretty
+  (set-selection-coding-system 'utf-8) ; please
+  (prefer-coding-system 'utf-8) ; with sugar on top
+  (setq-default indent-tabs-mode nil)
 
-(setq-default indent-tabs-mode nil)
-(setq-default indicate-empty-lines t)
+  (setq-default indent-tabs-mode nil)
+  (setq-default indicate-empty-lines t)
 
-;; Don't count two spaces after a period as the end of a sentence.
-;; Just one space is needed.
-(setq sentence-end-double-space nil)
+  ;; Don't count two spaces after a period as the end of a sentence.
+  ;; Just one space is needed.
+  (setq sentence-end-double-space nil)
 
-;; delete the region when typing, just like as we expect nowadays.
-(delete-selection-mode t)
+  ;; delete the region when typing, just like as we expect nowadays.
+  (delete-selection-mode t)
 
-(show-paren-mode t)
+  (show-paren-mode t)
 
-(column-number-mode t)
+  (column-number-mode t)
 
-(global-visual-line-mode)
-;TODO CHECK ERROR: symbol's function definition is void: diminish
-;(diminish 'visual-line-mode)
+  (global-visual-line-mode)
+  ;TODO CHECK ERROR: symbol's function definition is void: diminish
+  ;(diminish 'visual-line-mode)
 
-(setq uniquify-buffer-name-style 'forward)
+  ;; https://gist.github.com/leemeichin/4032852
+  ;; http://www.raebear.net/computers/emacs-colors/
+  ;; Sets the default mode-line. Remove '-default' if you want to test your changes on-the-fly with (eval-buffer)
+  (setq-default mode-line-format
+      '(
+        ;; add a noticeable red block that says 'READ ONLY' when the file's, er, read only
+        (:eval
+         (when (eql buffer-read-only t)
+             ;; propertize adds metadata to text, so you can add colours and formatting, amongst other things
+             (propertize " READ ONLY " 'face
+                         '(:background "color-88" :foreground "white" :weight bold))))
+        ;; show the buffer filename, with a green background when unmodified/saved and a red one when modified
+        (:eval
+         (propertize " %b " 'face
+                     (if (buffer-modified-p)
+                       '(:background "#8b4513" :foreground "white" :weight bold)
+                       '(:background "#458b00" :foreground "black" :weight bold))))
+        ;; show the current major mode in use (use obsolete format because trailing spaces nice it up)
+        (:propertize " %m " face (:background "grey"))
+        ;; show the current branch and VCS in use, if there is one
+        (:propertize (vc-mode vc-mode) face (:weight normal))
+        " "
+        ;; show the line number and column number (no 'All', 'Top', 'Bottom', etc.)
+        (:propertize " %l:%c " face (:background "black" :foreground "white" :weight light))
+        ;; Show full path.
+        (:eval
+           (propertize " (%f) "))
+        ))
 
-;; Turn off emacs alarms (those annoying beeps)
-(setq ring-bell-function 'ignore)
-(setq visible-bell t)
+  ;; (setq-default frame-title-format "%b (%f)")
+  ;; (setq-default mode-line-format "%b (%f)")
+
+  ;; (setq uniquify-buffer-name-style 'forward)
+  ;; (setq uniquify-buffer-name-style 'reverse)
+
+  ;; Turn off emacs alarms (those annoying beeps)
+  (setq ring-bell-function 'ignore)
+  (setq visible-bell t)
 #+END_SRC
 *** Title
 #+BEGIN_SRC emacs-lisp
@@ -1075,7 +1108,8 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
         (setq haskell-process-use-presentation-mode t)
 
         ;; https://www.reddit.com/r/haskell/comments/e5gcq0/best_emacs_experience_for_haskell/
-        (setq haskell-hoogle-url "https://hoogle.haskell.org/?hoogle=%s")
+        ;;(setq haskell-hoogle-url "https://hoogle.haskell.org/?hoogle=%s")
+        (setq haskell-hoogle-url "http://localhost:8080/?hoogle=%s")
 
         (setq haskell-mode-tag-find t)
 
