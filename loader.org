@@ -295,17 +295,17 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
                          '(:background "color-88" :foreground "white" :weight bold))))
         ;; show the buffer filename, with a green background when unmodified/saved and a red one when modified
         (:eval
-         (propertize " %b " 'face
+         (propertize
                      (if (buffer-modified-p)
-                       '(:background "#8b4513" :foreground "white" :weight bold)
-                       '(:background "#458b00" :foreground "black" :weight bold))))
+                       "%b ** "
+                       "%b   ")))
         ;; show the current major mode in use (use obsolete format because trailing spaces nice it up)
-        (:propertize " %m " face (:background "grey"))
+        (:propertize " %m ")
         ;; show the current branch and VCS in use, if there is one
         (:propertize (vc-mode vc-mode) face (:weight normal))
         " "
         ;; show the line number and column number (no 'All', 'Top', 'Bottom', etc.)
-        (:propertize " %l:%c " face (:background "black" :foreground "white" :weight light))
+        (:propertize " %l:%c ")
         ;; Show full path.
         (:eval
            (propertize " %f "))
@@ -1074,6 +1074,12 @@ The =eldoc-doc-buffer=
   :ensure t)
 
 (add-hook 'python-mode-hook 'highlight-symbol-mode)
+#+END_SRC
+** TODO YAML
+The source code formatter =prettier=.
+#+BEGIN_SRC emacs-lisp
+  (use-package prettier
+  :ensure t)
 #+END_SRC
 ** nix-mode
 #+BEGIN_SRC emacs-lisp
