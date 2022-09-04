@@ -297,8 +297,8 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
         (:eval
          (propertize
                      (if (buffer-modified-p)
-                       "%b ** "
-                       "%b   ")))
+                       " %b **"
+                       " %b --")))
         ;; show the current major mode in use (use obsolete format because trailing spaces nice it up)
         (:propertize " %m ")
         ;; show the current branch and VCS in use, if there is one
