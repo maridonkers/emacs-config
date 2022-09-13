@@ -158,6 +158,16 @@ Delete other windows.
   (global-set-key (kbd "C-'") 'delete-other-windows)
   (global-set-key (kbd "C-\"") 'delete-window)
 #+END_SRC
+*** Mode switching
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c m c") 'css-mode)
+  (global-set-key (kbd "C-c m d") 'dante-mode)
+  (global-set-key (kbd "C-c m f") 'flycheck-mode)
+  (global-set-key (kbd "C-c m h") 'html-mode)
+  (global-set-key (kbd "C-c m j") 'js-mode)
+  (global-set-key (kbd "C-c m H") 'haskell-mode)
+  (global-set-key (kbd "C-c m w") 'web-mode)
+#+END_SRC
 ** Menu bar switch
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c h") 'menu-bar-mode)
@@ -291,10 +301,10 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
         (:eval
          (propertize
                      (if (buffer-modified-p)
-                       " %b **"
+                       " ** %b "
                        (if (eql buffer-read-only t)
-                           " %b =="
-                           " %b --"))))
+                           " == %b "
+                           " -- %b "))))
         ;; show the current major mode in use (use obsolete format because trailing spaces nice it up)
         (:propertize " %m ")
         ;; show the current branch and VCS in use, if there is one
@@ -1199,6 +1209,16 @@ See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-dir
     :after (haskell-mode yasnippet)
     :defer)
 #+END_SRC
+** Purescript
+Install =purescript-mode=. The irritating message can be fixed with a call to =turn-on-purescript-indentation= (see: [[https://github.com/purescript-emacs/psc-ide-emacs/issues/60][Issue with purescript-mode-hook]].
+#+BEGIN_SRC emacs-lisp
+  (use-package purescript-mode
+      :ensure t
+  ;;     :config (turn-on-purescript-indentation)
+  )
+  ;; (add-hook 'purescript-mode-hook 'flycheck-mode)
+  (add-hook 'purescript-mode-hook #'turn-on-purescript-indentation)
+#+END_SRC
 ** HLedger
 #+BEGIN_SRC emacs-lisp
 (use-package hledger-mode
@@ -1311,8 +1331,8 @@ And again, the same as above but we make sure to not delete the source word.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<C-M-S-up>") 'scroll-up-line)
 (global-set-key (kbd "<C-M-S-down>") 'scroll-down-line)
-(global-set-key (kbd "<C-M-S-left>") 'previous-buffer)
-(global-set-key (kbd "<C-M-S-right>") 'next-buffer)
+(global-set-key (kbd "<C-prior>") 'previous-buffer)
+(global-set-key (kbd "<C-next>") 'next-buffer)
 #+END_SRC
 ** Navigation and S-exp
 #+BEGIN_SRC emacs-lisp
