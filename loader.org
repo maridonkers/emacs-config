@@ -355,7 +355,7 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 *** Moving around
 **** Bookmarks
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x r <return>") 'bookmark-save)
+(global-set-key (kbd "C-x r S") 'bookmark-save)
 #+END_SRC
 **** Bookmarks (bm)
 Bookmarks are very useful for quickly jumping around files.
@@ -1209,7 +1209,7 @@ See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-dir
     :after (haskell-mode yasnippet)
     :defer)
 #+END_SRC
-** Purescript
+** TODO Purescript
 Install =purescript-mode=. The irritating message can be fixed with a call to =turn-on-purescript-indentation= (see: [[https://github.com/purescript-emacs/psc-ide-emacs/issues/60][Issue with purescript-mode-hook]].
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
