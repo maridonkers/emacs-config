@@ -288,7 +288,13 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
   (column-number-mode t)
 
-  (global-visual-line-mode)
+  ;; Turn off text wrapping in the middle of a word
+  ;; (global-visual-line-mode 1)
+
+  ;; Soft wrap at window edge behaviour for text buffers.
+  (setq line-move-visual nil)
+  (add-hook 'text-mode-hook 'toggle-truncate-lines)
+
   ;TODO CHECK ERROR: symbol's function definition is void: diminish
   ;(diminish 'visual-line-mode)
 
@@ -1446,14 +1452,11 @@ See [[https://stackoverflow.com/questions/1775898/emacs-disable-line-truncation-
 
 *** Various
 #+BEGIN_SRC emacs-lisp
-;; Quick switch linum-mode.
-(global-set-key (kbd "C-S-n") 'linum-mode)
+  ;; Quick switch linum-mode.
+  (global-set-key (kbd "C-S-n") 'linum-mode)
 
-;; Expand and replace region.
-(global-set-key (kbd "C-$") 'expand-delete-line)
-
-;; Turn off text wrapping in the middle of a word
-(global-visual-line-mode 1)
+  ;; Expand and replace region.
+  (global-set-key (kbd "C-$") 'expand-delete-line)
 #+END_SRC
 ** Change
 *** Goto last change
