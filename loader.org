@@ -290,6 +290,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
   ;; Turn off text wrapping in the middle of a word
   ;; (global-visual-line-mode 1)
+  (global-set-key (kbd "C-x x v") 'visual-line-mode)
 
   ;; Soft wrap at window edge behaviour for text buffers.
   (setq line-move-visual nil)
