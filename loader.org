@@ -749,6 +749,7 @@ Org-mode is an Emacs built-in.
 ;;(define-key global-map "\C-ca" 'org-agenda)
 ;;(setq org-log-done t)
 
+(setq org-src-preserve-indentation t)
 (define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
 #+END_SRC
 ** TODO org-bullets
