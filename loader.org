@@ -1186,7 +1186,7 @@ The --stdin-input-file option is necessary when using input from stdin and accou
        ("M-R" . format-all-region)
     :config
       (define-format-all-formatter ormolush
-        (:executable "/home/mdo/bin/ormolu.sh")
+        (:executable "~/bin/ormolu.sh")
         (:install "echo '~/bin/ormolu.sh'")
         (:languages "Haskell" "Literate Haskell")
         (:features)
