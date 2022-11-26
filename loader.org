@@ -370,8 +370,11 @@ Bookmarks are very useful for quickly jumping around files.
 (use-package bm
   :ensure t
   :bind (("<M-S-return>" . bm-toggle)
+         ("<M-C-S-return>" . bm-toggle)
          ("<M-S-up>" . bm-previous)
-         ("<M-S-down>" . bm-next)))
+         ("<M-C-S-up>" . bm-previous)
+         ("<M-S-down>" . bm-next)
+         ("<M-C-S-down>" . bm-next)))
 #+END_SRC
 *** Winner mode
 #+BEGIN_SRC emacs-lisp
@@ -1028,7 +1031,7 @@ This interferes with search colors.
 #+BEGIN_SRC emacs-lisp
 ;(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-** Flycheck syntax checker
+** TODO Flycheck syntax checker
 See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.org/installation]].
 
 BTW: flycheck mode is not enabled by default because my computer is
@@ -1167,24 +1170,32 @@ See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs
   (use-package hindent
     :ensure t)
 #+END_SRC
-*** format-all
+*** TODO format-all
 See [[https://github.com/lassik/emacs-format-all-the-code][lassik/emacs-format-all-the-code]]
+
+Annoying error; [[https://github.com/tweag/ormolu/issues/888][tweag/ormolu/issues/888]]
+#+BEGIN_EXAMPLE
+The --stdin-input-file option is necessary when using input from stdin and accounting for .cabal files
+#+END_EXAMPLE
+
 #+BEGIN_SRC emacs-lisp
   (use-package format-all
     :ensure t
     :bind
        ("M-F" . format-all-buffer)
        ("M-R" . format-all-region)
-  )
+    :config
+      (define-format-all-formatter ormolush
+        (:executable "/home/mdo/bin/ormolu.sh")
+        (:install "echo '~/bin/ormolu.sh'")
+        (:languages "Haskell" "Literate Haskell")
+        (:features)
+        (:format (format-all--buffer-easy executable)))
+    )
 
   ;;(add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
   ;;(add-hook 'haskell-mode-hook 'format-all-mode)
   ;;(add-hook 'php-mode-hook 'format-all-mode)
-#+END_SRC
-*** TODO ormolu
-#+BEGIN_SRC emacs-lisp
-  (use-package ormolu
-    :ensure t)
 #+END_SRC
 *** dante
 See: [[https://github.com/jyp/dante#installation][jyp/dante#installation]]
