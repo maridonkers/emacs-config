@@ -1185,12 +1185,12 @@ The --stdin-input-file option is necessary when using input from stdin and accou
        ("M-F" . format-all-buffer)
        ("M-R" . format-all-region)
     :config
-      (define-format-all-formatter ormolush
-        (:executable "~/bin/ormolu.sh")
-        (:install "echo '~/bin/ormolu.sh'")
+      (define-format-all-formatter ormolu+
+        (:executable "ormolu")
+        (:install "stack install ormolu")
         (:languages "Haskell" "Literate Haskell")
         (:features)
-        (:format (format-all--buffer-easy executable)))
+        (:format (format-all--buffer-easy executable "--stdin-input-file" (buffer-file-name))))
     )
 
   ;;(add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
