@@ -1178,19 +1178,21 @@ Annoying error; [[https://github.com/tweag/ormolu/issues/888][tweag/ormolu/issue
 The --stdin-input-file option is necessary when using input from stdin and accounting for .cabal files
 #+END_EXAMPLE
 
+A format-all fixing issue is here: [[https://github.com/lassik/emacs-format-all-the-code/issues/216][lassik/emacs-format-all-the-code/issues/216]]
+
 #+BEGIN_SRC emacs-lisp
   (use-package format-all
     :ensure t
     :bind
        ("M-F" . format-all-buffer)
        ("M-R" . format-all-region)
-    :config
-      (define-format-all-formatter ormolu+
-        (:executable "ormolu")
-        (:install "stack install ormolu")
-        (:languages "Haskell" "Literate Haskell")
-        (:features)
-        (:format (format-all--buffer-easy executable "--stdin-input-file" (buffer-file-name))))
+    ;; :config
+    ;;   (define-format-all-formatter ormolu+
+    ;;     (:executable "ormolu")
+    ;;     (:install "stack install ormolu")
+    ;;     (:languages "Haskell" "Literate Haskell")
+    ;;     (:features)
+    ;;     (:format (format-all--buffer-easy executable "--stdin-input-file" (buffer-file-name))))
     )
 
   ;;(add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
