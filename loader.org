@@ -844,6 +844,9 @@ This installs the [[https://www.gnu.org/software/auctex/][auctex]] and [[https:/
 (require 'auctex-latexmk)
 (auctex-latexmk-setup)
 (setq auctex-latexmk-inherit-TeX-PDF-mode t)
+;; PDF viewer options
+(setq TeX-view-program-list '(("Zathura" "zathura --page=%(outpage) %o")))
+(setq TeX-view-program-selection '((output-pdf "Zathura")))
 #+END_SRC
 * Programming
 ** General
