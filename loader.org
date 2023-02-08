@@ -1309,6 +1309,12 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
     :ensure t
     :bind
       ("M-F" . rust-format-buffer)
+      ("M-." . lsp-find-definition)
+      ("M-," . xref-pop-marker-stack)
+      ("C-M-," . (lambda ()
+                   (interactive)
+                   (kill-current-buffer)
+                   (xref-pop-marker-stack)))
       ("<C-return>" . lsp-execute-code-action)
       ("<M-return>" . (lambda () (interactive)
                         (lsp-describe-thing-at-point)
