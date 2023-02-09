@@ -506,7 +506,8 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
           (global-set-key (kbd "C-c a") 'counsel-ag)
           (global-set-key (kbd "C-c l") 'counsel-locate)
           (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-          (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+          (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+          )
 
 (use-package counsel-projectile
   :ensure t
@@ -1332,6 +1333,10 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 #+END_EXAMPLE
+Lose the scattered undo files.
+#+BEGIN_SRC emacs-lisp
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+#+END_SRC
 ** JSON
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
