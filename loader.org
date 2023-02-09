@@ -212,8 +212,8 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
 (load-theme 'cyberpunk t)
 
-;; To accomodate aging eyes.
-(set-face-attribute 'default nil :height 135)
+;; To accomodate aging eyes and code.
+(set-face-attribute 'default nil :height 140 :font "Hack")
 
 ;; Selection color.
 ;;(set-face-background 'hl-line "#3e4446")
