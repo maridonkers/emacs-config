@@ -362,10 +362,9 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
   :pin melpa-stable
   :ensure t
   :commands (dired-sidebar-toggle-sidebar)
-  :bind (("C-c b [" . (lambda () (interactive)
+  :bind (("C-c b" . (lambda () (interactive)
                         (dired-sidebar-show-sidebar)
-                        (next-window-any-frame)))
-         ("C-c b ]" . dired-sidebar-hide-sidebar)))
+                        (next-window-any-frame)))))
 #+END_SRC
 *** Moving around
 **** Bookmarks
