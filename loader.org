@@ -33,6 +33,7 @@ There are several package archives available for GNU Emacs:
 - GNU
 - Marmalade
 - Melpa
+- JCS Elpa ([[https://github.com/jcs-emacs/jcs-elpa#-how-to-use][jcs-emacs/jcs-elpa#-how-to-use]])
 
 Each archive will write its files in a seperate archive directory.
 
@@ -44,12 +45,14 @@ Each archive will write its files in a seperate archive directory.
 (defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "http://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(defvar jcs-elpa '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/"))
 
 ;; Add repositories (resetting defaults first).
 (setq package-archives nil)
 (add-to-list 'package-archives melpa-stable t)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
+(add-to-list 'package-archives jcs-elpa t)
 #+END_SRC
 
 Initialize the archive and refresh the contents in case there is no cached archive.
@@ -220,8 +223,8 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 ;; (set-face-foreground 'highlight nil)
 
 ;; Font size
-(define-key global-map (kbd "C-c C-=") 'text-scale-increase)
-(define-key global-map (kbd "C-c C--") 'text-scale-decrease)
+(define-key global-map (kbd "C-c w +") 'text-scale-increase)
+(define-key global-map (kbd "C-c w -") 'text-scale-decrease)
 
 ;; Clearer active window bar.
 (set-face-attribute  'mode-line-inactive
@@ -352,6 +355,17 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 ;      (interactive)
 ;      (ignore-errors
 ;        (funcall fn)))))
+#+END_SRC
+*** sidebar (dired)
+#+BEGIN_SRC emacs-lisp
+(use-package dired-sidebar
+  :pin melpa-stable
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :bind (("C-c [" . (lambda () (interactive)
+                        (dired-sidebar-show-sidebar)
+                        (next-window-any-frame)))
+         ("C-c ]" . dired-sidebar-hide-sidebar)))
 #+END_SRC
 *** Moving around
 **** Bookmarks
@@ -1135,6 +1149,11 @@ See: [[https://github.com/rksm/emacs-rust-config/blob/master/init.el][rksm/emacs
   (lsp-ui-sideline-show-hover nil) ; t to enable
   (lsp-ui-doc-enable t))
 #+END_SRC
+** TODO tree-sitter
+Lose the frickin scattered undo files.
+#+BEGIN_SRC emacs-lisp
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+#+END_SRC
 ** Python
 *** elpy
 #+BEGIN_SRC emacs-lisp
@@ -1303,7 +1322,7 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
     :ensure t)
 #+END_SRC
 ** Rust
-[[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]]
+See [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]] and e.g. [[https://robert.kra.hn/posts/rust-emacs-setup/][Configuring Emacs for Rust development - Robert Krahn]]
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
     :pin melpa-stable
@@ -1324,18 +1343,12 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
 (add-hook 'rust-mode-hook
           (lambda () (setq indent-tabs-mode nil)))
 #+END_SRC
-** TODO tree-sitter
-#+BEGIN_EXAMPLE
-(use-package tree-sitter
-  :ensure t
-  :config
-  (require 'tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-#+END_EXAMPLE
-Lose the scattered undo files.
-#+BEGIN_SRC emacs-lisp
-(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+** TODO ChatGPT / CodeGPT
+See: [[https://github.com/emacs-openai/codegpt][emacs-openai/codegpt]] [note: appears to work only for superficial queries]
+#+BEGIN_SRC
+(use-package codegpt
+ :pin jcs-elpa
+ :ensure t)
 #+END_SRC
 ** JSON
 #+BEGIN_SRC emacs-lisp
