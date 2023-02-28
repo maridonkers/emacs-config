@@ -436,9 +436,13 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 ;  (global-set-key (kbd "C-c <C-down>") (ignore-error-wrapper 'windmove-down))
 
   (global-set-key (kbd "C-c <C-left>") 'windmove-left)
+  (global-set-key (kbd "C-<kp-4>") 'windmove-left)
   (global-set-key (kbd "C-c <C-right>") 'windmove-right)
+  (global-set-key (kbd "C-<kp-6>") 'windmove-right)
   (global-set-key (kbd "C-c <C-up>") 'windmove-up)
+  (global-set-key (kbd "C-<kp-8>") 'windmove-up)
   (global-set-key (kbd "C-c <C-down>") 'windmove-down)
+  (global-set-key (kbd "C-<kp-2>") 'windmove-down)
 #+END_SRC
 *** Frame toggle full screen
 #+BEGIN_SRC emacs-lisp
