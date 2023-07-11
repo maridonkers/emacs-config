@@ -594,7 +594,7 @@ See [[https://emacs.stackexchange.com/questions/63037/fast-way-to-copy-a-link-at
 
 Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
 **** eww
-#+BEGIN_SRC emacs-list
+#+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'eww-browse-url)
 #+END_SRC
 **** Firefox
@@ -607,7 +607,6 @@ You can set Firefox to open all external links in the same tab.
  - Set value to 1.
  - OK.
 #+BEGIN_EXAMPLE
-#+BEGIN_SRC emacs-lisp
   ;; (setq browse-url-browser-function 'browse-url-generic
   ;;       browse-url-generic-program "xdg-open")
 
@@ -630,7 +629,6 @@ You can set Firefox to open all external links in the same tab.
   ;;    (message "Starting Chromium...")
   ;;    (start-process (concat "chromium " url) nil "chromium " url)
   ;;    (message "Starting Chromium... done")))
-#+END_SRC
 #+END_EXAMPLE
 ** Break & Debug
 #+BEGIN_SRC emacs-lisp
