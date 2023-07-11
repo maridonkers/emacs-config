@@ -287,9 +287,12 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
   (column-number-mode t)
 
-  ;; Turn off text wrapping in the middle of a word
-  ;; (global-visual-line-mode 1)
+  ;; Beware of text wrapping in the middle of a word
+  (global-visual-line-mode 1)
   (global-set-key (kbd "C-x x v") 'visual-line-mode)
+
+  ;; In whitespace-mode whitespaces are shown visibly
+  (global-set-key (kbd "C-x x w") 'whitespace-mode)
 
   ;; Soft wrap at window edge behaviour for text buffers.
   (setq line-move-visual nil)
@@ -573,7 +576,28 @@ From [[https://www.emacswiki.org/emacs/TransposeWindows][Transpose Windows]].
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f11] 'speedbar)
 #+END_SRC
-*** Default browser
+*** Internet Browser
+**** org-mode copy ndk/link-fast-copy
+See [[https://emacs.stackexchange.com/questions/63037/fast-way-to-copy-a-link-at-point-in-org-mode]]
+#+BEGIN_SRC emacs-lisp
+(defun ndk/link-fast-copy ()
+   (interactive)
+   (let* ((context (org-element-context))
+          (type (org-element-type context))
+          (beg (org-element-property :begin context))
+          (end (org-element-property :end context)))
+     (when (eq type 'link)
+      (copy-region-as-kill beg end))))
+
+(define-key org-mode-map (kbd "C-c z") #'ndk/link-fast-copy)
+#+END_SRC
+
+Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
+**** eww
+#+BEGIN_SRC emacs-list
+(setq browse-url-browser-function 'eww-browse-url)
+#+END_SRC
+**** Firefox
 You can set Firefox to open all external links in the same tab.
 
  - Enter about:config in the address bar.
@@ -582,6 +606,7 @@ You can set Firefox to open all external links in the same tab.
  - Double click.
  - Set value to 1.
  - OK.
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
   ;; (setq browse-url-browser-function 'browse-url-generic
   ;;       browse-url-generic-program "xdg-open")
@@ -606,6 +631,7 @@ You can set Firefox to open all external links in the same tab.
   ;;    (start-process (concat "chromium " url) nil "chromium " url)
   ;;    (message "Starting Chromium... done")))
 #+END_SRC
+#+END_EXAMPLE
 ** Break & Debug
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-M-g") 'top-level)
