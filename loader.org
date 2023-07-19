@@ -1732,10 +1732,10 @@ Emacs lisp code from: [[https://www.emacswiki.org/emacs/NavigatingParentheses][N
 ** Launch
 #+BEGIN_SRC emacs-lisp
 ;; Shortcut to launch a shell
-(global-set-key (kbd "C-x C-m") 'shell)
+(global-set-key (kbd "C-x <return>") 'shell)
 
 ;; Open an eshell.
-(global-set-key (kbd "<f12>") 'eshell)
+(global-set-key (kbd "C-x <C-return>") 'eshell)
 #+END_SRC
 * E-mail/usenet clients
 ** TODO gnus
