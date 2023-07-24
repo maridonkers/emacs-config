@@ -591,11 +591,28 @@ See [[https://emacs.stackexchange.com/questions/63037/fast-way-to-copy-a-link-at
 #+END_SRC
 
 Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
-**** eww
+**** TODO eww
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'eww-browse-url)
 #+END_SRC
-**** Firefox
+#+END_EXAMPLE
+**** TODO Nyxt
+#+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "nyxt"
+      ;; browse-url-generic-args '("-new-window")
+      )
+#+END_SRC
+#+END_EXAMPLE
+**** Brave
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "brave"
+      browse-url-generic-args '("--new-window"))
+#+END_SRC
+**** TODO Firefox
 You can set Firefox to open all external links in the same tab.
 
  - Enter about:config in the address bar.
@@ -605,6 +622,7 @@ You can set Firefox to open all external links in the same tab.
  - Set value to 1.
  - OK.
 #+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
   ;; (setq browse-url-browser-function 'browse-url-generic
   ;;       browse-url-generic-program "xdg-open")
 
@@ -627,6 +645,7 @@ You can set Firefox to open all external links in the same tab.
   ;;    (message "Starting Chromium...")
   ;;    (start-process (concat "chromium " url) nil "chromium " url)
   ;;    (message "Starting Chromium... done")))
+#+END_SRC
 #+END_EXAMPLE
 ** Break & Debug
 #+BEGIN_SRC emacs-lisp
@@ -1618,7 +1637,11 @@ See [[https://stackoverflow.com/questions/1775898/emacs-disable-line-truncation-
 (global-set-key (kbd "C-S-Q") 'goto-last-change)
 #+END_SRC
 *** TODO Undo tree
-Frickin scattered undo files :-(
+Frickin scattered undo files :-( CRAP!
+#+BEGIN_SRC emacs-lisp
+(setq undo-tree-auto-save-history nil)
+#+END_SRC
+
 #+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 ;; Adds a custom directory where some .el scripts are placed used in
