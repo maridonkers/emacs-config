@@ -22,6 +22,17 @@ Disclaimer: tested only (my configuration) on Linux, with emacs 25.1.
 (defvar user-emacs-cache-directory
   (concat (getenv "HOME") "/.cache/emacs"))
 #+END_SRC
+* init.el
+The org-mode tangling must be kicked of from =init.el=, via e.g. the following construct:
+
+=init.el=:
+#+BEGIN_EXAMPLE
+(require 'org)
+(require 'ob-tangle)
+
+(setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
+(org-babel-load-file (expand-file-name "loader.org" init-dir))
+#+END_EXAMPLE
 * Installing use-package
 ** Setup
 GNU Emacs has a lot of packages that make things very easy for the
@@ -38,6 +49,8 @@ There are several package archives available for GNU Emacs:
 Each archive will write its files in a seperate archive directory.
 
 #+BEGIN_SRC emacs-lisp
+;; https://emacs.stackexchange.com/questions/71335/how-to-prevent-emacs-28-from-native-compiling-everything
+(setq comp-deferred-compilation nil)
 (require 'package)
 #+END_SRC
 
@@ -140,6 +153,19 @@ Because use-package supports :diminish and :delight.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c <C-backspace>") 'kill-emacs)
 #+END_SRC
+*** buffer name
+#+BEGIN_SRC emacs-lisp
+(defun insert-buffer-name-at-point ()
+  "Insert the name of the buffer at point."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point))
+      (insert (concat (buffer-name) "\n")))))
+
+(global-set-key (kbd "C-c @") 'insert-buffer-name-at-point)
+#+END_SRC
 *** pwd
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-?") 'pwd)
@@ -215,11 +241,6 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
 (load-theme 'cyberpunk t)
 
-;; To accomodate aging eyes and code.
-(set-face-attribute 'default nil :height 140 :font "Hack")
-(define-key global-map (kbd "C-c C-!") (lambda () (interactive)
-                                         (set-face-attribute 'default nil :height 140 :font "Hack")))
-
 ;; Selection color.
 ;;(set-face-background 'hl-line "#3e4446")
 ;; (set-face-foreground 'highlight nil)
@@ -252,6 +273,11 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (set-cursor-color "#ffff00")
 ;;(setq-default cursor-type 'hollow)
 (blink-cursor-mode 0)
+
+;; To accomodate aging eyes and code.
+(set-face-attribute 'default nil :height 140 :font "Hack")
+(define-key global-map (kbd "C-c C-!") (lambda () (interactive)
+                                         (set-face-attribute 'default nil :height 140 :font "Hack")))
 #+END_SRC
 *** Sane defaults
 [[https://github.com/danielmai/.emacs.d/blob/master/config.org]].
@@ -382,6 +408,7 @@ Bookmarks are very useful for quickly jumping around files.
 (use-package bm
   :ensure t
   :bind (("<M-S-SPC>" . bm-toggle)
+         ("M-S-<backspace>" . bm-remove-all-current-buffer)
          ("M-L" . bm-show-all)
          ("M-S-<prior>" . bm-previous)
          ("M-S-<next>" . bm-next)))
@@ -589,7 +616,6 @@ See [[https://emacs.stackexchange.com/questions/63037/fast-way-to-copy-a-link-at
 
 (define-key org-mode-map (kbd "C-c z") #'ndk/link-fast-copy)
 #+END_SRC
-
 Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
 **** TODO eww
 #+BEGIN_EXAMPLE
@@ -597,6 +623,12 @@ Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
 (setq browse-url-browser-function 'eww-browse-url)
 #+END_SRC
 #+END_EXAMPLE
+**** Librewolf
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "librewolf"
+      browse-url-generic-args '("--new-window"))
+#+END_SRC
 **** TODO Nyxt
 #+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
@@ -607,11 +639,13 @@ Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
 #+END_SRC
 #+END_EXAMPLE
 **** Brave
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "brave"
       browse-url-generic-args '("--new-window"))
 #+END_SRC
+#+END_EXAMPLE
 **** TODO Firefox
 You can set Firefox to open all external links in the same tab.
 
@@ -790,6 +824,7 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 (display-time-mode 1)
 #+END_SRC
 * evil
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t)
@@ -798,6 +833,7 @@ https://github.com/daedreth/UncleDavesEmacs/blob/master/config.org
 ;(evil-mode 1)
 (define-key projectile-mode-map (kbd "M-+") 'evil-mode)
 #+END_SRC
+#+END_EXAMPLE
 * Org-mode
 Org-mode is an Emacs built-in.
 ** TODO Shortcuts
@@ -867,14 +903,14 @@ The edit-indirect package is used by Markdown for editing code blocks.
 #+END_SRC
 * Markdown
 Markdown is a great way to write documentation, not as good as
-org-mode of course, but generally accepted as a standard.
+=org-mode= of course, but generally accepted as a standard.
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t)
 #+END_SRC
 * AsciiDoc
 [[http://www.methods.co.nz/asciidoc/][AsciiDoc]] is an alternative way to write documentation, not as good as
-org-mode of course, but supported by e.g. github. The [[https://github.com/sensorflo/adoc-mode/wiki][adoc-mode]] Emacs
+=org-mode= of course, but supported by e.g. github. The [[https://github.com/sensorflo/adoc-mode/wiki][adoc-mode]] Emacs
 major mode supports the adoc format.
 #+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
@@ -980,7 +1016,6 @@ String manipulation routines for emacs lisp
 
 (global-highlight-parentheses-mode)
 #+END_SRC
-
 *** Snippets
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
@@ -1355,13 +1390,6 @@ See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-dir
   (use-package direnv
     :ensure t)
 #+END_SRC
-*** haskell-snippets
-#+BEGIN_SRC emacs-lisp
-(use-package haskell-snippets
-    :ensure t
-    :after (haskell-mode yasnippet)
-    :defer)
-#+END_SRC
 ** TODO Purescript
 Install =purescript-mode=. The irritating message can be fixed with a call to =turn-on-purescript-indentation= (see: [[https://github.com/purescript-emacs/psc-ide-emacs/issues/60][Issue with purescript-mode-hook]].
 #+BEGIN_SRC emacs-lisp
@@ -1384,6 +1412,7 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
     :ensure t)
 #+END_SRC
 ** Rust
+*** rust-mode
 See [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]] and e.g. [[https://robert.kra.hn/posts/rust-emacs-setup/][Configuring Emacs for Rust development - Robert Krahn]]
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode
@@ -1405,13 +1434,84 @@ See [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]] and e.g. [[h
 (add-hook 'rust-mode-hook
           (lambda () (setq indent-tabs-mode nil)))
 #+END_SRC
+*** TODO rustic
+Additional functionality in [[https://github.com/brotzeit/rustic][brotzeit/rustic]] ?
+#+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(use-package rustic
+  :ensure t)
+#+END_SRC
+#+END_EXAMPLE
 ** TODO ChatGPT / CodeGPT
+Beware: this requires access to OpenAI API, which is apparently not free.
+*** ChatGPT generated code
+Code generated in [[https://chat.openai.com/share/cdc1dd42-4465-4645-a103-bf85634efd79/continue][ChatGPT session]]:
+#+BEGIN_EXAMPLE
+(require 'url)
+(require 'json)
+
+(defvar chatgpt-prompt-buffer nil)
+
+(defun start_chatgpt ()
+  "Start a buffer for ChatGPT interaction."
+  (interactive)
+  (setq chatgpt-prompt-buffer (generate-new-buffer "*ChatGPT Prompt*"))
+  (pop-to-buffer chatgpt-prompt-buffer)
+  (erase-buffer) ; Clear the buffer
+  (insert "Type your question or code snippet here.\n\n")
+  (local-set-key (kbd "RET") 'send_chatgpt_request))
+
+(defun send_chatgpt_request ()
+  "Send the current prompt to ChatGPT."
+  (interactive)
+  (with-current-buffer chatgpt-prompt-buffer
+    (let* ((prompt (buffer-string))
+           (api-key (getenv "OPENAI_API_KEY")) ; Read API key from environment variable
+           (url-request-method "POST")
+           (url-request-extra-headers
+            `(("Content-Type" . "application/json")
+              ("Authorization" . ,(concat "Bearer " api-key))))
+           (url-request-data
+            (json-encode `(("messages" . (list (list "text" ,prompt)))
+                           ("max_tokens" . 50)))))
+      (url-retrieve
+       "https://api.openai.com/v1/chat/completions"
+       (lambda (status)
+         (goto-char (point-min))
+         (search-forward-regexp "\n\n")
+         (let* ((response-json (buffer-substring (point) (point-max)))
+                (response-data (json-read-from-string response-json))
+                (response-text (cdr (assoc 'text (car response-data)))))
+           (insert response-text "\n\n")))))))
+
+(global-set-key (kbd "C-c A") 'start_chatgpt)
+#+END_EXAMPLE
+
+*** gptel
+See: [[https://github.com/karthink/gptel][karthink/gptel]]
+#+BEGIN_SRC emacs-lisp
+(use-package gptel
+ :pin melpa
+ :ensure t)
+#+END_SRC
+
+Usage: Procure an OpenAI API key.
+Optional: Set gptel-api-key to the key. Alternatively, you may choose a more secure method such as:
+- Storing in ~/.authinfo. By default, “api.openai.com” is used as HOST and “apikey” as USER.
+      =machine api.openai.com login apikey password TOKEN-
+
+- Setting it to a function that returns the key.
+
+*** codegpt
 See: [[https://github.com/emacs-openai/codegpt][emacs-openai/codegpt]] [note: appears to work only for superficial queries]
-#+BEGIN_SRC
+#+BEGIN_EXAMPLE
 (use-package codegpt
  :pin jcs-elpa
  :ensure t)
-#+END_SRC
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(require 'codegpt)
+#+END_EXAMPLE
 ** JSON
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
@@ -1609,11 +1709,12 @@ See [[https://stackoverflow.com/questions/1775898/emacs-disable-line-truncation-
   (add-hook 'minibuffer-setup-hook
         (lambda () (setq truncate-lines nil)))
 #+END_SRC
-*** Numbering
+*** TODO Numbering
+Emacs29: Symbol's function definition is void: global-linum-mode 
 #+BEGIN_SRC emacs-lisp
 ;; No line numbers by default.
-(global-linum-mode 0)
-(set-default 'global-linum-mode 0)
+;; (global-linum-mode 0)
+;; (set-default 'global-linum-mode 0)
 
 ;; Line numbers for programming.
 (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
@@ -1640,6 +1741,10 @@ See [[https://stackoverflow.com/questions/1775898/emacs-disable-line-truncation-
 Frickin scattered undo files :-( CRAP!
 #+BEGIN_SRC emacs-lisp
 (setq undo-tree-auto-save-history nil)
+
+;; https://emacs.stackexchange.com/questions/67929/how-can-i-prevent-undo-after-redo
+(global-set-key (kbd "C-/") 'undo-only)
+(global-set-key (kbd "C-S-/") 'undo-redo)
 #+END_SRC
 
 #+BEGIN_EXAMPLE
