@@ -1195,6 +1195,7 @@ See: [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-plantuml.html
 (setq org-plantuml-exec-mode 'plantuml)
 (setq org-plantuml-executable-path "/run/current-system/sw/bin/plantuml")
 (setq org-plantuml-executable-args '("-headless" "-charset UTF-8"))
+(setq org-confirm-babel-evaluate nil)
 
 (org-babel-do-load-languages
   'org-babel-load-languages
