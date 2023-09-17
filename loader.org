@@ -1185,16 +1185,20 @@ The =eldoc-doc-buffer=
 See: [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-plantuml.html]].
 #+BEGIN_SRC emacs-lisp
 ;; Not available error?
-;; (use-package plantuml-mode
-;;   :pin melpa-stable
-;;   :ensure t)
+(use-package plantuml-mode
+  :pin melpa-stable
+  :ensure t)
 
 ;; (setq plantuml-jar-path "/run/current-system/sw/bin/plantuml")
 ;; (setq org-plantuml-jar-path "/run/current-system/sw/bin/plantuml")
 
-;; (org-babel-do-load-languages
-;;  'org-babel-load-languages
-;;  '((plantuml . t))) ; this line activates plantuml
+(setq org-plantuml-exec-mode 'plantuml)
+(setq org-plantuml-executable-path "/run/current-system/sw/bin/plantuml")
+(setq org-plantuml-executable-args '("-headless" "-charset UTF-8"))
+
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((plantuml . t))) ; this line activates plantuml
 #+END_SRC
 ** LSP
 *** lsp-mode
