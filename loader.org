@@ -181,11 +181,11 @@ Delete other windows.
   (global-set-key (kbd "C-'") 'delete-other-windows)
   (global-set-key (kbd "C-\"") 'delete-window)
 #+END_SRC
-*** Mode switching
+*** TODO Mode switching
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c m c") 'css-mode)
-  (global-set-key (kbd "C-c m d") 'dante-mode)
-  (global-set-key (kbd "C-c m f") 'flycheck-mode)
+  ;; (global-set-key (kbd "C-c m f") 'flycheck-mode)
+  (global-set-key (kbd "C-c m f") 'flymake-mode)
   (global-set-key (kbd "C-c m h") 'html-mode)
   (global-set-key (kbd "C-c m j") 'js-mode)
   (global-set-key (kbd "C-c m H") 'haskell-mode)
@@ -1133,10 +1133,10 @@ See here: [[https://www.flycheck.org/en/latest/user/installation.html][flycheck.
 
 BTW: flycheck mode is not enabled by default because my computer is
 too slow (with Haskell code) because every small change triggers
-expensive checking. Instead I now enable it (and =dante-mode=) per
-project, via =.dir-locals.el=. Also I initiate interactive Haskell
-mode via the <C-S-return> and/or C-Z keybindings, which activates its
-functions ('hover over' type info in the minibuffer, C-c RET
+expensive checking. Instead I now enable it per project, via
+=.dir-locals.el=. Also I initiate interactive Haskell mode via the
+<C-S-return> and/or C-Z keybindings, which activates its functions
+('hover over' type info in the minibuffer, C-c RET
 haskell-process-do-info, etc). File loading is still somewhat slow but
 when it's loaded and a C-c S-RET is done, it's very usable).
 
@@ -1151,17 +1151,16 @@ e.g. as follows:
     '(haskell-indentation-where-pre-offset 2)
     '(haskell-indentation-where-post-offset 2)
   )
-  (dante-repl-command-line . ("cabal" "repl"))
   (haskell-process-type . ghci)
   (format-all-formatters
    ("Haskell" ormolu)
    ("Literate Haskell" ormolu)
   )
-  (eval . (dante-mode 1))
-  (eval . (flycheck-mode 1))
+  (eval . (flycheck-mode 0))
 )) 
 #+END_EXAMPLE
 
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :pin melpa-stable
@@ -1176,6 +1175,7 @@ e.g. as follows:
   ;; (add-hook 'prog-mode-hook #'flycheck-mode)
   (flycheck-mode 0)
 #+END_SRC
+#+END_EXAMPLE
 ** eldoc
 The =eldoc-doc-buffer=
 #+BEGIN_SRC emacs-lisp
@@ -1224,7 +1224,7 @@ Try this for =rust-mode=; see [[https://www.mortens.dev/blog/emacs-and-the-langu
   (lsp-rust-analyzer-display-parameter-hints nil)
   (lsp-rust-analyzer-display-reborrow-hints nil)
   :config  
-  (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
+  ;; (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
   (add-hook 'rust-mode-hook 'lsp-deferred)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 )
@@ -1286,55 +1286,54 @@ See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configura
 Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumtypeofway.com/posts/emacs-config.html]].
 #+BEGIN_SRC emacs-lisp
   (use-package haskell-mode
-      :ensure t
-      :config
-        ;; haskell-mode doesn't know about newer GHC features.
-        (let ((new-extensions '("QuantifiedConstraints"
-                                "DerivingVia"
-                                "BlockArguments"
-                                "DerivingStrategies"
-                                "StandaloneKindSignatures"
-                                )))
-          (setq
-           haskell-ghc-supported-extensions
-           (append haskell-ghc-supported-extensions new-extensions)))
+    :ensure t
+    :config
+      ;; haskell-mode doesn't know about newer GHC features.
+      (let ((new-extensions
+        '("QuantifiedConstraints" "DerivingVia" "BlockArguments"
+          "DerivingStrategies" "StandaloneKindSignatures" )))
+        (setq haskell-ghc-supported-extensions (append haskell-ghc-supported-extensions new-extensions)))
 
-        ;; https://github.com/syl20bnr/spacemacs/issues/2489
-        (setq haskell-process-use-presentation-mode t)
+      ;; https://github.com/syl20bnr/spacemacs/issues/2489
+      (setq haskell-process-use-presentation-mode t)
 
-        ;; https://www.reddit.com/r/haskell/comments/e5gcq0/best_emacs_experience_for_haskell/
-        ;;(setq haskell-hoogle-url "https://hoogle.haskell.org/?hoogle=%s")
-        (setq haskell-hoogle-url "http://localhost:8080/?hoogle=%s")
+          ;; https://www.reddit.com/r/haskell/comments/e5gcq0/best_emacs_experience_for_haskell/
+          ;;(setq haskell-hoogle-url
+          ;;"https://hoogle.haskell.org/?hoogle=%s") (setq
+          ;;haskell-hoogle-url "http://localhost:8080/?hoogle=%s")
 
-        (setq haskell-mode-tag-find t)
-
-      :bind ("C-x c c" . haskell-cabal-visit-file)
-            ("C-x c i" . haskell-navigate-imports)
-            ("C-x c I" . haskell-navigate-imports-return)
-            ("C-c C-z" . haskell-interactive-switch)
-            ("C-c <C-delete>" . haskell-process-restart)
-            ("C-c o" . haskell-hoogle)
-            ("<M-return>" . haskell-hoogle-lookup-from-website)
-            ("<C-S-return>" . haskell-process-load-file)
-            ("C-c RET" . haskell-process-do-info)
-            ("C-c S-RET" . haskell-mode-show-type-at)
-            ("M-." . haskell-mode-goto-loc)
-            ("M-," . dumb-jump-back)
-            ;;("<C-M-return>" . company-ghci)
-            )
+      (setq haskell-mode-tag-find t)
+    :bind (:map haskell-mode-map
+             ("C-x c c" . haskell-cabal-visit-file)
+             ("C-x c i" . haskell-navigate-imports)
+             ("C-x c I" . haskell-navigate-imports-return)
+             ("C-c C-z" . haskell-interactive-switch)
+             ("C-c 1" . haskell-goto-first-error)
+             ("C-c <" . haskell-goto-prev-error)
+             ("C-c >" . haskell-goto-next-error)
+             ("C-c <C-delete>" . haskell-process-restart)
+             ("C-c o" . haskell-hoogle)
+             ("<M-return>" . haskell-hoogle-lookup-from-website)
+             ("<C-S-return>" . haskell-process-load-file)
+             ("<C-return>" . haskell-mode-show-type-at)
+             ("<M-return>" . haskell-process-do-info)
+             ("M-." . haskell-mode-jump-to-def) ;; haskell-mode-goto-loc
+             ("M-," . xref-pop-marker-stack)
+             ("M-F" . format-all-buffer)))
+             
   (add-hook 'haskell-mode-hook #'highlight-symbol-mode)
   (add-to-list 'auto-mode-alist '("\\.hamlet\\'" . html-mode))
   (add-to-list 'auto-mode-alist '("\\.lucius\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.cassius\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.julius\\'" . js-mode))
 
-  ;; Indent to 4 chars for Fourmolu (but better defined in .dir-locals.el; hence commented out)
-  ;;(custom-set-variables
-  ;;  '(haskell-indentation-layout-offset 4)
-  ;;  '(haskell-indentation-starter-offset 4)
-  ;;  '(haskell-indentation-left-offset 4)
-  ;;  '(haskell-indentation-where-pre-offset 4)
-  ;;  '(haskell-indentation-where-post-offset 4))
+  ;; Indent to 4 chars for Fourmolu (but better defined in
+  ;;.dir-locals.el; hence commented out) (custom-set-variables
+  ;;'(haskell-indentation-layout-offset 4)
+  ;;'(haskell-indentation-starter-offset 4)
+  ;;'(haskell-indentation-left-offset 4)
+  ;;'(haskell-indentation-where-pre-offset 4)
+  ;;'(haskell-indentation-where-post-offset 4))
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
 *** hindent
@@ -1371,23 +1370,6 @@ A format-all fixing issue is here: [[https://github.com/lassik/emacs-format-all-
   ;;(add-hook 'haskell-mode-hook 'format-all-mode)
   ;;(add-hook 'php-mode-hook 'format-all-mode)
 #+END_SRC
-*** dante
-See: [[https://github.com/jyp/dante#installation][jyp/dante#installation]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package dante
-   :ensure t
-   :after haskell-mode
-   :commands 'dante-mode
-   :bind
-       ("<C-return>" . dante-info)
-   :init
-    ; Disabled per default; enabled per project via .dir-locals.el
-    ;(add-hook 'haskell-mode-hook 'flycheck-mode)
-    ;(add-hook 'haskell-mode-hook 'dante-mode)
-  )
-  (dante-mode 0)
-#+END_SRC
 *** direnv
 See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-direnv#installation]]
 
@@ -1395,15 +1377,17 @@ See: [[https://github.com/wbolster/emacs-direnv#installation][wbolster/emacs-dir
   (use-package direnv
     :ensure t)
 #+END_SRC
-** TODO Purescript
+** Purescript
 Install =purescript-mode=. The irritating message can be fixed with a call to =turn-on-purescript-indentation= (see: [[https://github.com/purescript-emacs/psc-ide-emacs/issues/60][Issue with purescript-mode-hook]].
 #+BEGIN_SRC emacs-lisp
   (use-package purescript-mode
       :ensure t
   ;;     :config (turn-on-purescript-indentation)
-  )
+      :bind (:map purescript-mode-map
+             ("C-c o" . purescript-pursuit)))
   ;; (add-hook 'purescript-mode-hook 'flycheck-mode)
   (add-hook 'purescript-mode-hook #'turn-on-purescript-indentation)
+  (add-hook 'purescript-mode-hook #'purescript-decl-scan-mode)
 #+END_SRC
 ** HLedger
 #+BEGIN_SRC emacs-lisp
@@ -1423,18 +1407,18 @@ See [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]] and e.g. [[h
 (use-package rust-mode
     :pin melpa-stable
     :ensure t
-    :bind
-      ("M-F" . rust-format-buffer)
-      ("M-." . lsp-find-definition)
-      ("M-," . xref-pop-marker-stack)
-      ("C-M-," . (lambda ()
-                   (interactive)
-                   (kill-current-buffer)
-                   (xref-pop-marker-stack)))
-      ("<C-return>" . lsp-execute-code-action)
-      ("<M-return>" . (lambda () (interactive)
-                        (lsp-describe-thing-at-point)
-                        (next-window-any-frame))))
+    :bind (:map rust-mode-map
+           ("M-F" . rust-format-buffer)
+           ("M-." . lsp-find-definition)
+           ("M-," . xref-pop-marker-stack)
+           ("C-M-," . (lambda ()
+                        (interactive)
+                        (kill-current-buffer)
+                        (xref-pop-marker-stack)))
+           ("<C-return>" . lsp-execute-code-action)
+           ("<M-return>" . (lambda () (interactive)
+                             (lsp-describe-thing-at-point)
+                             (next-window-any-frame)))))
 
 (add-hook 'rust-mode-hook
           (lambda () (setq indent-tabs-mode nil)))
@@ -1722,14 +1706,14 @@ Emacs29: Symbol's function definition is void: global-linum-mode
 ;; (set-default 'global-linum-mode 0)
 
 ;; Line numbers for programming.
-(add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
 ;(add-hook 'web-mode-hook (lambda () (linum-mode 1)))
 #+END_SRC
 
 *** Various
 #+BEGIN_SRC emacs-lisp
   ;; Quick switch linum-mode.
-  (global-set-key (kbd "C-S-n") 'linum-mode)
+  (global-set-key (kbd "C-S-n") 'display-line-numbers-mode)
 
   ;; Expand and replace region.
   (global-set-key (kbd "C-$") 'expand-delete-line)
