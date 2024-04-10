@@ -400,7 +400,61 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 *** Moving around
 **** Bookmarks
 #+BEGIN_SRC emacs-lisp
+;; auto save
+(setq bookmark-save-flag 1)
+
+;; Visuals
+(defun my/add-bookmark-visual-indicator ()
+  (let ((bm-overlay (make-overlay (line-beginning-position) (line-end-position))))
+    (overlay-put bm-overlay 'face '(:background "#36a126" :foreground "black"))
+    (overlay-put bm-overlay 'my-bookmark-overlay t)))
+
+(defun my/remove-bookmark-visual-indicators ()
+  (remove-overlays (point-min) (point-max) 'my-bookmark-overlay t))
+
+(defun my/bookmark-set-hook (&rest _args)
+  "Function to be called after a bookmark is set."
+  (my/add-bookmark-visual-indicator))
+
+(defun my/global-refresh-bookmark-visual-indicators ()
+  "Globally refresh visual indicators for all bookmarks across all buffers."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (buffer-file-name) ; Only operate on buffers associated with files
+        (my/refresh-bookmark-visual-indicators-for-current-buffer)))))
+
+(defun my/refresh-bookmark-visual-indicators-for-current-buffer ()
+  "Refresh visual indicators for all bookmarks in the current buffer."
+  (my/remove-bookmark-visual-indicators) ; Assume this is already buffer-local in its operation
+  ;; Loop through all bookmarks and apply indicators if they belong to the current buffer.
+  (let ((current-file (buffer-file-name)))
+    (dolist (bookmark (bookmark-all-names))
+      (let ((bookmark-filename (bookmark-get-filename bookmark))
+            (pos (bookmark-get-position bookmark)))
+        (when (and bookmark-filename
+                   current-file
+                   pos
+                   (file-equal-p bookmark-filename current-file))
+          (save-excursion
+            (goto-char pos)
+            (my/add-bookmark-visual-indicator)))))))
+
+(defun my/bookmark-delete-hook (&rest _args)
+  "Function to be called after a bookmark is deleted."
+  (my/global-refresh-bookmark-visual-indicators))
+
+(defun my/bookmark-refresh (&rest _args)
+  "Function to be refresh bookmarks visual indicators."
+  (interactive)
+  (my/global-refresh-bookmark-visual-indicators))
+
+(advice-add 'bookmark-set :after #'my/bookmark-set-hook)
+(advice-add 'bookmark-delete :after #'my/bookmark-delete-hook)
+(add-hook 'bookmark-after-jump-hook 'my/add-bookmark-visual-indicator)
+
+(global-set-key (kbd "C-x r D") 'bookmark-delete)
 (global-set-key (kbd "C-x r S") 'bookmark-save)
+(global-set-key (kbd "C-x r R") 'my/bookmark-refresh)
 #+END_SRC
 **** Bookmarks (bm)
 Bookmarks are very useful for quickly jumping around files.
@@ -1336,6 +1390,25 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
   ;;'(haskell-indentation-where-post-offset 4))
 #+END_SRC
 See here for setup: [[https://stackoverflow.com/questions/56501112/haskell-emacs-haskell-mode-run-c-h-f-haskell-mode-for-instruction-how-to-setu][Haskell Emacs haskell-mode: Run 'C-h f haskell-mode' for instruction how to setup a Haskell interaction mode]].
+*** eglot
+#+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(use-package eglot
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook 'eglot-ensure)
+  :config
+  (setq-default eglot-workspace-configuration
+                '((haskell
+                   (plugin
+                    (stan
+                     (globalOn . :json-false))))))  ;; disable stan ;; TODO
+  :custom
+  (eglot-autoshutdown t)  ;; shutdown language server after closing last file
+  (eglot-confirm-server-initiated-edits nil)  ;; allow edits without confirmation
+  )
+#+END_SRC
+#+END_EXAMPLE
 *** hindent
 #+BEGIN_SRC emacs-lisp
   (use-package hindent
