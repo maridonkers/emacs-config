@@ -403,7 +403,7 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 ;; auto save
 (setq bookmark-save-flag 1)
 
-;; Visuals
+;; Visuals for bookmarks.
 (defun my/add-bookmark-visual-indicator ()
   (let ((bm-overlay (make-overlay (line-beginning-position) (line-end-position))))
     (overlay-put bm-overlay 'face '(:background "#36a126" :foreground "black"))
@@ -443,10 +443,21 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
   "Function to be called after a bookmark is deleted."
   (my/global-refresh-bookmark-visual-indicators))
 
+;; Hack To ensure that bookmarks get initialized.
 (defun my/bookmark-refresh (&rest _args)
   "Function to be refresh bookmarks visual indicators."
   (interactive)
+  (bookmark-bmenu-list)
+  (kill-buffer "*Bookmark List*")  
   (my/global-refresh-bookmark-visual-indicators))
+
+;; This is a hack but appears to work.
+(defun my/run-bookmark-refresh ()
+  "Run bookmark refresh function after Emacs has finished loading the buffer."
+  (run-with-idle-timer 0 nil #'my/bookmark-refresh))
+
+(add-hook 'find-file-hook #'my/run-bookmark-refresh)
+(add-hook 'desktop-after-read-hook #'my/run-bookmark-refresh)
 
 (advice-add 'bookmark-set :after #'my/bookmark-set-hook)
 (advice-add 'bookmark-delete :after #'my/bookmark-delete-hook)
