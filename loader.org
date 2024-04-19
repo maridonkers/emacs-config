@@ -1489,7 +1489,7 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
 (use-package racket-mode
   :ensure t
   :bind (:map racket-mode-map
-         ("C-c o" . racket-repl-documentation)
+         ("C-c o" . racket-documentation-search)
          ("<M-return>" . racket-describe-search)
          ("<C-S-return>" . racket-run-module-at-point)))
 
