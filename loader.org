@@ -1173,9 +1173,9 @@ Global highlight code taken from [[https://github.com/nschum/highlight-symbol.el
   :config (setq highlight-symbol-idle-delay  0.5)
   :bind (("C-*" . highlight-symbol)
          ("M-*" . highlight-symbol-remove-all)
-         ("<f5>" . highlight-symbol-next)
-         ("S-<f5>" . highlight-symbol-prev)
-         ("M-<f5>" . highlight-symbol-query-replace)))
+         ("<f8>" . highlight-symbol-next)
+         ("S-<f8>" . highlight-symbol-prev)
+         ("M-<f8>" . highlight-symbol-query-replace)))
 
 ;;WARNING: interferes with Magit faces. (do not use global mode).
 ;;(global-highlight-symbol-mode 1)
