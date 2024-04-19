@@ -1484,6 +1484,18 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
 (use-package graphql-mode
     :ensure t)
 #+END_SRC
+** Racket
+#+BEGIN_SRC emacs-lisp
+(use-package racket-mode
+  :ensure t
+  :bind (:map racket-mode-map
+         ("<M-return>" . racket-describe-search)
+         ("<C-S-return>" . racket-run-module-at-point)))
+
+(require 'racket-xp)
+(add-hook 'racket-mode-hook #'racket-xp-mode)
+(setq tab-always-indent 'complete)
+#+END_SRC
 ** Rust
 *** rust-mode
 See [[https://github.com/rust-lang/rust-mode][rust-lang/rust-mode]] and e.g. [[https://robert.kra.hn/posts/rust-emacs-setup/][Configuring Emacs for Rust development - Robert Krahn]]
