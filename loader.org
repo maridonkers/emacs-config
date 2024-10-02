@@ -400,8 +400,8 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 *** Moving around
 **** Bookmarks
 #+BEGIN_SRC emacs-lisp
-;; auto save
-(setq bookmark-save-flag 1)
+;; Disable auto save
+(setq bookmark-save-flag nil)
 
 ;; Visuals for bookmarks.
 (defun my/add-bookmark-visual-indicator ()
@@ -464,8 +464,12 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 (add-hook 'bookmark-after-jump-hook 'my/add-bookmark-visual-indicator)
 
 (global-set-key (kbd "C-x r D") 'bookmark-delete)
+(global-set-key (kbd "C-x r L") 'bookmark-load)
 (global-set-key (kbd "C-x r S") 'bookmark-save)
 (global-set-key (kbd "C-x r R") 'my/bookmark-refresh)
+
+(global-set-key (kbd "C-x r p l") (lambda () (interactive) (bookmark-load (expand-file-name "bookmarks" command-line-default-directory))))
+(global-set-key (kbd "C-x r p s") (lambda () (interactive) (bookmark-write-file (expand-file-name "bookmarks" command-line-default-directory))))
 #+END_SRC
 **** Bookmarks (bm)
 Bookmarks are very useful for quickly jumping around files.
@@ -911,6 +915,10 @@ Org-mode is an Emacs built-in.
 
 (setq org-src-preserve-indentation t)
 (define-key org-mode-map (kbd "<C-M-tab>") 'pcomplete)
+(define-key org-mode-map (kbd "C-c o r +") 'org-table-insert-row)
+(define-key org-mode-map (kbd "C-c o c +") 'org-table-insert-column)
+(define-key org-mode-map (kbd "C-c o r -") 'org-table-kill-row)
+(define-key org-mode-map (kbd "C-c o c -") 'org-table-delete-column)
 #+END_SRC
 ** TODO org-bullets
 Disabled this because it results in 100% CPU usage.
@@ -1117,6 +1125,7 @@ String manipulation routines for emacs lisp
 Magit is the only thing you need when it comes to Version Control (Git)
 
 #+BEGIN_SRC emacs-lisp
+(setq package-install-upgrade-built-in t)
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)))
@@ -1378,7 +1387,7 @@ Inspired by: [[https://blog.sumtypeofway.com/posts/emacs-config.html][blog.sumty
              ("C-c >" . haskell-goto-next-error)
              ("C-c <C-delete>" . haskell-process-restart)
              ("C-c o" . haskell-hoogle)
-             ("<M-return>" . haskell-hoogle-lookup-from-website)
+             ("C-c O" . haskell-hoogle-lookup-from-website)
              ("<C-S-return>" . haskell-process-load-file)
              ("<C-return>" . haskell-mode-show-type-at)
              ("<M-return>" . haskell-process-do-info)
@@ -1490,7 +1499,8 @@ Install =purescript-mode=. The irritating message can be fixed with a call to =t
   :ensure t
   :bind (:map racket-mode-map
          ("C-c o" . racket-documentation-search)
-         ("<M-return>" . racket-describe-search)
+         ("<M-return>" . racket-xp-describe)
+         ("<C-return>" . racket-describe-search)
          ("<C-S-return>" . racket-run-module-at-point)))
 
 (require 'racket-xp)
