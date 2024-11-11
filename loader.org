@@ -468,8 +468,9 @@ Also check this out: [[https://emacs.stackexchange.com/questions/31621/handle-st
 (global-set-key (kbd "C-x r S") 'bookmark-save)
 (global-set-key (kbd "C-x r R") 'my/bookmark-refresh)
 
-(global-set-key (kbd "C-x r p l") (lambda () (interactive) (bookmark-load (expand-file-name "bookmarks" command-line-default-directory))))
-(global-set-key (kbd "C-x r p s") (lambda () (interactive) (bookmark-write-file (expand-file-name "bookmarks" command-line-default-directory))))
+(global-set-key (kbd "C-x r p d") 'bookmark-delete-all)
+(global-set-key (kbd "C-x r p l") (lambda () "Load project bookmarks" (interactive) (bookmark-load (expand-file-name ".emacs.bookmarks" command-line-default-directory))))
+(global-set-key (kbd "C-x r p s") (lambda () "Save project bookmarks" (interactive) (bookmark-write-file (expand-file-name ".emacs.bookmarks" command-line-default-directory))))
 #+END_SRC
 **** Bookmarks (bm)
 Bookmarks are very useful for quickly jumping around files.
@@ -1349,6 +1350,12 @@ The source code formatter =prettier=.
 (use-package nix-mode
   :ensure t)
 #+END_SRC
+** Julia
+#+BEGIN_SRC emacs-lisp
+(use-package julia-mode
+    :pin melpa-stable
+    :ensure t)
+#+END_SRC
 ** Haskell
 See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configuration (Or, Emacs is Agar for Brain Worms) - 2020-09-14]]
 *** company-ghci
@@ -1630,11 +1637,12 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 #+END_SRC
 ** PHP
-*** Drupal mode
+*** PHP mode
 #+BEGIN_SRC emacs-lisp
-(use-package drupal-mode
+(use-package php-mode
+  :pin melpa-stable
   :ensure t
-  :diminish drupal-mode)
+  :diminish php-mode)
 #+END_SRC
 *** Geben (Xdebug)
 #+BEGIN_SRC emacs-lisp
@@ -1645,7 +1653,8 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
 *** web-mode
 #+BEGIN_SRC emacs-lisp
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.php" . web-mode))
+;; No web mode for PHP
+;; (add-to-list 'auto-mode-alist '("\\.php" . web-mode))
 (setq web-mode-engines-alist
   '(("php"    . "\\.phtml\\'")
     ("blade"  . "\\.blade\\."))
