@@ -275,9 +275,13 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 (blink-cursor-mode 0)
 
 ;; To accomodate aging eyes and code.
-(set-face-attribute 'default nil :height 140 :font "Hack")
 (define-key global-map (kbd "C-c C-!") (lambda () (interactive)
                                          (set-face-attribute 'default nil :height 140 :font "Hack")))
+;; Also set at initialization, as a default.
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (custom-set-faces
+                '(default ((t (:height 140 :font "Hack")))))))
 #+END_SRC
 *** Sane defaults
 [[https://github.com/danielmai/.emacs.d/blob/master/config.org]].
@@ -1637,13 +1641,18 @@ Package [[https://github.com/smihica/emmet-mode][emmet-mode]].
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 #+END_SRC
 ** PHP
-*** PHP mode
+*** php-mode
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
   :pin melpa-stable
   :ensure t
   :diminish php-mode)
 #+END_SRC
+*** jinja2-mode
+(use-package jinja2-mode
+  :pin melpa-stable
+  :ensure t
+  :diminish jinja2-mode)
 *** Geben (Xdebug)
 #+BEGIN_SRC emacs-lisp
 (use-package geben
