@@ -274,7 +274,7 @@ The package [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 ;;(setq-default cursor-type 'hollow)
 (blink-cursor-mode 0)
 
-;; To accomodate aging eyes and code.
+;; To accommodate aging eyes and code.
 (define-key global-map (kbd "C-c C-!") (lambda () (interactive)
                                          (set-face-attribute 'default nil :height 140 :font "Hack")))
 ;; Also set at initialization, as a default.
