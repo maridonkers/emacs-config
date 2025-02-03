@@ -1374,18 +1374,23 @@ See: [[https://elixir-lang.org/][elixir-lang.org]]
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
     :ensure t
-    :bind (:map elixir-mode-map
-                ("M-." . lsp-find-definition)
-                ("M-," . xref-pop-marker-stack)
-                ("C-M-," . (lambda ()
-                             (interactive)
-                             (kill-current-buffer)
-                             (xref-pop-marker-stack)))
-                ("<C-return>" . lsp-execute-code-action)
-                ("<M-return>" . (lambda () (interactive)
-                                  (lsp-describe-thing-at-point)
-                                  (next-window-any-frame)))
-          )
+    :bind
+    (:map elixir-mode-map
+          ("M-." . lsp-find-definition)
+          ("M-," . xref-pop-marker-stack)
+          ("C-M-," . (lambda ()
+                       (interactive)
+                       (kill-current-buffer)
+                       (xref-pop-marker-stack)))
+          ("<C-M-return>" . lsp-mode)
+          ("<M-return>" . (lambda () (interactive)
+                            (lsp-describe-thing-at-point)
+                            (next-window-any-frame))))
+    :config
+    (add-hook 'elixir-mode-hook 'lsp-deferred)
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
+    (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode))
 )
 #+END_SRC
 ** Haskell
