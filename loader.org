@@ -1281,12 +1281,19 @@ See: [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-plantuml.html
   '((plantuml . t))) ; this line activates plantuml
 #+END_SRC
 ** LSP
-*** lsp-mode
-Try this for =rust-mode=; see [[https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/][mortens.dev/blog/emacs-and-the-language-server-protocol]]
+*** TODO lsp-mode
+For =elixir-mode. To configure this for =rust-mode= see [[https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/][mortens.dev/blog/emacs-and-the-language-server-protocol]]
+#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
-  :pin melpa-stable
+  ;; :pin melpa-stable
+  :commands lsp
   :ensure t
+  :diminish lsp-mode
+    :hook
+    (elixir-mode . lsp)
+    :init
+    (add-to-list 'exec-path "~/lib/elixir-ls")
   :custom
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
@@ -1306,8 +1313,10 @@ Try this for =rust-mode=; see [[https://www.mortens.dev/blog/emacs-and-the-langu
   ;; (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
   (add-hook 'rust-mode-hook 'lsp-deferred)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode))
 )
 #+END_SRC
+#+END_EXAMPLE
 *** lsp-ui
 See: [[https://github.com/rksm/emacs-rust-config/blob/master/init.el][rksm/emacs-rust-config/blob/master/init.el]]
 #+BEGIN_SRC emacs-lisp
@@ -1359,6 +1368,25 @@ The source code formatter =prettier=.
 (use-package julia-mode
     :pin melpa-stable
     :ensure t)
+#+END_SRC
+** Elixir
+See: [[https://elixir-lang.org/][elixir-lang.org]]
+#+BEGIN_SRC emacs-lisp
+(use-package elixir-mode
+    :ensure t
+    :bind (:map elixir-mode-map
+                ("M-." . lsp-find-definition)
+                ("M-," . xref-pop-marker-stack)
+                ("C-M-," . (lambda ()
+                             (interactive)
+                             (kill-current-buffer)
+                             (xref-pop-marker-stack)))
+                ("<C-return>" . lsp-execute-code-action)
+                ("<M-return>" . (lambda () (interactive)
+                                  (lsp-describe-thing-at-point)
+                                  (next-window-any-frame)))
+          )
+)
 #+END_SRC
 ** Haskell
 See: [[https://blog.sumtypeofway.com/posts/emacs-config.html][My Emacs Configuration (Or, Emacs is Agar for Brain Worms) - 2020-09-14]]
