@@ -1391,6 +1391,13 @@ See: [[https://elixir-lang.org/][elixir-lang.org]]
     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
     (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
     (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode))
+
+    (defvar lsp-elixir--config-options (make-hash-table))
+
+    ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196?page=10
+    (add-hook 'lsp-after-initialize-hook
+              (lambda ()
+                (lsp--set-configuration `(:elixirLS, lsp-elixir--config-options))))
 )
 #+END_SRC
 ** Haskell
