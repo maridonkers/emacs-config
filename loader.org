@@ -697,10 +697,10 @@ Alternatively check out: [[https://hungyi.net/posts/copy-org-mode-url/]]
 (setq browse-url-browser-function 'eww-browse-url)
 #+END_SRC
 #+END_EXAMPLE
-**** Librewolf
+**** Chromium
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "librewolf"
+      browse-url-generic-program "chromium"
       browse-url-generic-args '("--new-window"))
 #+END_SRC
 **** TODO Nyxt
@@ -775,7 +775,7 @@ You can set Firefox to open all external links in the same tab.
 #+END_SRC
 ** Revert buffer
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-M-f") 'revert-buffer)
+(global-set-key (kbd "C-M-S-f") 'revert-buffer)
 #+END_SRC
 ** Large files
 #+BEGIN_SRC emacs-lisp
@@ -1372,6 +1372,21 @@ The source code formatter =prettier=.
 ** Elixir
 See: [[https://elixir-lang.org/][elixir-lang.org]]
 #+BEGIN_SRC emacs-lisp
+(require 'url) ;; Ensure the 'url' library is loaded
+
+(defun my-elixir-hexdocs-search ()
+  "Open Elixir HexDocs search with thing at point or selection, properly URL-encoded."
+  (interactive)
+  (let* ((search-keyword
+          (if (use-region-p)
+              (buffer-substring-no-properties (region-beginning) (region-end))
+            (thing-at-point 'word)))
+         (encoded-search-keyword (url-encode-url search-keyword)) ;; URL-encode the keyword
+         (search-url (format "https://hexdocs.pm/elixir/search.html?q=%s" encoded-search-keyword)))
+    (browse-url search-url)))
+
+;; (global-set-key (kbd "C-c o") 'my-elixir-hexdocs-search)
+
 (use-package elixir-mode
     :ensure t
     :bind
@@ -1382,6 +1397,8 @@ See: [[https://elixir-lang.org/][elixir-lang.org]]
                        (interactive)
                        (kill-current-buffer)
                        (xref-pop-marker-stack)))
+          ;; https://hexdocs.pm/elixir/1.17.3/search.html?q=defp
+          ("C-c o" . 'my-elixir-hexdocs-search)
           ("<C-M-return>" . lsp-mode)
           ("<M-return>" . (lambda () (interactive)
                             (lsp-describe-thing-at-point)
